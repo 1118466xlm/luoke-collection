@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#7EC8A3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="洛克收集簿">
+<title>洛克收集簿</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --mint:#7EC8A3;--mint-dk:#5DAB86;--sky:#8EC5E2;--sky-dk:#6AAED5;
+  --pink:#F4B5B5;--peach:#FCD5B5;--lavender:#D5C6E0;--butter:#FFF1C1;
+  --bg:#FDF6F0;--surface:#FFFAF7;--text:#5D576B;--text2:#A098AE;
+  --border:#E8DED5;--shadow:0 2px 14px rgba(126,200,163,.06);
+  --radius:14px;--safe-b:env(safe-area-inset-bottom,16px);--safe-t:env(safe-area-inset-top,0px)
+}
+html,body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);color:var(--text);height:100%;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;user-select:none
+}
+.bg-stickers{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-stickers span{position:absolute;font-size:80px;opacity:.04;animation:floatSticker 20s ease-in-out infinite}
+.bg-stickers span:nth-child(1){top:5%;left:4%;font-size:95px;animation-delay:0s}
+.bg-stickers span:nth-child(2){top:10%;right:6%;font-size:70px;animation-delay:-3s}
+.bg-stickers span:nth-child(3){top:52%;left:2%;font-size:105px;animation-delay:-7s}
+.bg-stickers span:nth-child(4){top:68%;right:3%;font-size:78px;animation-delay:-11s}
+.bg-stickers span:nth-child(5){top:32%;left:86%;font-size:88px;animation-delay:-15s}
+.bg-stickers span:nth-child(6){top:84%;left:44%;font-size:66px;animation-delay:-18s}
+.bg-stickers span:nth-child(7){top:20%;left:32%;font-size:58px;animation-delay:-5s}
+.bg-stickers span:nth-child(8){top:76%;right:16%;font-size:72px;animation-delay:-13s}
+@keyframes floatSticker{
+  0%,100%{transform:translateY(0)rotate(0deg)}
+  25%{transform:translateY(-14px)rotate(3deg)}
+  50%{transform:translateY(-6px)rotate(-2deg)}
+  75%{transform:translateY(-20px)rotate(1deg)}
+}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;max-width:640px;margin:0 auto}
+.header{
+  background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;
+  padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;text-align:center
+}
+.header h1{font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.5px}
+.search-bar{padding:8px 14px;flex-shrink:0;display:flex;gap:6px;background:var(--bg)}
+.search-bar input{flex:1;padding:10px 16px;border:2px solid var(--border);border-radius:24px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
+.search-bar input:focus{border-color:var(--mint)}
+.search-bar input::placeholder{color:var(--text2)}
+.search-bar .btn-clear{display:none;background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:0 6px}
+.search-bar.searching .btn-clear{display:inline}
+.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* fullscreen carousel */
+.carousel-full{display:none;position:relative;width:100%;height:320px;overflow:hidden;background:#1a1a2e}
+.carousel-full.show{display:block}
+.carousel-full canvas{width:100%;height:100%;display:block;transition:opacity .6s}
+.carousel-full .cf-overlay{position:absolute;inset:0;background:linear-gradient(transparent 60%,rgba(0,0,0,.45));display:flex;flex-direction:column;justify-content:flex-end;padding:16px 14px;pointer-events:none}
+.carousel-full .cf-row{display:flex;align-items:center;gap:10px}
+.carousel-full .cf-row>*{pointer-events:auto}
+.carousel-full .cf-label{color:#fff;font-size:12px;letter-spacing:1px;opacity:.8;flex:1}
+.carousel-full .cf-dots{display:flex;gap:6px;align-items:center}
+.carousel-full .cf-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:all .2s}
+.carousel-full .cf-dot.active{background:#fff;transform:scale(1.5)}
+.carousel-full .cf-btns{display:flex;gap:6px}
+.carousel-full .cf-btn{width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.14);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* group entry strip */
+.group-entry{display:flex;align-items:center;gap:12px;margin:10px 10px;padding:14px 16px;
+  background:linear-gradient(135deg,#FFF5F5,#FFF0E8,#F5F0FF);border-radius:var(--radius);
+  cursor:pointer;box-shadow:var(--shadow);transition:transform .12s;position:relative;z-index:2}
+.group-entry:active{transform:scale(.98)}
+.group-entry .ge-icon{font-size:32px}
+.group-entry .ge-info{flex:1}
+.group-entry .ge-title{font-size:15px;font-weight:700;color:var(--text)}
+.group-entry .ge-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.group-entry .ge-arrow{font-size:18px;color:var(--mint-dk)}
+/* uniform grid */
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 10px}
+.gallery .card{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
+.gallery .card:active{transform:scale(.97)}
+.gallery .card .img-box{width:100%;height:160px;overflow:hidden;background:#F0EBE6}
+.gallery .card .img-box img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery .card .info{padding:8px 10px;display:flex;gap:5px;flex-wrap:wrap}
+.gallery .card .chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600}
+/* groups page */
+.groups-page{position:fixed;inset:0;z-index:70;background:var(--bg);display:none;flex-direction:column}
+.groups-page.active{display:flex}
+.groups-header{background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;display:flex;align-items:center;gap:10px}
+.groups-header button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px}
+.groups-header h2{font-size:18px;flex:1}
+.groups-body{flex:1;overflow-y:auto;padding:8px 10px}
+.set-list{display:flex;flex-direction:column;gap:6px}
+.set-group{border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.set-header{padding:16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:16px;transition:background .12s;color:var(--text)}
+.set-header:active{background:#FFF9F5}
+.set-header .arrow{transition:transform .2s;font-size:12px;color:var(--mint-dk)}
+.set-group.open .set-header .arrow{transform:rotate(90deg)}
+.slot-list{display:none}
+.set-group.open .slot-list{display:block}
+.slot-item{padding:12px 16px 12px 28px;cursor:pointer;display:flex;align-items:center;gap:10px;border-top:1px solid #F5EFE8;font-size:14px}
+.slot-item:active{background:#FFF9F5}
+.slot-item .slot-emoji{font-size:20px}
+.slot-item .count{margin-left:auto;color:var(--text2);font-size:12px}
+.slot-gallery{padding:6px}
+.slot-gallery .back-btn{display:flex;align-items:center;gap:6px;padding:8px 0;margin-bottom:6px;background:none;border:none;color:var(--mint-dk);font-size:15px;cursor:pointer;font-weight:600}
+.slot-gallery .gallery-title{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+/* detail */
+.detail-overlay{position:fixed;inset:0;z-index:50;background:rgba(45,35,35,.96);display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.detail-overlay.active{display:flex}
+.detail-close{position:sticky;top:max(10px,var(--safe-t));align-self:flex-end;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;z-index:2;margin:10px}
+.detail-img{width:100%;display:block}
+.detail-info{padding:16px;color:#fff}
+.detail-info .date{font-size:12px;color:var(--peach);margin-bottom:14px}
+.pieces{display:flex;flex-direction:column;gap:8px}
+.piece-card{background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--mint)}
+.piece-card .p-set{font-size:14px;font-weight:700;color:var(--butter)}
+.piece-card .p-slot{font-size:13px;color:var(--peach)}
+.detail-actions{display:flex;gap:10px;padding:0 16px 24px}
+.detail-actions button{flex:1;padding:13px;border-radius:12px;border:none;font-size:15px;cursor:pointer;font-weight:600}
+.btn-edit{background:var(--mint);color:#fff}
+.btn-delete{background:rgba(255,255,255,.08);color:var(--pink)}
+/* form */
+.form-overlay{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+.form-overlay.active{display:flex}
+.form-header{background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.form-header button{background:none;border:none;color:#fff;font-size:16px;cursor:pointer}
+.form-header span{font-weight:700;font-size:16px}
+.form-body{flex:1;padding:16px;overflow-y:auto}
+.form-body label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+.form-body label:first-child{margin-top:0}
+.form-body input[type=text],.form-body select{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:15px;background:var(--surface);outline:none;color:var(--text)}
+.form-body input[type=text]:focus,.form-body select:focus{border-color:var(--mint)}
+.form-body input[type=text]::placeholder{color:var(--text2)}
+.form-body input[type=file]{margin-top:8px;font-size:14px;color:var(--text)}
+.img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius);margin-top:8px;background:#F0EBE6;display:none}
+.piece-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:10px;background:var(--surface);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.piece-row select{width:96px;flex-shrink:0;font-size:14px;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none;-webkit-appearance:auto;appearance:auto}
+.piece-row select:focus{border-color:var(--mint)}
+.piece-row input{flex:1;min-width:60px;font-size:14px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
+.piece-row input:focus{border-color:var(--mint)}
+.piece-row input::placeholder{color:var(--text2)}
+.piece-row .btn-remove-piece{background:none;border:none;color:var(--pink);font-size:20px;cursor:pointer;padding:2px 6px;flex-shrink:0}
+.autocomplete-wrap{position:relative;flex:1;min-width:60px}
+.autocomplete-dropdown{display:none;position:absolute;top:100%;left:0;right:0;z-index:10;background:var(--surface);border:2px solid var(--border);border-radius:10px;max-height:150px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+.autocomplete-dropdown.show{display:block}
+.autocomplete-dropdown .ac-item{padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #F5EFE8}
+.autocomplete-dropdown .ac-item:last-child{border-bottom:none}
+.autocomplete-dropdown .ac-item:active{background:#FFF9F5}
+.btn-add-piece{display:none;width:100%;padding:12px;border:2px dashed #E0D5CA;border-radius:12px;background:none;color:var(--mint-dk);font-size:14px;cursor:pointer;margin-top:8px;font-weight:600}
+.btn-save{width:100%;padding:15px;background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;margin-top:18px;margin-bottom:var(--safe-b);letter-spacing:1px}
+.fab{position:fixed;bottom:calc(24px + var(--safe-b));right:20px;width:58px;height:58px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;font-size:30px;box-shadow:0 6px 20px rgba(126,200,163,.3);cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.fab:active{transform:scale(.9)}
+.footer{padding:8px 14px calc(8px + var(--safe-b));display:flex;gap:10px;justify-content:center;flex-shrink:0;border-top:1px solid var(--border);background:var(--bg)}
+.footer button{padding:8px 18px;border-radius:20px;border:2px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;color:var(--text)}
+.footer button:active{background:#FFF9F5}
+.empty{text-align:center;padding:60px 20px;color:var(--text2)}
+.empty .empty-icon{font-size:72px;margin-bottom:16px}
+.empty p{margin-bottom:6px;font-size:15px;line-height:1.7}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.install-banner{display:none;position:fixed;bottom:calc(84px + var(--safe-b));left:16px;right:16px;background:var(--surface);border-radius:var(--radius);box-shadow:0 6px 24px rgba(126,200,163,.1);padding:16px;z-index:30;align-items:center;gap:12px;border:2px solid #E0F0E8}
+.install-banner.show{display:flex}
+.install-banner .ib-text{flex:1;font-size:14px}
+.install-banner button{padding:9px 18px;border-radius:20px;border:none;background:var(--mint);color:#fff;font-size:14px;cursor:pointer;white-space:nowrap;font-weight:600}
+.install-banner .ib-close{background:none;color:var(--text2);font-size:20px;padding:4px}
+.confirm-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.3);display:none;align-items:center;justify-content:center}
+.confirm-overlay.active{display:flex}
+.confirm-dialog{background:var(--surface);border-radius:18px;padding:24px;max-width:300px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.confirm-dialog p{margin-bottom:20px;font-size:15px;line-height:1.5;color:var(--text)}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btns button{flex:1;padding:11px;border-radius:12px;border:none;font-size:15px;cursor:pointer;font-weight:600}
+.btn-cancel{background:#F0EBE6;color:var(--text)}
+.btn-ok{background:var(--pink);color:#fff}
+</style>
+</head>
+<body>
+<div class="bg-stickers"><span>👗</span><span>👘</span><span>👜</span><span>👠</span><span>🧥</span><span>👒</span><span>🩰</span><span>🧣</span></div>
+
+<div id="app">
+  <div class="header"><h1>✨ 洛克收集簿</h1></div>
+  <div class="search-bar" id="searchBar">
+    <input type="text" id="searchInput" placeholder="🔍 搜索服装名…">
+    <button class="btn-clear" id="btnClearSearch">✕</button>
+  </div>
+  <div class="main" id="main"></div>
+  <button class="fab" id="fab">+</button>
+  <div class="footer">
+    <button id="btnExport">📤 导出数据</button>
+    <button id="btnImport">📥 导入数据</button>
+  </div>
+</div>
+
+<div class="groups-page" id="groupsPage">
+  <div class="groups-header"><button id="groupsBack">← 返回</button><h2>📋 时装分组</h2></div>
+  <div class="groups-body" id="groupsBody"></div>
+</div>
+
+<div class="detail-overlay" id="detailOverlay">
+  <button class="detail-close" id="detailClose">✕</button>
+  <img class="detail-img" id="detailImg" src="" alt="">
+  <div class="detail-info"><div class="date" id="detailDate"></div><div class="pieces" id="detailPieces"></div></div>
+  <div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div>
+</div>
+
+<div class="form-overlay" id="formOverlay">
+  <div class="form-header"><button id="formCancel">取消</button><span id="formTitle">添加搭配</span><button id="formSubmit" style="font-weight:700">保存</button></div>
+  <div class="form-body">
+    <label>📷 游戏截图</label>
+    <input type="file" accept="image/*" id="formImageInput">
+    <img class="img-preview" id="formImgPreview" src="" alt="">
+    <label>🧩 部件列表</label>
+    <div id="formPieces"></div>
+    <button class="btn-add-piece" id="btnAddPiece">+ 添加部件</button>
+    <button class="btn-save" id="btnSaveForm">💾 保存搭配</button>
+  </div>
+</div>
+
+<div class="install-banner" id="installBanner"><span class="ib-text">📲 添加到桌面，随时翻阅</span><button id="installBtn">安装</button><button class="ib-close" id="installDismiss">✕</button></div>
+<div class="toast" id="toast"></div>
+<div class="confirm-overlay" id="confirmOverlay"><div class="confirm-dialog"><p id="confirmMsg"></p><div class="confirm-btns"><button class="btn-cancel" id="confirmCancel">取消</button><button class="btn-ok" id="confirmOk">确认</button></div></div></div>
+
+<script>
+(function(){
+'use strict';
+
+var SLOTS=['头发','外套','上装','下装','袜子','鞋子','背包','帽子'];
+var EM={头发:'💇',外套:'🧥',上装:'👕',下装:'👖',袜子:'🧦',鞋子:'👟',背包:'🎒',帽子:'🎩'};
+var TC=[
+  {bg:'#FFE8E0',tx:'#C4887E'},{bg:'#FFECD2',tx:'#C4985E'},{bg:'#FFF8D6',tx:'#B89E3E'},
+  {bg:'#E8F5E0',tx:'#6E9E6E'},{bg:'#D8F0F5',tx:'#5E8E9E'},{bg:'#F0E0F5',tx:'#8E6EAE'},
+  {bg:'#FFE0EC',tx:'#B86E88'},{bg:'#E0F0E8',tx:'#5E987A'},{bg:'#FFF0E5',tx:'#C48A60'},
+  {bg:'#E8E8F5',tx:'#7878A8'},{bg:'#FFE8D5',tx:'#B88058'},{bg:'#D5F0E8',tx:'#4E8E7A'},
+  {bg:'#F5E0E8',tx:'#A87088'},{bg:'#E0F0FF',tx:'#5888B0'},{bg:'#FFF0F0',tx:'#B87070'},
+  {bg:'#F0F0E0',tx:'#969656'},{bg:'#E8F0E8',tx:'#688868'},{bg:'#F5E8F0',tx:'#986898'},
+  {bg:'#FFF5E0',tx:'#B89850'},{bg:'#E0F5F5',tx:'#5A8A8A'},{bg:'#FDE8E8',tx:'#B06868'},
+  {bg:'#E8F8E8',tx:'#509050'},{bg:'#F0E8F8',tx:'#7868A8'},{bg:'#F8F0E0',tx:'#A89860'}
+];
+function tc(n){var h=0;for(var i=0;i<n.length;i++){h=((h<<5)-h)+n.charCodeAt(i);h|=0}return TC[Math.abs(h)%TC.length]}
+
+// DB
+var db;
+function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open('luoke-v5',1);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('outfits'))d.createObjectStore('outfits',{keyPath:'id'})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
+function dbp(o){return new Promise(function(ok,fail){var t=db.transaction('outfits','readwrite');t.objectStore('outfits').put(o);t.oncomplete=ok;t.onerror=fail})}
+function dbd(id){return new Promise(function(ok,fail){var t=db.transaction('outfits','readwrite');t.objectStore('outfits').delete(id);t.oncomplete=ok;t.onerror=fail})}
+function dba(){return new Promise(function(ok,fail){var t=db.transaction('outfits','readonly');var r=t.objectStore('outfits').getAll();r.onsuccess=function(){ok(r.result||[])};r.onerror=fail})}
+function dbg(id){return new Promise(function(ok,fail){var t=db.transaction('outfits','readonly');var r=t.objectStore('outfits').get(id);r.onsuccess=function(){ok(r.result)};r.onerror=fail})}
+
+// Utils
+function $(s){return document.querySelector(s)}
+function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function fd(ts){var d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function bu(b){return b?URL.createObjectURL(b):''}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function toast(msg){var el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},2000)}
+function confirm(msg){return new Promise(function(ok){$('#confirmMsg').textContent=msg;$('#confirmOverlay').classList.add('active');function c(v){$('#confirmOverlay').classList.remove('active');$('#confirmOk').removeEventListener('click',onOk);$('#confirmCancel').removeEventListener('click',onCancel);ok(v)}function onOk(){c(true)}function onCancel(){c(false)};$('#confirmOk').addEventListener('click',onOk);$('#confirmCancel').addEventListener('click',onCancel)})}
+function thumb(blob,maxSize){maxSize=maxSize||320;return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(maxSize/img.width,maxSize/img.height,1);var c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){ok(b)},'image/jpeg',.7)};img.src=bu(blob)})}
+function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
+
+// State
+var all=[];
+var st={q:'',set:null,slot:null,eid:null,did:null,ci:0,ct:null,cp:true,slides:[]};
+
+// Autocomplete
+function setNames(){var s=new Set();all.forEach(function(o){o.pieces.forEach(function(p){if(p.setName)s.add(p.setName)})});return Array.from(s).sort()}
+function ac(input,valsFn){
+  var wrap=input.parentElement;
+  if(!wrap.classList.contains('autocomplete-wrap')){
+    wrap=document.createElement('div');wrap.className='autocomplete-wrap';
+    input.parentElement.insertBefore(wrap,input);wrap.appendChild(input);
+    var dd=document.createElement('div');dd.className='autocomplete-dropdown';wrap.appendChild(dd);
+  }
+  var dd=wrap.querySelector('.autocomplete-dropdown');
+  input.addEventListener('input',function(){
+    var vals=typeof valsFn==='function'?valsFn():valsFn,q=input.value.trim().toLowerCase();dd.innerHTML='';
+    if(!q){dd.classList.remove('show');return}
+    var m=vals.filter(function(v){return v.toLowerCase().indexOf(q)!==-1}).slice(0,8);
+    if(!m.length){dd.classList.remove('show');return}
+    m.forEach(function(v){var el=document.createElement('div');el.className='ac-item';el.textContent=v;el.addEventListener('pointerdown',function(e){e.preventDefault();input.value=v;dd.classList.remove('show')});dd.appendChild(el)});
+    dd.classList.add('show');
+  });
+  input.addEventListener('blur',function(){setTimeout(function(){dd.classList.remove('show')},200)});
+}
+
+// Filter
+function filt(q){if(!q)return all.slice().reverse();var lq=q.toLowerCase();return all.filter(function(o){return o.pieces.some(function(p){return p.setName.toLowerCase().indexOf(lq)!==-1})}).reverse()}
+
+// Carousel
+function buildSlides(){
+  var slides=[],land=[],port=[];
+  all.forEach(function(o){var iw=o.imageWidth,ih=o.imageHeight;if(iw&&ih){if(iw>=ih)land.push(o);else port.push(o)}else{land.push(o)}});
+  land.forEach(function(o){slides.push({t:'s',items:[o]})});
+  port.sort(function(){return Math.random()-.5});
+  for(var i=0;i<port.length;i+=2){if(i+1<port.length)slides.push({t:'p',items:[port[i],port[i+1]]});else slides.push({t:'s',items:[port[i]]})}
+  slides.sort(function(){return Math.random()-.5});
+  return slides;
+}
+function drawSlide(slide,cvs){
+  var dpr=window.devicePixelRatio||1,cw=cvs.width/dpr,ch=cvs.height/dpr,ctx=cvs.getContext('2d');ctx.clearRect(0,0,cw,ch);
+  if(slide.t==='s'){var o=slide.items[0],img=new Image();img.onload=function(){var s=Math.min(cw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh)};img.src=bu(o.image)}
+  else{var hw=cw/2;slide.items.forEach(function(o,i){var img=new Image();img.onload=function(){var s=Math.min(hw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,i*hw+(hw-dw)/2,(ch-dh)/2,dw,dh);if(i===0){ctx.fillStyle='rgba(255,255,255,.06)';ctx.fillRect(hw-1,0,2,ch)}};img.src=bu(o.image)})}
+}
+function renderCarousel(){
+  var el=document.getElementById('carouselEl');if(!all.length){if(el)el.style.display='none';return}
+  st.slides=buildSlides();if(!st.slides.length){if(el)el.style.display='none';return}st.ci=0;
+  if(!el){el=document.createElement('div');el.id='carouselEl';el.className='carousel-full show';el.innerHTML='<canvas id="carouselCanvas"></canvas><div class="cf-overlay"><div class="cf-row"><span class="cf-label">🎡 灵感轮播</span><div class="cf-dots" id="carouselDots"></div><div class="cf-btns"><button class="cf-btn" id="carouselPrev">◀</button><button class="cf-btn" id="carouselPlay">⏯</button><button class="cf-btn" id="carouselNext">▶</button></div></div></div>';$('#main').insertBefore(el,$('#main').firstChild);bindCarousel(el)}el.style.display='block';upDots();loadSlide();startTimer()}
+function bindCarousel(el){
+  var cvs=el.querySelector('#carouselCanvas');
+  function sz(){var rect=cvs.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cvs.width=rect.width*dpr;cvs.height=rect.height*dpr;cvs.style.width=rect.width+'px';cvs.style.height=rect.height+'px';cvs.getContext('2d').setTransform(1,0,0,1,0,0);cvs.getContext('2d').scale(dpr,dpr)}sz();window.addEventListener('resize',function(){sz();loadSlide()});
+  el.querySelector('#carouselPrev').addEventListener('click',function(){st.ci=(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()});
+  el.querySelector('#carouselNext').addEventListener('click',function(){st.ci=(st.ci+1)%st.slides.length;loadSlide();startTimer()});
+  el.querySelector('#carouselPlay').addEventListener('click',function(){st.cp=!st.cp;this.textContent=st.cp?'⏯':'▶';if(st.cp)startTimer();else clearInterval(st.ct)});
+  var tx=0;el.addEventListener('touchstart',function(e){tx=e.touches[0].clientX});el.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){st.ci=dx<0?(st.ci+1)%st.slides.length:(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()}});
+}
+function upDots(){var dots=$('#carouselDots');if(!dots)return;var h='';for(var i=0;i<st.slides.length;i++)h+='<button class="cf-dot'+(i===st.ci?' active':'')+'" data-i="'+i+'"></button>';dots.innerHTML=h;dots.querySelectorAll('.cf-dot').forEach(function(d){d.addEventListener('click',function(){st.ci=parseInt(this.dataset.i);loadSlide();startTimer()})})}
+function loadSlide(){var cvs=document.getElementById('carouselCanvas');if(!cvs||!st.slides.length)return;var s=st.slides[st.ci];if(s)drawSlide(s,cvs);upDots()}
+function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=setInterval(function(){st.ci=(st.ci+1)%st.slides.length;loadSlide()},3500)}
+function stopTimer(){clearInterval(st.ct);st.ct=null}
+
+// Homepage
+function home(){
+  var main=$('#main'),outfits=filt(st.q),carEl=document.getElementById('carouselEl');if(carEl)carEl.remove();
+  var html='';
+  if(!outfits.length){html+='<div class="empty"><div class="empty-icon">📸</div><p>还没有收藏穿搭</p><p>点击右下角 <b>+</b> 添加游戏截图吧</p></div>'}
+  else{
+    var nGroups=buildTree().length;
+    html+='<div class="group-entry" id="groupEntry"><span class="ge-icon">👘</span><div class="ge-info"><div class="ge-title">时装分组</div><div class="ge-sub">共 '+nGroups+' 个服装组 · 点击查看</div></div><span class="ge-arrow">▶</span></div>';
+    html+='<div class="gallery">';
+    outfits.forEach(function(o){
+      var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});
+      var chips='';sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+';color:'+c.tx+'">'+esc(s)+'</span>'});
+      html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+'</div></div>';
+    });
+    html+='</div>';
+  }
+  main.innerHTML=html;
+  // Bind card clicks
+  main.querySelectorAll('.card').forEach(function(c){c.addEventListener('click',function(){showDetail(c.dataset.id)})});
+  // Bind group entry click — use onclick for reliability
+  var ge=document.getElementById('groupEntry');
+  if(ge){ge.onclick=function(){openGroups()}}
+  renderCarousel();
+}
+
+// Groups page
+function openGroups(){console.log('openGroups called');renderGroups();$('#groupsPage').classList.add('active');document.body.style.overflow='hidden'}
+function closeGroups(){$('#groupsPage').classList.remove('active');document.body.style.overflow='';st.set=null;st.slot=null}
+function buildTree(){
+  var tree=new Map();
+  all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(!tree.has(sn))tree.set(sn,new Map());var slots=tree.get(sn);if(!slots.has(p.slot))slots.set(p.slot,new Set());slots.get(p.slot).add(o.id)})});
+  var entries=Array.from(tree.entries());entries.sort(function(a,b){if(a[0]==='未分组')return 1;if(b[0]==='未分组')return -1;return a[0].localeCompare(b[0],'zh')});
+  return entries;
+}
+function renderGroups(){
+  var body=$('#groupsBody');if(st.set&&st.slot){renderSlotG();return}
+  if(!all.length){body.innerHTML='<div class="empty"><div class="empty-icon">👗</div><p>还没有收藏搭配</p><p>添加搭配后时装会自动归类到这里</p></div>';return}
+  var tree=buildTree(),html='<div class="set-list">';
+  tree.forEach(function(slots,sn){
+    var isOpen=st.set===sn,total=new Set();slots.forEach(function(ids){ids.forEach(function(id){total.add(id)})});
+    html+='<div class="set-group'+(isOpen?' open':'')+'" data-set="'+esc(sn)+'">';
+    html+='<div class="set-header"><span>👘 '+esc(sn)+'</span><span style="font-size:12px;color:var(--text2)">'+total.size+'张</span><span class="arrow">▶</span></div><div class="slot-list">';
+    var se=Array.from(slots.entries());se.sort(function(a,b){return SLOTS.indexOf(a[0])-SLOTS.indexOf(b[0])});
+    se.forEach(function(e){html+='<div class="slot-item" data-set="'+esc(sn)+'" data-slot="'+esc(e[0])+'"><span class="slot-emoji">'+(EM[e[0]]||'?')+'</span><span>'+esc(e[0])+'</span><span class="count">'+e[1].size+'张</span></div>'});
+    html+='</div></div>';
+  });
+  html+='</div>';body.innerHTML=html;
+  body.querySelectorAll('.set-header').forEach(function(h){h.addEventListener('click',function(){var sn=h.parentElement.dataset.set;st.set=st.set===sn?null:sn;renderGroups()})});
+  body.querySelectorAll('.slot-item').forEach(function(item){item.addEventListener('click',function(){st.set=item.dataset.set;st.slot=item.dataset.slot;renderGroups()})});
+}
+function renderSlotG(){
+  var body=$('#groupsBody'),ids=new Set();
+  all.forEach(function(o){o.pieces.forEach(function(p){if((p.setName||'未分组')===st.set&&p.slot===st.slot)ids.add(o.id)})});
+  var outfits=all.filter(function(o){return ids.has(o.id)}).reverse(),html='<div class="slot-gallery">';
+  html+='<button class="back-btn" id="groupsSlotBack">← 返回时装列表</button>';
+  html+='<div class="gallery-title">'+esc(st.set)+' · '+(EM[st.slot]||'')+' '+esc(st.slot)+' ('+outfits.length+'张)</div>';
+  if(!outfits.length){html+='<div class="empty"><p>该槽位暂无图片</p></div>'}
+  else{html+='<div class="gallery">';outfits.forEach(function(o){html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info"><span class="chip" style="background:'+tc(st.set).bg+';color:'+tc(st.set).tx+'">'+esc(st.set)+'</span></div></div>'});html+='</div>'}
+  html+='</div>';body.innerHTML=html;
+  var bb=$('#groupsSlotBack');if(bb)bb.addEventListener('click',function(){st.slot=null;renderGroups()});
+  body.querySelectorAll('.card').forEach(function(c){c.addEventListener('click',function(){showDetail(c.dataset.id)})});
+}
+
+// Detail
+function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$('#detailImg').src=bu(o.image);$('#detailDate').textContent='📅 添加于 '+fd(o.createdAt);var html='';o.pieces.forEach(function(p){html+='<div class="piece-card"><span style="font-size:28px">'+(EM[p.slot]||'?')+'</span><div><div class="p-set">'+esc(p.setName||'未分组')+'</div><div class="p-slot">'+esc(p.slot)+'</div></div></div>'});$('#detailPieces').innerHTML=html;$('#detailOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function closeDetail(){$('#detailOverlay').classList.remove('active');document.body.style.overflow='';st.did=null}
+
+// Form
+function openAdd(){st.eid=null;$('#formTitle').textContent='添加搭配';$('#formImageInput').value='';$('#formImgPreview').style.display='none';$('#formPieces').innerHTML='';addRow();$('#btnAddPiece').style.display='none';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function openEdit(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.eid=id;$('#formTitle').textContent='编辑搭配';$('#formImageInput').value='';if(o.image){$('#formImgPreview').src=bu(o.image);$('#formImgPreview').style.display='block'}else{$('#formImgPreview').style.display='none'}$('#formPieces').innerHTML='';o.pieces.forEach(function(p){addRow(p)});$('#btnAddPiece').style.display='';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function closeForm(){$('#formOverlay').classList.remove('active');document.body.style.overflow='';st.eid=null}
+function addRow(data){
+  data=data||{setName:'',slot:'头发'};
+  var row=document.createElement('div');row.className='piece-row';
+  row.innerHTML='<select class="fn-slot">'+SLOTS.map(function(s){return'<option value="'+s+'"'+(s===data.slot?' selected':'')+'>'+(EM[s]||'')+s+'</option>'}).join('')+'</select><input type="text" class="fn-set" placeholder="服装名，如: 嘟嘟锅" value="'+esc(data.setName)+'"><button class="btn-remove-piece">🗑</button>';
+  row.querySelector('.btn-remove-piece').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove();upBtn()}else toast('至少保留一个部件')});
+  var si=row.querySelector('.fn-set');ac(si,setNames);
+  si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;if(cs==='帽子'){upBtn();return}var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});if(ns==='帽子')upBtn();var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});
+  $('#formPieces').appendChild(row);upBtn();
+}
+function upBtn(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(!rows.length){$('#btnAddPiece').style.display='';return}var ls=rows[rows.length-1].querySelector('.fn-slot').value;if(ls==='帽子')$('#btnAddPiece').style.display='';else $('#btnAddPiece').style.display='none'}
+function saveForm(){
+  var pr=$('#formPieces').querySelectorAll('.piece-row'),pieces=[];pr.forEach(function(r){var sn=r.querySelector('.fn-set').value.trim(),slot=r.querySelector('.fn-slot').value;if(sn)pieces.push({setName:sn,slot:slot})});
+  if(!pieces.length){toast('请至少填写一个部件的服装名');return}
+  function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbp(o).then(function(){refresh().then(function(){closeForm();home();toast(st.eid?'已更新 ✨':'已添加 ✨')})})}
+  var fi=$('#formImageInput');
+  if(st.eid){if(fi.files&&fi.files[0]){imgSz(fi.files[0]).then(function(sz){thumb(fi.files[0]).then(function(tb){doSave(fi.files[0],tb,sz.w,sz.h)})})}else{var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}}
+  else{if(!fi.files||!fi.files[0]){toast('请选择截图 📷');return}imgSz(fi.files[0]).then(function(sz){thumb(fi.files[0]).then(function(tb){doSave(fi.files[0],tb,sz.w,sz.h)})})}
+}
+
+// Import/export
+function b64(b){return new Promise(function(ok,fail){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=fail;r.readAsDataURL(b)})}
+function b2b(b64){var parts=b64.split(','),mime=parts[0].match(/:(.*?);/)[1],bytes=atob(parts[1]),arr=new Uint8Array(bytes.length);for(var i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);return new Blob([arr],{type:mime})}
+function exportData(){
+  if(!all.length){toast('没有数据可导出');return}toast('正在导出…');
+  var ps=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});
+  Promise.all(ps).then(function(data){var json=JSON.stringify({version:1,exportedAt:Date.now(),count:data.length,data:data}),blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='luoke-'+fd(Date.now())+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast('导出成功 📤')}).catch(function(e){toast('导出失败: '+e.message)});
+}
+function importData(){
+  var inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.addEventListener('change',function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);if(!json.data||!Array.isArray(json.data))throw new Error('无效备份');toast('正在导入 '+json.data.length+' 条…');var chain=Promise.resolve();json.data.forEach(function(item){chain=chain.then(function(){return dbg(item.id).then(function(ex){if(ex)return;return dbp({id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})})});chain.then(function(){refresh().then(function(){home();toast('导入完成 🎉')})})}).catch(function(e){toast('导入失败: '+e.message)})});inp.click();
+}
+
+// Search
+function updSearch(){st.q=$('#searchInput').value.trim();if(st.q)$('#searchBar').classList.add('searching');else $('#searchBar').classList.remove('searching');home()}
+
+// Events
+function bind(){
+  $('#groupsBack').addEventListener('click',closeGroups);
+  $('#groupsPage').addEventListener('click',function(e){if(e.target===this)closeGroups()});
+  $('#fab').addEventListener('click',openAdd);
+  $('#searchInput').addEventListener('input',updSearch);
+  $('#btnClearSearch').addEventListener('click',function(){$('#searchInput').value='';updSearch()});
+  $('#detailClose').addEventListener('click',closeDetail);
+  $('#detailOverlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
+  $('#detailEdit').addEventListener('click',function(){var id=st.did;closeDetail();if(id)openEdit(id)});
+  $('#detailDelete').addEventListener('click',function(){var id=st.did;if(!id)return;confirm('确定删除这张搭配吗？').then(function(ok){if(!ok)return;dbd(id).then(function(){closeDetail();refresh().then(function(){home();toast('已删除 🗑')})})})});
+  $('#formCancel').addEventListener('click',closeForm);
+  $('#formOverlay').addEventListener('click',function(e){if(e.target===this)closeForm()});
+  $('#formSubmit').addEventListener('click',saveForm);
+  $('#btnSaveForm').addEventListener('click',saveForm);
+  $('#btnAddPiece').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row'),ls='头发';if(rows.length)ls=rows[rows.length-1].querySelector('.fn-slot').value;var idx=SLOTS.indexOf(ls),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});
+  $('#formImageInput').addEventListener('change',function(){var f=this.files[0];if(f){$('#formImgPreview').src=URL.createObjectURL(f);$('#formImgPreview').style.display='block'}});
+  $('#btnExport').addEventListener('click',exportData);
+  $('#btnImport').addEventListener('click',importData);
+  $('#installBtn').addEventListener('click',function(){if(dp){dp.prompt().then(function(r){if(r.outcome==='accepted'){toast('已安装');$('#installBanner').classList.remove('show');dp=null}}).catch(function(){})}else toast('浏览器菜单 → 添加到主屏幕')});
+  $('#installDismiss').addEventListener('click',function(){$('#installBanner').classList.remove('show')});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#detailOverlay').classList.contains('active'))closeDetail();else if($('#formOverlay').classList.contains('active'))closeForm();else if($('#groupsPage').classList.contains('active'))closeGroups()}});
+}
+
+// PWA
+var dp=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('#installBanner').classList.add('show')});
+window.addEventListener('appinstalled',function(){dp=null;$('#installBanner').classList.remove('show')});
+function regPWA(){if(!document.querySelector('link[rel=manifest]')){var l=document.createElement('link');l.rel='manifest';l.href='./manifest.json';document.head.appendChild(l)}if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){})}}
+function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v5').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
+
+// Init
+function refresh(){return dba().then(function(arr){all=arr})}
+function init(){dbo().then(function(){return refresh()}).then(function(){bind();regPWA();home();cachePg()})}
+document.addEventListener('DOMContentLoaded',init);
+
+})();
+</script>
+</body>
+</html>
