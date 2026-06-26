@@ -2,13 +2,14 @@
   "name": "洛克收集簿",
   "short_name": "洛克收集簿",
   "description": "洛克王国穿搭收集整理",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f8f7fc",
-  "theme_color": "#6C5CE7",
+  "background_color": "#FFFBF7",
+  "theme_color": "#7EC8A3",
   "icons": [{
-    "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjY0IiBmaWxsPSIjNkM1Q0U3Ii8+PHRleHQgeD0iMjU2IiB5PSIyNTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+4pyAPC90ZXh0Pjwvc3ZnPg==",
+    "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjY0IiBmaWxsPSIjN0VDOEEzIi8+PHRleHQgeD0iMjU2IiB5PSIyNTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiNmZmYiIGZvbnQtc2l6ZT0iMjQwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+4pyAPC90ZXh0Pjwvc3ZnPg==",
     "sizes": "512x512",
     "type": "image/svg+xml",
     "purpose": "any maskable"
