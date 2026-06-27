@@ -13,7 +13,9 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --mint:#7EC8A3;--mint-dk:#5DAB86;--sky:#8EC5E2;--pink:#F4B5B5;--peach:#FCD5B5;--lavender:#D5C6E0;--butter:#FFF1C1;
+  --mint:#7EC8A3;--mint-lt:#D4F0E8;--sky:#8EC5E2;--sky-lt:#DDF0FA;
+  --pink:#F4B5B5;--pink-lt:#FDE8E8;--peach:#FCD5B5;--peach-lt:#FFF4E8;
+  --lav:#D5C6E0;--lav-lt:#F2ECF8;--butter:#FFF1C1;--butter-lt:#FFFBE8;
   --bg:#FFFBF7;--surface:#FFF;--text:#5D576B;--text2:#A098AE;
   --border:#EBE3DA;--shadow:0 2px 10px rgba(0,0,0,.04);
   --radius:12px;--safe-b:env(safe-area-inset-bottom,16px);--safe-t:env(safe-area-inset-top,0px)
@@ -30,15 +32,18 @@ html,body{
 .tab{flex:1;padding:9px 0;border:none;border-radius:10px 10px 0 0;background:rgba(255,255,255,.2);color:rgba(255,255,255,.75);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-weight:500;transition:all .15s}
 .tab.active{background:var(--bg);color:var(--text);font-weight:700}
 .tab svg{width:18px;height:18px}
-.search-bar{padding:8px 14px;flex-shrink:0;display:flex;gap:6px;background:var(--bg)}
-.search-bar input{flex:1;padding:10px 16px;border:2px solid var(--border);border-radius:24px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
-.search-bar input:focus{border-color:var(--mint)}
+.tab:nth-child(1).active{color:#5DAB86}
+.tab:nth-child(2).active{color:#6AAED5}
+.tab:nth-child(3).active{color:#C4887E}
+.search-bar{padding:8px 14px;flex-shrink:0;display:flex;gap:6px;background:var(--sky-lt)}
+.search-bar input{flex:1;padding:10px 16px;border:2px solid transparent;border-radius:24px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
+.search-bar input:focus{border-color:var(--sky)}
 .search-bar input::placeholder{color:var(--text2)}
 .search-bar .btn-clear{display:none;background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:0 6px}
 .search-bar.searching .btn-clear{display:inline}
 .main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 /* carousel */
-.carousel-wrap{padding:10px 10px 0}
+.carousel-wrap{padding:10px 10px 0;background:var(--pink-lt)}
 .carousel-inner{width:100%;height:180px;border-radius:var(--radius);overflow:hidden;background:#1a1a2e;position:relative}
 .carousel-inner canvas{width:100%;height:100%;display:block;transition:opacity .5s}
 .carousel-inner .ci-overlay{position:absolute;inset:0;border-radius:var(--radius);background:linear-gradient(transparent 55%,rgba(0,0,0,.35));display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;pointer-events:none}
@@ -50,9 +55,13 @@ html,body{
 .carousel-inner .ci-dot.active{background:#fff;transform:scale(1.5)}
 .carousel-inner .ci-btns{display:flex;gap:4px}
 .carousel-inner .ci-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:12px;cursor:pointer}
-/* gallery */
-.gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+/* gallery — colorful cards */
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;background:var(--lav-lt)}
 .gallery .card{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
+.gallery .card:nth-child(4n+1){border-top:3px solid var(--mint)}
+.gallery .card:nth-child(4n+2){border-top:3px solid var(--sky)}
+.gallery .card:nth-child(4n+3){border-top:3px solid var(--pink)}
+.gallery .card:nth-child(4n+0){border-top:3px solid var(--peach)}
 .gallery .card:active{transform:scale(.97)}
 .gallery .card .img-box{width:100%;height:160px;overflow:hidden;background:#F5F0EB}
 .gallery .card .img-box img{width:100%;height:100%;object-fit:cover;display:block}
@@ -60,55 +69,54 @@ html,body{
 .gallery .card .chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600}
 .export-row{display:flex;gap:10px;justify-content:center;padding:8px 10px calc(8px + var(--safe-b))}
 .export-row button{padding:8px 20px;border-radius:20px;border:2px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;color:var(--text)}
-/* fashion (placeholder) */
-.fashion-placeholder{text-align:center;padding:80px 20px;color:var(--text2)}
+/* fashion placeholder */
+.fashion-placeholder{text-align:center;padding:80px 20px;color:var(--text2);background:linear-gradient(135deg,var(--mint-lt),var(--sky-lt),var(--lav-lt))}
 .fashion-placeholder svg{margin-bottom:16px;opacity:.6}
 .fashion-placeholder p{font-size:15px;line-height:1.7}
-/* slot-gallery (for drill-down from fashion in future) */
-.slot-gallery{padding:6px}
-.slot-gallery .back-btn{display:flex;align-items:center;gap:6px;padding:8px 0;margin-bottom:6px;background:none;border:none;color:var(--mint-dk);font-size:15px;cursor:pointer;font-weight:600}
-.slot-gallery .gallery-title{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
 /* cart */
-.cart-wrap{padding:10px}
+.cart-wrap{padding:10px;background:var(--butter-lt)}
 .cart-add-bar{display:flex;gap:8px;margin-bottom:10px}
-.cart-add-bar button{padding:8px 16px;border-radius:20px;border:none;background:var(--mint);color:#fff;font-size:13px;cursor:pointer;font-weight:600}
+.cart-add-bar button{padding:8px 16px;border-radius:20px;border:none;background:var(--pink);color:#fff;font-size:13px;cursor:pointer;font-weight:600}
 .cart-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .cart-item{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
-.cart-item .ci-img{width:100%;height:140px;overflow:hidden;background:#F5F0EB;position:relative;display:flex;align-items:center;justify-content:center}
-.cart-item .ci-img img{width:100%;height:100%;object-fit:cover;display:block}
+.cart-item:nth-child(3n+1){border-top:3px solid var(--peach)}
+.cart-item:nth-child(3n+2){border-top:3px solid var(--sky)}
+.cart-item:nth-child(3n+0){border-top:3px solid var(--lav)}
+.cart-item .ci-img{width:100%;height:140px;overflow:hidden;background:#F5F0EB;display:flex;align-items:center;justify-content:center}
+.cart-item .ci-img img{width:100%;height:100%;object-fit:contain;display:block;background:#F5F0EB}
 .cart-item .ci-img .ci-placeholder{font-size:40px;color:#D5CCC0}
-.cart-item .ci-img-tap{cursor:pointer;position:relative}
-.cart-item .ci-img-tap::after{content:'+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(0,0,0,.15);pointer-events:none}
-.ci-quality-toggle{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;margin-bottom:6px;border:none;cursor:pointer}
+.cart-item .ci-img.ci-img-tap{cursor:pointer;position:relative}
+.cart-item .ci-img.ci-img-tap::after{content:'+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(0,0,0,.12);pointer-events:none}
 .cart-item .ci-info{padding:10px}
 .cart-item .ci-name{font-size:13px;font-weight:700;margin-bottom:4px}
-.cart-item .ci-quality{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;margin-bottom:6px}
+.ci-quality-toggle{display:inline-block;padding:3px 9px;border-radius:8px;font-size:10px;font-weight:600;margin-bottom:6px;border:none;cursor:pointer}
 .ci-quality-gold{background:#FFF8D6;color:#B8860B}
 .ci-quality-purple{background:#F0E0F5;color:#7D3C98}
-.cart-item .ci-buy{width:100%;padding:8px;border:none;border-radius:8px;background:var(--mint);color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.cart-item .ci-buy{width:100%;padding:8px;border:none;border-radius:8px;background:var(--sky);color:#fff;font-size:12px;cursor:pointer;font-weight:600}
 .cart-item .ci-buy.in-cart{background:#F5EFE8;color:var(--text2)}
-/* cart sidebar - aligned with FAB */
+/* cart sidebar */
 .cart-sidebar{position:fixed;right:20px;bottom:calc(88px + var(--safe-b));z-index:21}
-.cart-badge{width:48px;height:48px;border-radius:50%;border:none;background:var(--sky);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(142,197,226,.35);position:relative;display:flex;align-items:center;justify-content:center}
-.cart-badge .cb-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--pink);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.cart-badge{width:48px;height:48px;border-radius:50%;border:none;background:var(--pink);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(244,181,181,.4);position:relative;display:flex;align-items:center;justify-content:center}
+.cart-badge .cb-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--sky);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
 .cart-badge svg{width:22px;height:22px}
 .cart-panel{display:none;position:fixed;inset:0;z-index:75;background:var(--bg);flex-direction:column;max-width:640px;margin:0 auto}
 .cart-panel.active{display:flex}
-.cart-panel-header{background:var(--mint);color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));display:flex;align-items:center;gap:10px;flex-shrink:0}
+.cart-panel-header{background:var(--pink);color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));display:flex;align-items:center;gap:10px;flex-shrink:0}
 .cart-panel-header button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer}
 .cart-panel-header h2{font-size:18px;flex:1}
 .cart-panel-body{flex:1;overflow-y:auto;padding:10px}
 .cart-panel-body .cart-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-.cart-panel-body .cart-row img{width:48px;height:48px;object-fit:cover;border-radius:8px;background:#F5F0EB}
+.cart-panel-body .cart-row img{width:48px;height:48px;object-fit:contain;border-radius:8px;background:#F5F0EB}
 .cart-panel-body .cart-row .cr-name{flex:1;font-size:14px;font-weight:600}
 .cart-panel-body .cart-row .cr-del{background:none;border:none;color:var(--pink);font-size:18px;cursor:pointer}
 .cart-panel-footer{padding:10px 16px calc(10px + var(--safe-b));border-top:1px solid var(--border);text-align:center;color:var(--text2);font-size:13px}
+/* pika add form mini */
 .form-mini{display:flex;flex-direction:column;gap:8px}
 .form-mini input,.form-mini select{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
-.form-mini input:focus,.form-mini select:focus{border-color:var(--mint)}
+.form-mini input:focus,.form-mini select:focus{border-color:var(--pink)}
 .form-mini .btn-row{display:flex;gap:8px}
 .form-mini .btn-row button{flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;cursor:pointer;font-weight:600}
-.form-mini .btn-row .btn-primary{background:var(--mint);color:#fff}
+.form-mini .btn-row .btn-primary{background:var(--pink);color:#fff}
 .form-mini .btn-row .btn-secondary{background:#F0EBE6;color:var(--text)}
 /* detail */
 .detail-overlay{position:fixed;inset:0;z-index:50;background:rgba(25,15,15,.96);display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -119,8 +127,11 @@ html,body{
 .detail-info .date{font-size:12px;color:var(--peach);margin-bottom:14px}
 .pieces{display:flex;flex-direction:column;gap:8px}
 .piece-card{background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--mint)}
+.piece-card:nth-child(odd){border-left-color:var(--mint)}
+.piece-card:nth-child(even){border-left-color:var(--sky)}
 .piece-card .p-set{font-size:14px;font-weight:700;color:var(--butter)}
 .piece-card .p-slot{font-size:13px;color:var(--peach)}
+.piece-card .slot-icon-svg{width:32px;height:32px;flex-shrink:0;color:var(--mint)}
 .detail-actions{display:flex;gap:10px;padding:0 16px 24px}
 .detail-actions button{flex:1;padding:13px;border-radius:12px;border:none;font-size:15px;cursor:pointer;font-weight:600}
 .btn-edit{background:var(--mint);color:#fff}
@@ -140,7 +151,8 @@ html,body{
 .form-body input[type=file]{margin-top:8px;font-size:14px;color:var(--text)}
 .img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius);margin-top:8px;background:#F5F0EB;display:none}
 .piece-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:10px;background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.02)}
-.piece-row select{width:96px;flex-shrink:0;font-size:14px;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
+.piece-row .slot-icon-svg{width:28px;height:28px;flex-shrink:0}
+.piece-row select{width:84px;flex-shrink:0;font-size:14px;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
 .piece-row select:focus{border-color:var(--mint)}
 .piece-row input{flex:1;min-width:60px;font-size:14px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
 .piece-row input:focus{border-color:var(--mint)}
@@ -152,7 +164,7 @@ html,body{
 .ac-dd .ac-item{padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #F5EFE8}
 .ac-dd .ac-item:last-child{border-bottom:none}
 .ac-dd .ac-item:active{background:#FFF9F5}
-.btn-add-piece{display:none;width:100%;padding:12px;border:2px dashed #E5DBD0;border-radius:12px;background:none;color:var(--mint-dk);font-size:14px;cursor:pointer;margin-top:8px;font-weight:600}
+.btn-add-piece{padding:12px;border:2px dashed #E5DBD0;border-radius:12px;background:none;color:var(--mint-dk);font-size:14px;cursor:pointer;margin-top:8px;font-weight:600;display:block;width:100%}
 .btn-save{width:100%;padding:15px;background:var(--mint);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;margin-top:18px;margin-bottom:var(--safe-b)}
 /* crop */
 .crop-overlay{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center}
@@ -163,7 +175,7 @@ html,body{
 .crop-btn-land{background:var(--mint);color:#fff}
 .crop-btn-port{background:var(--sky);color:var(--text)}
 .crop-btn-done{background:#fff;color:var(--text)}
-/* fab - aligned with cart badge */
+/* fab */
 .fab{position:fixed;right:20px;bottom:calc(20px + var(--safe-b));width:56px;height:56px;border-radius:50%;border:none;background:var(--mint);color:#fff;font-size:28px;box-shadow:0 6px 18px rgba(126,200,163,.3);cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;transition:transform .12s}
 .fab:active{transform:scale(.9)}
 .fab svg{width:26px;height:26px}
@@ -192,71 +204,28 @@ html,body{
 <div id="app">
   <div class="header"><h1>洛克收集簿</h1></div>
   <div class="tabs">
-    <button class="tab active" data-tab="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首页
-    </button>
-    <button class="tab" data-tab="fashion">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>时装分组
-    </button>
-    <button class="tab" data-tab="cart">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>购物车
-    </button>
+    <button class="tab active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首页</button>
+    <button class="tab" data-tab="fashion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>时装分组</button>
+    <button class="tab" data-tab="cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>购物车</button>
   </div>
   <div class="search-bar" id="searchBar">
     <input type="text" id="searchInput" placeholder="搜索服装名…">
     <button class="btn-clear" id="btnClearSearch">✕</button>
   </div>
   <div class="main" id="main"></div>
-  <button class="fab" id="fab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-  </button>
+  <button class="fab" id="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
 </div>
 
-<!-- cart sidebar badge -->
-<div class="cart-sidebar" id="cartSidebar">
-  <button class="cart-badge" id="cartBadge">
-    <span class="cb-count" id="cartCount">0</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
-  </button>
-</div>
-<div class="cart-panel" id="cartPanel">
-  <div class="cart-panel-header"><button id="cartPanelBack">← 返回</button><h2>购物车</h2></div>
-  <div class="cart-panel-body" id="cartPanelBody"></div>
-  <div class="cart-panel-footer">继续浏览时装吧 ✨</div>
-</div>
+<div class="cart-sidebar" id="cartSidebar"><button class="cart-badge" id="cartBadge"><span class="cb-count" id="cartCount">0</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></button></div>
+<div class="cart-panel" id="cartPanel"><div class="cart-panel-header"><button id="cartPanelBack">← 返回</button><h2>购物车</h2></div><div class="cart-panel-body" id="cartPanelBody"></div><div class="cart-panel-footer">继续浏览时装吧 ✨</div></div>
 
-<!-- detail -->
-<div class="detail-overlay" id="detailOverlay">
-  <button class="detail-close" id="detailClose">✕</button>
-  <img class="detail-img" id="detailImg" src="" alt="">
-  <div class="detail-info"><div class="date" id="detailDate"></div><div class="pieces" id="detailPieces"></div></div>
-  <div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div>
-</div>
+<div class="detail-overlay" id="detailOverlay"><button class="detail-close" id="detailClose">✕</button><img class="detail-img" id="detailImg" src="" alt=""><div class="detail-info"><div class="date" id="detailDate"></div><div class="pieces" id="detailPieces"></div></div><div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div></div>
 
-<!-- form -->
-<div class="form-overlay" id="formOverlay">
-  <div class="form-header"><button id="formCancel">取消</button><span id="formTitle">添加搭配</span><button id="formSubmit" style="font-weight:700">保存</button></div>
-  <div class="form-body">
-    <label>📷 游戏截图</label>
-    <input type="file" accept="image/*" id="formImageInput">
-    <img class="img-preview" id="formImgPreview" src="" alt="">
-    <label>🧩 部件列表</label>
-    <div id="formPieces"></div>
-    <button class="btn-add-piece" id="btnAddPiece">+ 添加部件</button>
-    <button class="btn-save" id="btnSaveForm">💾 保存搭配</button>
-  </div>
-</div>
+<div class="form-overlay" id="formOverlay"><div class="form-header"><button id="formCancel">取消</button><span id="formTitle">添加搭配</span><button id="formSubmit" style="font-weight:700">保存</button></div><div class="form-body"><label>📷 游戏截图</label><input type="file" accept="image/*" id="formImageInput"><img class="img-preview" id="formImgPreview" src="" alt=""><label>🧩 部件列表</label><div id="formPieces"></div><button class="btn-add-piece" id="btnAddPiece">+ 添加部件</button><button class="btn-save" id="btnSaveForm">💾 保存搭配</button></div></div>
 
-<div class="form-overlay" id="pikaFormOverlay">
-  <div class="form-header"><button id="pikaFormCancel">取消</button><span>添加皮卡时装</span><button id="pikaFormSubmit" style="font-weight:700">添加</button></div>
-  <div class="form-body">
-    <div class="form-mini"><label>时装名称</label><input type="text" id="pikaName" placeholder="如: 草莓甜心"><label>品质</label><select id="pikaQuality"><option value="金色">金色</option><option value="紫色">紫色</option></select><label>图片（可选）</label><input type="file" accept="image/*" id="pikaImage"><button style="width:100%;padding:14px;background:var(--mint);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;margin-top:10px;cursor:pointer" id="pikaDoAdd">💾 添加到列表</button></div>
-  </div>
-</div>
+<div class="form-overlay" id="pikaFormOverlay"><div class="form-header" style="background:var(--pink)"><button id="pikaFormCancel">取消</button><span>添加皮卡时装</span><button id="pikaFormSubmit" style="font-weight:700">添加</button></div><div class="form-body"><div class="form-mini"><label>时装名称</label><input type="text" id="pikaName" placeholder="如: 草莓甜心"><label>品质</label><select id="pikaQuality"><option value="金色">金色</option><option value="紫色">紫色</option></select><label>图片（可选）</label><input type="file" accept="image/*" id="pikaImage"><button style="width:100%;padding:14px;background:var(--pink);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;margin-top:10px;cursor:pointer" id="pikaDoAdd">💾 添加到列表</button></div></div></div>
 
-<div class="crop-overlay" id="cropOverlay"><canvas id="cropCanvas"></canvas>
-  <div class="crop-tools"><button class="crop-btn-land" id="cropLand">📐 横版 16:9</button><button class="crop-btn-port" id="cropPort">📱 竖版 3:4</button><button class="crop-btn-done" id="cropDone">✅ 确认裁剪</button></div>
-</div>
+<div class="crop-overlay" id="cropOverlay"><canvas id="cropCanvas"></canvas><div class="crop-tools"><button class="crop-btn-land" id="cropLand">📐 横版 16:9</button><button class="crop-btn-port" id="cropPort">📱 竖版 3:4</button><button class="crop-btn-done" id="cropDone">✅ 确认裁剪</button></div></div>
 
 <div class="install-banner" id="installBanner"><span class="ib-text">📲 添加到桌面，随时翻阅</span><button id="installBtn">安装</button><button class="ib-close" id="installDismiss">✕</button></div>
 <div class="toast" id="toast"></div>
@@ -265,17 +234,16 @@ html,body{
 <script>
 (function(){'use strict';
 
-// ═══════ SLOT SVG ICONS (custom, PWA-native) ═══════
-// Each icon is a 24x24 viewBox stroke-based SVG designed for the mint color theme
-var SLOT_ICONS={
-  '头发':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="5"/><path d="M10 3c-3.5.5-7 3-7 8 0 6 4 10 9 10s9-4 9-10c0-5-3.5-7.5-7-8"/></svg>',
-  '外套':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3l-2 4v12l6 2 2-14-6-4z"/><path d="M18 3l2 4v12l-6 2-2-14 6-4z"/></svg>',
-  '上装':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 3h14v5c0 4-3 6-7 6s-7-2-7-6V3z"/><path d="M7 3v4c0 2 2 4 5 4s5-2 5-4V3"/></svg>',
-  '下装':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3h10l-1 14c0 3-4 5-4 5s-4-2-4-5L7 3z"/><line x1="12" y1="3" x2="12" y2="20"/></svg>',
-  '袜子':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 2h4l2 8v10c0 1-.5 2-1 2h-2c-.5 0-1-1-1-2v-6h-2v6c0 1-.5 2-1 2H7c-.5 0-1-1-1-2V10l4-8z"/></svg>',
-  '鞋子':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 15c0-2 1-3 3-3h12l2 4c1 1 1 3 0 4s-2 1-3 1H5c-2 0-3-1-3-3v-3z"/><path d="M6 12V7c0-3 3-5 5-5h1"/></svg>',
-  '背包':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="5" width="12" height="16" rx="3"/><path d="M8 5V3c0-1 2-2 4-2s4 1 4 2v2"/><line x1="8" y1="13" x2="16" y2="13"/></svg>',
-  '帽子':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15l10-8 10 8"/><path d="M4 15v4c0 1 1 2 2 2h12c1 0 2-1 2-2v-4"/></svg>'
+// ═══════ SLOT ICONS — clearer, recognizable stroke SVGs ═══════
+var SI={
+  '头发':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="5"/><path d="M3 18v-3c0-4 4-7 9-7s9 3 9 7v3"/></svg>',
+  '外套':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l-2 6v12l6 2 2-8-6-12z"/><path d="M18 3l2 6v12l-6 2-2-8 6-12z"/><line x1="12" y1="8" x2="12" y2="22"/></svg>',
+  '上装':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 3h14v5c0 4-3 6-7 6s-7-2-7-6V3zM7 3v4c0 2 2 4 5 4s5-2 5-4V3"/></svg>',
+  '下装':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h12l-2 14c0 2-4 4-4 4s-4-2-4-4L6 3z"/><line x1="12" y1="3" x2="12" y2="18"/></svg>',
+  '袜子':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 22V12l4-12h4l4 12v10c0 1-1 2-2 2h-4c-1 0-2-1-2-2v-5h-2v5c0 1-1 2-2 2H8c-1 0-2-1-2-2z"/><line x1="10" y1="17" x2="16" y2="17"/></svg>',
+  '鞋子':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 16c0-3 1-4 3-4h10l3 6c1 2 0 4-2 4H6c-2 0-4-1-4-3v-3z"/><path d="M6 12V8c0-2 2-4 4-4h2L8 14"/></svg>',
+  '背包':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="8" width="10" height="13" rx="2"/><path d="M7 8V6c0-2 2-3 5-3s5 1 5 3v2"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',
+  '帽子':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 16l10-8 10 8"/><path d="M4 16v3c0 1 1 2 2 2h12c1 0 2-1 2-2v-3"/><line x1="8" y1="8" x2="16" y2="8"/></svg>'
 };
 
 // ═══════ CONFIG ═══════
@@ -283,37 +251,12 @@ var SLOTS=['头发','外套','上装','下装','袜子','鞋子','背包','帽�
 var TC=[{bg:'#FFE8E0',tx:'#C4887E'},{bg:'#FFECD2',tx:'#C4985E'},{bg:'#FFF8D6',tx:'#B89E3E'},{bg:'#E8F5E0',tx:'#6E9E6E'},{bg:'#D8F0F5',tx:'#5E8E9E'},{bg:'#F0E0F5',tx:'#8E6EAE'},{bg:'#FFE0EC',tx:'#B86E88'},{bg:'#E0F0E8',tx:'#5E987A'},{bg:'#FFF0E5',tx:'#C48A60'},{bg:'#E8E8F5',tx:'#7878A8'},{bg:'#FFE8D5',tx:'#B88058'},{bg:'#D5F0E8',tx:'#4E8E7A'},{bg:'#F5E0E8',tx:'#A87088'},{bg:'#E0F0FF',tx:'#5888B0'},{bg:'#FFF0F0',tx:'#B87070'},{bg:'#F0F0E0',tx:'#969656'},{bg:'#E8F0E8',tx:'#688868'},{bg:'#F5E8F0',tx:'#986898'},{bg:'#FFF5E0',tx:'#B89850'},{bg:'#E0F5F5',tx:'#5A8A8A'},{bg:'#FDE8E8',tx:'#B06868'},{bg:'#E8F8E8',tx:'#509050'},{bg:'#F0E8F8',tx:'#7868A8'},{bg:'#F8F0E0',tx:'#A89860'}];
 function tc(n){for(var i=0,h=0;i<n.length;i++){h=((h<<5)-h)+n.charCodeAt(i);h|=0}return TC[Math.abs(h)%TC.length]}
 
-// ═══════ PRELOADED PIKA (73 sets from 小红书 白洛汐 全图鉴) ═══════
-var DEFAULT_PIKA=[
-{id:'p01',name:'旧日的追忆',quality:'紫色'},{id:'p02',name:'松果的追忆',quality:'紫色'},{id:'p03',name:'晴空的追忆',quality:'紫色'},
-{id:'p04',name:'橙花的追忆',quality:'紫色'},{id:'p05',name:'正红的追忆',quality:'紫色'},{id:'p06',name:'反叛的水手',quality:'紫色'},
-{id:'p07',name:'唱诗班礼赞',quality:'紫色'},{id:'p08',name:'新芽的追忆',quality:'紫色'},{id:'p09',name:'宁静星愿',quality:'紫色'},
-{id:'p10',name:'浪漫星愿',quality:'紫色'},{id:'p11',name:'明朗星愿',quality:'紫色'},{id:'p12',name:'魔法学院校服',quality:'紫色'},
-{id:'p13',name:'仪典学分院服',quality:'紫色'},{id:'p14',name:'精灵学分院服',quality:'紫色'},{id:'p15',name:'炼金学分院服',quality:'紫色'},
-{id:'p16',name:'战斗学分院服',quality:'紫色'},{id:'p17',name:'爵士鹿',quality:'紫色'},{id:'p18',name:'熔岩布丁',quality:'紫色'},
-{id:'p19',name:'蹦蹦花',quality:'紫色'},{id:'p20',name:'音速犬',quality:'紫色'},{id:'p21',name:'岚鸟',quality:'紫色'},
-{id:'p22',name:'厉毒修萝',quality:'紫色'},{id:'p23',name:'翠顶夫人',quality:'紫色'},{id:'p24',name:'卡洛儿',quality:'金色'},
-{id:'p25',name:'花魁蜂后',quality:'金色'},{id:'p26',name:'皇家狮鹫',quality:'金色'},{id:'p27',name:'星光狮',quality:'金色'},
-{id:'p28',name:'烈火守护',quality:'金色'},{id:'p29',name:'蒲公英娃娃',quality:'紫色'},{id:'p30',name:'雪灵',quality:'紫色'},
-{id:'p31',name:'圣代甜甜',quality:'紫色'},{id:'p32',name:'獠牙猪',quality:'紫色'},{id:'p33',name:'异色獠牙猪',quality:'紫色'},
-{id:'p34',name:'白金独角兽',quality:'紫色'},{id:'p35',name:'异色白金独角兽',quality:'紫色'},{id:'p36',name:'花衣蝶',quality:'紫色'},
-{id:'p37',name:'红绒十字',quality:'紫色'},{id:'p38',name:'异色红绒十字',quality:'紫色'},{id:'p39',name:'琉璃水母',quality:'紫色'},
-{id:'p40',name:'嘟嘟锅',quality:'紫色'},{id:'p41',name:'异色嘟嘟锅',quality:'紫色'},{id:'p42',name:'九幽菇',quality:'紫色'},
-{id:'p43',name:'梦悠悠',quality:'紫色'},{id:'p44',name:'雪影娃娃',quality:'紫色'},{id:'p45',name:'异色雪影娃娃',quality:'紫色'},
-{id:'p46',name:'幽冥眼',quality:'紫色'},{id:'p47',name:'电球咩咩',quality:'紫色'},{id:'p48',name:'夏日暖阳',quality:'紫色'},
-{id:'p49',name:'快乐的果实',quality:'紫色'},{id:'p50',name:'轻风省的果实',quality:'紫色'},{id:'p51',name:'糖心暖阳',quality:'紫色'},
-{id:'p52',name:'晴午革风',quality:'紫色'},{id:'p53',name:'柿红革风',quality:'紫色'},{id:'p54',name:'凛冬革风',quality:'紫色'},
-{id:'p55',name:'魔草巫灵',quality:'紫色'},{id:'p56',name:'奇丽花',quality:'紫色'},{id:'p57',name:'异色奇丽花',quality:'紫色'},
-{id:'p58',name:'魔眷鸟',quality:'紫色'},{id:'p59',name:'高脚鹬',quality:'紫色'},{id:'p60',name:'咕德帽帽',quality:'紫色'},
-{id:'p61',name:'异色咕德帽帽',quality:'紫色'},{id:'p62',name:'小丑公爵',quality:'紫色'},{id:'p63',name:'异色小丑公爵',quality:'紫色'},
-{id:'p64',name:'巨鼓象',quality:'紫色'},{id:'p65',name:'异色巨鼓象',quality:'紫色'},{id:'p66',name:'烟花伯爵',quality:'紫色'},
-{id:'p67',name:'异色烟花伯爵',quality:'紫色'},{id:'p68',name:'海豹船长',quality:'紫色'},{id:'p69',name:'千棘盔',quality:'紫色'},
-{id:'p70',name:'迷迷箱怪',quality:'紫色'},{id:'p71',name:'怖哭菇',quality:'紫色'},{id:'p72',name:'幻影灵菇',quality:'紫色'},
-{id:'p73',name:'流浪鼠',quality:'紫色'}
-];
+// ═══════ PRELOADED PIKA (73 sets) ═══════
+var DP=[{id:'p01',name:'旧日的追忆',quality:'紫色'},{id:'p02',name:'松果的追忆',quality:'紫色'},{id:'p03',name:'晴空的追忆',quality:'紫色'},{id:'p04',name:'橙花的追忆',quality:'紫色'},{id:'p05',name:'正红的追忆',quality:'紫色'},{id:'p06',name:'反叛的水手',quality:'紫色'},{id:'p07',name:'唱诗班礼赞',quality:'紫色'},{id:'p08',name:'新芽的追忆',quality:'紫色'},{id:'p09',name:'宁静星愿',quality:'紫色'},{id:'p10',name:'浪漫星愿',quality:'紫色'},{id:'p11',name:'明朗星愿',quality:'紫色'},{id:'p12',name:'魔法学院校服',quality:'紫色'},{id:'p13',name:'仪典学分院服',quality:'紫色'},{id:'p14',name:'精灵学分院服',quality:'紫色'},{id:'p15',name:'炼金学分院服',quality:'紫色'},{id:'p16',name:'战斗学分院服',quality:'紫色'},{id:'p17',name:'爵士鹿',quality:'紫色'},{id:'p18',name:'熔岩布丁',quality:'紫色'},{id:'p19',name:'蹦蹦花',quality:'紫色'},{id:'p20',name:'音速犬',quality:'紫色'},{id:'p21',name:'岚鸟',quality:'紫色'},{id:'p22',name:'厉毒修萝',quality:'紫色'},{id:'p23',name:'翠顶夫人',quality:'紫色'},{id:'p24',name:'卡洛儿',quality:'金色'},{id:'p25',name:'花魁蜂后',quality:'金色'},{id:'p26',name:'皇家狮鹫',quality:'金色'},{id:'p27',name:'星光狮',quality:'金色'},{id:'p28',name:'烈火守护',quality:'金色'},{id:'p29',name:'蒲公英娃娃',quality:'紫色'},{id:'p30',name:'雪灵',quality:'紫色'},{id:'p31',name:'圣代甜甜',quality:'紫色'},{id:'p32',name:'獠牙猪',quality:'紫色'},{id:'p33',name:'异色獠牙猪',quality:'紫色'},{id:'p34',name:'白金独角兽',quality:'紫色'},{id:'p35',name:'异色白金独角兽',quality:'紫色'},{id:'p36',name:'花衣蝶',quality:'紫色'},{id:'p37',name:'红绒十字',quality:'紫色'},{id:'p38',name:'异色红绒十字',quality:'紫色'},{id:'p39',name:'琉璃水母',quality:'紫色'},{id:'p40',name:'嘟嘟锅',quality:'紫色'},{id:'p41',name:'异色嘟嘟锅',quality:'紫色'},{id:'p42',name:'九幽菇',quality:'紫色'},{id:'p43',name:'梦悠悠',quality:'紫色'},{id:'p44',name:'雪影娃娃',quality:'紫色'},{id:'p45',name:'异色雪影娃娃',quality:'紫色'},{id:'p46',name:'幽冥眼',quality:'紫色'},{id:'p47',name:'电球咩咩',quality:'紫色'},{id:'p48',name:'夏日暖阳',quality:'紫色'},{id:'p49',name:'快乐的果实',quality:'紫色'},{id:'p50',name:'轻风省的果实',quality:'紫色'},{id:'p51',name:'糖心暖阳',quality:'紫色'},{id:'p52',name:'晴午革风',quality:'紫色'},{id:'p53',name:'柿红革风',quality:'紫色'},{id:'p54',name:'凛冬革风',quality:'紫色'},{id:'p55',name:'魔草巫灵',quality:'紫色'},{id:'p56',name:'奇丽花',quality:'紫色'},{id:'p57',name:'异色奇丽花',quality:'紫色'},{id:'p58',name:'魔眷鸟',quality:'紫色'},{id:'p59',name:'高脚鹬',quality:'紫色'},{id:'p60',name:'咕德帽帽',quality:'紫色'},{id:'p61',name:'异色咕德帽帽',quality:'紫色'},{id:'p62',name:'小丑公爵',quality:'紫色'},{id:'p63',name:'异色小丑公爵',quality:'紫色'},{id:'p64',name:'巨鼓象',quality:'紫色'},{id:'p65',name:'异色巨鼓象',quality:'紫色'},{id:'p66',name:'烟花伯爵',quality:'紫色'},{id:'p67',name:'异色烟花伯爵',quality:'紫色'},{id:'p68',name:'海豹船长',quality:'紫色'},{id:'p69',name:'千棘盔',quality:'紫色'},{id:'p70',name:'迷迷箱怪',quality:'紫色'},{id:'p71',name:'怖哭菇',quality:'紫色'},{id:'p72',name:'幻影灵菇',quality:'紫色'},{id:'p73',name:'流浪鼠',quality:'紫色'}];
+
 // ═══════ DB ═══════
 var db;
-function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open('luoke-v8',2);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('outfits'))d.createObjectStore('outfits',{keyPath:'id'});if(!d.objectStoreNames.contains('pika'))d.createObjectStore('pika',{keyPath:'id'});if(!d.objectStoreNames.contains('pikaCart'))d.createObjectStore('pikaCart',{keyPath:'id'})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
+function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open('luoke-v10',2);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('outfits'))d.createObjectStore('outfits',{keyPath:'id'});if(!d.objectStoreNames.contains('pika'))d.createObjectStore('pika',{keyPath:'id'});if(!d.objectStoreNames.contains('pikaCart'))d.createObjectStore('pikaCart',{keyPath:'id'})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
 function dbPut(store,o){return new Promise(function(ok,fail){var t=db.transaction(store,'readwrite');t.objectStore(store).put(o);t.oncomplete=ok;t.onerror=fail})}
 function dbDel(store,id){return new Promise(function(ok,fail){var t=db.transaction(store,'readwrite');t.objectStore(store).delete(id);t.oncomplete=ok;t.onerror=fail})}
 function dbAll(store){return new Promise(function(ok,fail){var t=db.transaction(store,'readonly');var r=t.objectStore(store).getAll();r.onsuccess=function(){ok(r.result||[])};r.onerror=fail})}
@@ -327,12 +270,12 @@ function bu(b){return b?URL.createObjectURL(b):''}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function toast(m){var el=$('#toast');el.textContent=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},2000)}
 function confirm(m){return new Promise(function(ok){$('#confirmMsg').textContent=m;$('#confirmOverlay').classList.add('active');function c(v){$('#confirmOverlay').classList.remove('active');$('#confirmOk').onclick=null;$('#confirmCancel').onclick=null;ok(v)}$('#confirmOk').onclick=function(){c(true)};$('#confirmCancel').onclick=function(){c(false)}})}
-function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(sz/img.width,sz/img.height,1);var c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){ok(b)},'image/jpeg',.85)};img.src=bu(blob)})}
+function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(sz/img.width,sz/img.height,1);var c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){ok(b)},'image/jpeg',.92)};img.src=bu(blob)})}
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 // ═══════ STATE ═══════
 var all=[],pika=[],cart=[];
-var st={tab:'home',q:'',set:null,slot:null,did:null,ci:0,ct:null,cp:true,slides:[],cropFile:null,cropImg:null,cropRatio:16/9,cropX:0,cropY:0,cropW:0,cropH:0,cropResolve:null,eid:null};
+var st={tab:'home',q:'',set:null,slot:null,did:null,ci:0,ct:null,cp:true,slides:[],cropFile:null,cropImg:null,cropRatio:3/4,cropX:0,cropY:0,cropW:0,cropH:0,cropResolve:null,eid:null,cropIsPika:false};
 
 // ═══════ AUTOCOMPLETE ═══════
 function setNames(){var s=new Set();all.forEach(function(o){o.pieces.forEach(function(p){if(p.setName)s.add(p.setName)})});return Array.from(s).sort()}
@@ -344,15 +287,23 @@ function ac(input,valsFn){
   input.addEventListener('blur',function(){setTimeout(function(){dd.classList.remove('show')},200)});
 }
 
-// ═══════ FILTER ═══════
 function filt(q){if(!q)return all.slice().reverse();var lq=q.toLowerCase();return all.filter(function(o){return o.pieces.some(function(p){return p.setName.toLowerCase().indexOf(lq)!==-1})}).reverse()}
 
-// ═══════ CROP ═══════
-function doCrop(file){return new Promise(function(ok){st.cropFile=file;st.cropResolve=ok;st.cropRatio=16/9;var img=new Image();img.onload=function(){st.cropImg=img;var r=st.cropRatio,iw=img.width,ih=img.height;if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}drawCrop();$('#cropOverlay').classList.add('active')};img.src=bu(file)})}
+// ═══════ CROP (generic + pika specific) ═══════
+function doCrop(file,ratio,isPika){return new Promise(function(ok){st.cropFile=file;st.cropResolve=ok;st.cropRatio=ratio||16/9;st.cropIsPika=!!isPika;var img=new Image();img.onload=function(){st.cropImg=img;var r=st.cropRatio,iw=img.width,ih=img.height;if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}drawCrop();$('#cropOverlay').classList.add('active')};img.src=bu(file)})}
 function drawCrop(){var cvs=$('#cropCanvas'),ctx=cvs.getContext('2d'),img=st.cropImg,rw=Math.min(window.innerWidth-20,500),rh=window.innerHeight*.55,s=Math.min(rw/img.width,rh/img.height);cvs.width=img.width*s;cvs.height=img.height*s;cvs.style.width=cvs.width+'px';cvs.style.height=cvs.height+'px';ctx.drawImage(img,0,0,cvs.width,cvs.height);ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(0,0,cvs.width,cvs.height);var cx=st.cropX*s,cy=st.cropY*s,cw=st.cropW*s,ch=st.cropH*s;ctx.clearRect(cx,cy,cw,ch);ctx.drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,cx,cy,cw,ch);ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(cx,cy,cw,ch)}
 function bindCropEv(){var cvs=$('#cropCanvas'),drag=false,lx=0,ly=0;cvs.addEventListener('touchstart',function(e){drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;e.preventDefault()});cvs.addEventListener('touchmove',function(e){if(!drag)return;var dx=e.touches[0].clientX-lx,dy=e.touches[0].clientY-ly,img=st.cropImg;if(!img)return;var sc=img.width/cvs.width;st.cropX=Math.max(0,Math.min(img.width-st.cropW,st.cropX-dx*sc));st.cropY=Math.max(0,Math.min(img.height-st.cropH,st.cropY-dy*sc));lx=e.touches[0].clientX;ly=e.touches[0].clientY;drawCrop();e.preventDefault()});cvs.addEventListener('touchend',function(){drag=false})}
 function setCropRatio(r){st.cropRatio=r;var img=st.cropImg,iw=img.width,ih=img.height;if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}drawCrop()}
-function applyCrop(){var img=st.cropImg,c=document.createElement('canvas');c.width=st.cropW;c.height=st.cropH;c.getContext('2d').drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,0,0,st.cropW,st.cropH);c.toBlob(function(b){$('#cropOverlay').classList.remove('active');var r=st.cropResolve;st.cropResolve=null;st.cropImg=null;if(r)r(b)},'image/jpeg',.92)}
+function applyCrop(){var img=st.cropImg,c=document.createElement('canvas');c.width=st.cropW;c.height=st.cropH;c.getContext('2d').drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,0,0,st.cropW,st.cropH);c.toBlob(function(b){$('#cropOverlay').classList.remove('active');var r=st.cropResolve;st.cropResolve=null;st.cropImg=null;if(r)r(b)},st.cropIsPika?'image/png':'image/jpeg',st.cropIsPika?1:.92)}
+
+// ═══════ PIKA IMAGE (manual crop, high quality) ═══════
+function addPikaImage(pid){
+  var inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+  inp.addEventListener('change',function(){var f=this.files[0];if(!f)return;
+    doCrop(f,3/4,true).then(function(cropped){var p=pika.find(function(x){return x.id===pid});if(p){p.imageBlob=cropped;dbPut('pika',p);renderCart();toast('图片已添加（PNG无损裁剪）')}});
+  });
+  inp.click();
+}
 
 // ═══════ CAROUSEL ═══════
 function buildSlides(){var slides=[],land=[],port=[];all.forEach(function(o){var iw=o.imageWidth,ih=o.imageHeight;if(iw&&ih){if(iw>=ih)land.push(o);else port.push(o)}else{land.push(o)}});land.forEach(function(o){slides.push({t:'s',items:[o]})});port.sort(function(){return Math.random()-.5});for(var i=0;i<port.length;i+=2){if(i+1<port.length)slides.push({t:'p',items:[port[i],port[i+1]]});else slides.push({t:'s',items:[port[i]]})}slides.sort(function(){return Math.random()-.5});return slides}
@@ -367,12 +318,12 @@ function upDots(){var dots=$('#carouselDots');if(!dots)return;var h='';for(var i
 function loadSlide(){var cvs=document.getElementById('carouselCanvas');if(!cvs||!st.slides.length)return;var s=st.slides[st.ci];if(s)drawSlide(s,cvs);upDots()}
 function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=setInterval(function(){st.ci=(st.ci+1)%st.slides.length;loadSlide()},3500)}
 
-// ═══════ RENDER: HOME ═══════
+// ═══════ HOME ═══════
 function renderHome(){
   $('#fab').style.display='flex';$('#cartSidebar').style.display='block';
   var main=$('#main'),outfits=filt(st.q),cw=document.getElementById('cw');if(cw)cw.remove();
   var html='';
-  if(!outfits.length){html='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>还没有收藏穿搭</p><p>点击右下角 <b>+</b> 添加游戏截图吧</p></div>'}
+  if(!outfits.length){html+='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>还没有收藏穿搭</p><p>点击右下角 <b>+</b> 添加游戏截图吧</p></div>'}
   else{html+='<div class="gallery">';outfits.forEach(function(o){var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});var chips='';sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+';color:'+c.tx+'">'+esc(s)+'</span>'});html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+'</div></div>'});html+='</div>';html+='<div class="export-row"><button id="btnExport">📤 导出数据</button><button id="btnImport">📥 导入数据</button></div>'}
   main.innerHTML=html;
   main.querySelectorAll('.card').forEach(function(c){c.addEventListener('click',function(){showDetail(c.dataset.id)})});
@@ -381,14 +332,13 @@ function renderHome(){
   renderCarousel();
 }
 
-// ═══════ RENDER: FASHION (placeholder) ═══════
 function renderFashion(){
   $('#fab').style.display='flex';$('#cartSidebar').style.display='block';
   var cw=document.getElementById('cw');if(cw)cw.remove();
   $('#main').innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>时装分组功能调整中</p><p>请稍候…</p></div>';
 }
 
-// ═══════ RENDER: CART ═══════
+// ═══════ CART ═══════
 function cartCount(){return cart.length}
 function updateCartBadge(){$('#cartCount').textContent=cartCount()}
 function isInCart(pid){return cart.some(function(x){return x.id===pid})}
@@ -401,7 +351,7 @@ function renderCart(){
     var inCart=isInCart(p.id);
     html+='<div class="cart-item"><div class="ci-img'+(p.imageBlob?'':' ci-img-tap')+'" data-pid="'+p.id+'">';
     if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}
-    else{html+='<span class="ci-placeholder">'+SLOT_ICONS['上装']+'</span>'}
+    else{html+='<span class="ci-placeholder">'+SI['上装']+'</span>'}
     html+='</div><div class="ci-info"><div class="ci-name">'+esc(p.name)+'</div>';
     html+='<button class="ci-quality-toggle '+(p.quality==='金色'?'ci-quality-gold':'ci-quality-purple')+'" data-pid="'+p.id+'">'+(p.quality==='金色'?'✦ 金色':'◇ 紫色')+'</button>';
     html+='<button class="ci-buy'+(inCart?' in-cart':'')+'" data-pid="'+p.id+'">'+(inCart?'✓ 已加入':'+ 加入购物车')+'</button>';
@@ -410,9 +360,7 @@ function renderCart(){
   html+='</div></div>';main.innerHTML=html;
   document.getElementById('btnAddPika').onclick=function(){$('#pikaFormOverlay').classList.add('active')};
   main.querySelectorAll('.ci-buy').forEach(function(btn){btn.onclick=function(){toggleCart(this.dataset.pid,this)}});
-  // Click placeholder to add image
-  main.querySelectorAll('.ci-img-tap').forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.addEventListener('change',function(){var f=this.files[0];if(!f)return;cropPikaAuto(f).then(function(cropped){mkThumb(cropped,400).then(function(tb){var p=pika.find(function(x){return x.id===pid});if(p){p.imageBlob=tb;dbPut('pika',p);renderCart();toast('图片已添加')}})})});inp.click()}});
-  // Quality toggle
+  main.querySelectorAll('.ci-img-tap').forEach(function(el){el.onclick=function(){addPikaImage(this.dataset.pid)}});
   main.querySelectorAll('.ci-quality-toggle').forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==='金色'?'紫色':'金色';dbPut('pika',p);renderCart();toast('已切换为'+(p.quality==='金色'?'金色 ✦':'紫色 ◇'))}});
 }
 function toggleCart(pid,btn){
@@ -421,32 +369,26 @@ function toggleCart(pid,btn){
   updateCartBadge();
 }
 
-// ═══════ CART PANEL ═══════
-function openCartPanel(){var body=$('#cartPanelBody'),html='';if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去购物车标签页添加皮卡时装吧</p></div>'}else{cart.forEach(function(c){html+='<div class="cart-row">';if(c.imageBlob)html+='<img src="'+bu(c.imageBlob)+'" alt="">';else html+='<span style="font-size:28px;width:48px;text-align:center;color:#D5CCC0">👔</span>';html+='<span class="cr-name">'+esc(c.name)+' <span style="font-size:11px;color:var(--text2)">'+(c.quality==='金色'?'✦金色':'◇紫色')+'</span></span>';html+='<button class="cr-del" data-pid="'+c.id+'">🗑</button></div>'})}body.innerHTML=html;body.querySelectorAll('.cr-del').forEach(function(b){b.onclick=function(){cart=cart.filter(function(x){return x.id!==b.dataset.pid});dbDel('pikaCart',b.dataset.pid);updateCartBadge();openCartPanel()}});$('#cartPanel').classList.add('active')}
-function closeCartPanel(){$('#cartPanel').classList.remove('active')}
-
-// ═══════ ADD PIKA ═══════
-// ═══════ PIKA AUTO-CROP (3:4 centered) ═══════
-function cropPikaAuto(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){var tw=img.width,th=img.height,ratio=3/4;var cw,ch;if(tw/th>ratio){ch=th;cw=th*ratio}else{cw=tw;ch=tw/ratio}var cx=(tw-cw)/2,cy=(th-ch)/2;var c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(img,cx,cy,cw,ch,0,0,cw,ch);c.toBlob(function(b){ok(b)},'image/jpeg',.9)};img.src=bu(blob)})}
+function openCartPanel(){var body=$('#cartPanelBody'),html='';if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去购物车标签页添加皮卡时装吧</p></div>'}else{cart.forEach(function(c){html+='<div class="cart-row">';if(c.imageBlob){html+='<img src="'+bu(c.imageBlob)+'" alt="">'}else{html+='<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#F5F0EB;border-radius:8px">'+SI['上装']+'</span>'}html+='<span class="cr-name">'+esc(c.name)+' <span style="font-size:11px;color:var(--text2)">'+(c.quality==='金色'?'✦金色':'◇紫色')+'</span></span>';html+='<button class="cr-del" data-pid="'+c.id+'">🗑</button></div>'})}body.innerHTML=html;body.querySelectorAll('.cr-del').forEach(function(b){b.onclick=function(){cart=cart.filter(function(x){return x.id!==b.dataset.pid});dbDel('pikaCart',b.dataset.pid);updateCartBadge();openCartPanel()}});$('#cartPanel').classList.add('active');document.body.style.overflow='hidden'}
+function closeCartPanel(){$('#cartPanel').classList.remove('active');document.body.style.overflow=''}
 
 function addPikaFashion(){
   var name=$('#pikaName').value.trim(),quality=$('#pikaQuality').value;if(!name){toast('请输入时装名称');return}
   var id='p'+uid(),obj={id:id,name:name,quality:quality,imageBlob:null};
-  var fi=$('#pikaImage');if(fi.files&&fi.files[0]){cropPikaAuto(fi.files[0]).then(function(cropped){mkThumb(cropped,400).then(function(tb){obj.imageBlob=tb;dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';$('#pikaImage').value='';renderCart();toast('图片已自动裁剪添加')})})})}
+  var fi=$('#pikaImage');if(fi.files&&fi.files[0]){doCrop(fi.files[0],3/4,true).then(function(cropped){obj.imageBlob=cropped;dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';$('#pikaImage').value='';renderCart();toast('已添加（PNG无损）')})})}
   else{dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';renderCart();toast('已添加')})}
 }
 
 // ═══════ DETAIL ═══════
-function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$('#detailImg').src=bu(o.image);$('#detailDate').textContent='📅 添加于 '+fd(o.createdAt);var html='';o.pieces.forEach(function(p){var icon=SLOT_ICONS[p.slot]||'';html+='<div class="piece-card"><span style="display:flex;align-items:center;width:32px;height:32px">'+icon+'</span><div><div class="p-set">'+esc(p.setName||'未分组')+'</div><div class="p-slot">'+esc(p.slot)+'</div></div></div>'});$('#detailPieces').innerHTML=html;$('#detailOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$('#detailImg').src=bu(o.image);$('#detailDate').textContent='📅 添加于 '+fd(o.createdAt);var html='';o.pieces.forEach(function(p){var icon=SI[p.slot]||'';html+='<div class="piece-card"><span class="slot-icon-svg">'+icon+'</span><div><div class="p-set">'+esc(p.setName||'未分组')+'</div><div class="p-slot">'+esc(p.slot)+'</div></div></div>'});$('#detailPieces').innerHTML=html;$('#detailOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function closeDetail(){$('#detailOverlay').classList.remove('active');document.body.style.overflow='';st.did=null}
 
 // ═══════ FORM ═══════
-function openAdd(){st.eid=null;$('#formTitle').textContent='添加搭配';$('#formImageInput').value='';$('#formImgPreview').style.display='none';$('#formPieces').innerHTML='';addRow();$('#btnAddPiece').style.display='none';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
-function openEdit(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.eid=id;$('#formTitle').textContent='编辑搭配';$('#formImageInput').value='';if(o.image){$('#formImgPreview').src=bu(o.image);$('#formImgPreview').style.display='block'}else{$('#formImgPreview').style.display='none'}$('#formPieces').innerHTML='';o.pieces.forEach(function(p){addRow(p)});$('#btnAddPiece').style.display='';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function openAdd(){st.eid=null;$('#formTitle').textContent='添加搭配';$('#formImageInput').value='';$('#formImgPreview').style.display='none';$('#formPieces').innerHTML='';addRow();$('#btnAddPiece').style.display='block';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function openEdit(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.eid=id;$('#formTitle').textContent='编辑搭配';$('#formImageInput').value='';if(o.image){$('#formImgPreview').src=bu(o.image);$('#formImgPreview').style.display='block'}else{$('#formImgPreview').style.display='none'}$('#formPieces').innerHTML='';o.pieces.forEach(function(p){addRow(p)});$('#btnAddPiece').style.display='block';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function closeForm(){$('#formOverlay').classList.remove('active');document.body.style.overflow='';st.eid=null}
-function addRow(data){data=data||{setName:'',slot:'头发'};var row=document.createElement('div');row.className='piece-row';var icon=SLOT_ICONS[data.slot]||'';row.innerHTML='<span class=\"slot-icon-svg\" style=\"width:28px;height:28px;flex-shrink:0;color:var(--mint)\">'+icon+'</span><select class=\"fn-slot\">'+SLOTS.map(function(s){return'<option value=\"'+s+'\"'+(s===data.slot?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select><input type=\"text\" class=\"fn-set\" placeholder=\"服装名, 如: 嘟嘟锅\" value=\"'+esc(data.setName)+'\"><button class=\"btn-rm\">🗑</button>';row.querySelector('.fn-slot').addEventListener('change',function(){var svg=row.querySelector('.slot-icon-svg');if(svg)svg.innerHTML=SLOT_ICONS[this.value]||''});row.querySelector('.btn-rm').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove();upBtn()}else toast('至少保留一个部件')});var si=row.querySelector('.fn-set');ac(si,setNames);si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});$('#formPieces').appendChild(row);upBtn()}
-function upBtn(){$('#btnAddPiece').style.display=''}
-function saveForm(){var pr=$('#formPieces').querySelectorAll('.piece-row'),pieces=[];pr.forEach(function(r){var sn=r.querySelector('.fn-set').value.trim(),slot=r.querySelector('.fn-slot').value;if(sn)pieces.push({setName:sn,slot:slot})});if(!pieces.length){toast('请至少填写一个部件的服装名');return}function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbPut('outfits',o).then(function(){refresh().then(function(){closeForm();renderHome();toast(st.eid?'已更新 ✨':'已添加 ✨')})})}function processFile(f){doCrop(f).then(function(cb){imgSz(cb).then(function(sz){mkThumb(cb).then(function(tb){doSave(cb,tb,sz.w,sz.h)})})})}var fi=$('#formImageInput');if(st.eid){if(fi.files&&fi.files[0]){processFile(fi.files[0])}else{var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}}else{if(!fi.files||!fi.files[0]){toast('请选择截图 📷');return}processFile(fi.files[0])}}
+function addRow(data){data=data||{setName:'',slot:'头发'};var row=document.createElement('div');row.className='piece-row';var icon=SI[data.slot]||'';row.innerHTML='<span class="slot-icon-svg" style="color:var(--mint)">'+icon+'</span><select class="fn-slot">'+SLOTS.map(function(s){return'<option value="'+s+'"'+(s===data.slot?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select><input type="text" class="fn-set" placeholder="服装名, 如: 嘟嘟锅" value="'+esc(data.setName)+'"><button class="btn-rm">🗑</button>';row.querySelector('.fn-slot').addEventListener('change',function(){var svg=row.querySelector('.slot-icon-svg');if(svg)svg.innerHTML=SI[this.value]||''});row.querySelector('.btn-rm').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove()}else toast('至少保留一个部件')});var si=row.querySelector('.fn-set');ac(si,setNames);si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});$('#formPieces').appendChild(row)}
+function saveForm(){var pr=$('#formPieces').querySelectorAll('.piece-row'),pieces=[];pr.forEach(function(r){var sn=r.querySelector('.fn-set').value.trim(),slot=r.querySelector('.fn-slot').value;if(sn)pieces.push({setName:sn,slot:slot})});if(!pieces.length){toast('请至少填写一个部件的服装名');return}function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbPut('outfits',o).then(function(){refresh().then(function(){closeForm();renderHome();toast(st.eid?'已更新 ✨':'已添加 ✨')})})}function processFile(f){doCrop(f,16/9).then(function(cb){imgSz(cb).then(function(sz){mkThumb(cb).then(function(tb){doSave(cb,tb,sz.w,sz.h)})})})}var fi=$('#formImageInput');if(st.eid){if(fi.files&&fi.files[0]){processFile(fi.files[0])}else{var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}}else{if(!fi.files||!fi.files[0]){toast('请选择截图 📷');return}processFile(fi.files[0])}}
 
 // ═══════ IMPORT/EXPORT ═══════
 function b64(b){return new Promise(function(ok,fail){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=fail;r.readAsDataURL(b)})}
@@ -454,13 +396,9 @@ function b2b(b64){var parts=b64.split(','),mime=parts[0].match(/:(.*?);/)[1],byt
 function exportData(){if(!all.length){toast('没有数据可导出');return}toast('正在导出…');var ps=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});Promise.all(ps).then(function(data){var json=JSON.stringify({version:1,exportedAt:Date.now(),count:data.length,data:data}),blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='luoke-'+fd(Date.now())+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast('导出成功 📤')}).catch(function(e){toast('导出失败: '+e.message)})}
 function importData(){var inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.addEventListener('change',function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);if(!json.data||!Array.isArray(json.data))throw new Error('无效备份');toast('正在导入 '+json.data.length+' 条…');var chain=Promise.resolve();json.data.forEach(function(item){chain=chain.then(function(){return dbGet('outfits',item.id).then(function(ex){if(ex)return;return dbPut('outfits',{id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})})});chain.then(function(){refresh().then(function(){renderHome();toast('导入完成 🎉')})})}).catch(function(e){toast('导入失败: '+e.message)})});inp.click()}
 
-// ═══════ SEARCH ═══════
 function updSearch(){st.q=$('#searchInput').value.trim();if(st.q)$('#searchBar').classList.add('searching');else $('#searchBar').classList.remove('searching');if(st.tab==='home')renderHome()}
-
-// ═══════ TAB SWITCH ═══════
 function switchTab(tab){st.tab=tab;st.set=null;st.slot=null;var cw=document.getElementById('cw');if(cw)cw.remove();document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab)});if(tab==='cart'){renderCart()}else if(tab==='fashion'){renderFashion()}else{renderHome()}}
 
-// ═══════ EVENTS ═══════
 function bind(){
   document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){switchTab(t.dataset.tab)})});
   $('#fab').addEventListener('click',openAdd);
@@ -488,26 +426,17 @@ function bind(){
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#detailOverlay').classList.contains('active'))closeDetail();else if($('#formOverlay').classList.contains('active'))closeForm()}});
 }
 
-// ═══════ PWA ═══════
 var dp=null;
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('#installBanner').classList.add('show')});
 window.addEventListener('appinstalled',function(){dp=null;$('#installBanner').classList.remove('show')});
 function regPWA(){if(!document.querySelector('link[rel=manifest]')){var l=document.createElement('link');l.rel='manifest';l.href='./manifest.json';document.head.appendChild(l)}if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){})}}
-function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v9').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
+function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v10').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
 
-// ═══════ INIT ═══════
 function refresh(){return dbAll('outfits').then(function(arr){all=arr})}
-function loadPika(){return dbAll('pika').then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DEFAULT_PIKA.forEach(function(p){chain=chain.then(function(){return dbPut('pika',p)})});return chain.then(function(){return dbAll('pika')}).then(function(arr){pika=arr})}})}
+function loadPika(){return dbAll('pika').then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut('pika',p)})});return chain.then(function(){return dbAll('pika')}).then(function(arr){pika=arr})}})}
 function loadCart(){return dbAll('pikaCart').then(function(arr){cart=arr})}
-function init(){
-  dbo().then(function(){
-    return Promise.all([refresh(),loadPika(),loadCart()]);
-  }).then(function(){
-    bind();regPWA();renderHome();cachePg();updateCartBadge();
-  });
-}
+function init(){dbo().then(function(){return Promise.all([refresh(),loadPika(),loadCart()])}).then(function(){bind();regPWA();renderHome();cachePg();updateCartBadge()})}
 document.addEventListener('DOMContentLoaded',init);
-
 })();
 </script>
 </body>
