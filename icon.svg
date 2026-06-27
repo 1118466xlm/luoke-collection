@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="92" fill="#7EC8A3"/>
+  <g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- hanger hook -->
+    <path d="M256 130v55" stroke-width="38"/>
+    <!-- hanger bar -->
+    <path d="M170 220h172" stroke-width="22"/>
+    <!-- shirt body -->
+    <path d="M256 220l-95 50-25 80 45 15 20-65 55-3 55 3 20 65 45-15-25-80z" stroke-width="18"/>
+    <!-- sleeves -->
+    <path d="M255 270l-50 5" stroke-width="20"/>
+    <path d="M257 270l50 5" stroke-width="20"/>
+  </g>
+</svg>

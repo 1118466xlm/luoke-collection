@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#7EC8A3">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="洛克收集簿">
@@ -418,10 +420,13 @@ function openCartPanel(){var body=$('#cartPanelBody'),html='';if(!cart.length){h
 function closeCartPanel(){$('#cartPanel').classList.remove('active')}
 
 // ═══════ ADD PIKA ═══════
+// ═══════ PIKA AUTO-CROP (3:4 centered) ═══════
+function cropPikaAuto(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){var tw=img.width,th=img.height,ratio=3/4;var cw,ch;if(tw/th>ratio){ch=th;cw=th*ratio}else{cw=tw;ch=tw/ratio}var cx=(tw-cw)/2,cy=(th-ch)/2;var c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(img,cx,cy,cw,ch,0,0,cw,ch);c.toBlob(function(b){ok(b)},'image/jpeg',.9)};img.src=bu(blob)})}
+
 function addPikaFashion(){
   var name=$('#pikaName').value.trim(),quality=$('#pikaQuality').value;if(!name){toast('请输入时装名称');return}
   var id='p'+uid(),obj={id:id,name:name,quality:quality,imageBlob:null};
-  var fi=$('#pikaImage');if(fi.files&&fi.files[0]){mkThumb(fi.files[0],400).then(function(tb){obj.imageBlob=tb;dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';$('#pikaImage').value='';renderCart();toast('已添加')})})}
+  var fi=$('#pikaImage');if(fi.files&&fi.files[0]){cropPikaAuto(fi.files[0]).then(function(cropped){mkThumb(cropped,400).then(function(tb){obj.imageBlob=tb;dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';$('#pikaImage').value='';renderCart();toast('图片已自动裁剪添加')})})})}
   else{dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';renderCart();toast('已添加')})}
 }
 
