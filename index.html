@@ -77,6 +77,9 @@ html,body{
 .cart-item .ci-img{width:100%;height:140px;overflow:hidden;background:#F5F0EB;position:relative;display:flex;align-items:center;justify-content:center}
 .cart-item .ci-img img{width:100%;height:100%;object-fit:cover;display:block}
 .cart-item .ci-img .ci-placeholder{font-size:40px;color:#D5CCC0}
+.cart-item .ci-img-tap{cursor:pointer;position:relative}
+.cart-item .ci-img-tap::after{content:'+';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(0,0,0,.15);pointer-events:none}
+.ci-quality-toggle{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;margin-bottom:6px;border:none;cursor:pointer}
 .cart-item .ci-info{padding:10px}
 .cart-item .ci-name{font-size:13px;font-weight:700;margin-bottom:4px}
 .cart-item .ci-quality{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;margin-bottom:6px}
@@ -396,18 +399,21 @@ function renderCart(){
   html+='<div class="cart-list">';
   pika.forEach(function(p){
     var inCart=isInCart(p.id);
-    html+='<div class="cart-item"><div class="ci-img">';
+    html+='<div class="cart-item"><div class="ci-img'+(p.imageBlob?'':' ci-img-tap')+'" data-pid="'+p.id+'">';
     if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}
     else{html+='<span class="ci-placeholder">'+SLOT_ICONS['上装']+'</span>'}
     html+='</div><div class="ci-info"><div class="ci-name">'+esc(p.name)+'</div>';
-    if(p.quality==='金色')html+='<span class="ci-quality ci-quality-gold">✦ 金色</span>';
-    else html+='<span class="ci-quality ci-quality-purple">◇ 紫色</span>';
+    html+='<button class="ci-quality-toggle '+(p.quality==='金色'?'ci-quality-gold':'ci-quality-purple')+'" data-pid="'+p.id+'">'+(p.quality==='金色'?'✦ 金色':'◇ 紫色')+'</button>';
     html+='<button class="ci-buy'+(inCart?' in-cart':'')+'" data-pid="'+p.id+'">'+(inCart?'✓ 已加入':'+ 加入购物车')+'</button>';
     html+='</div></div>';
   });
   html+='</div></div>';main.innerHTML=html;
   document.getElementById('btnAddPika').onclick=function(){$('#pikaFormOverlay').classList.add('active')};
   main.querySelectorAll('.ci-buy').forEach(function(btn){btn.onclick=function(){toggleCart(this.dataset.pid,this)}});
+  // Click placeholder to add image
+  main.querySelectorAll('.ci-img-tap').forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.addEventListener('change',function(){var f=this.files[0];if(!f)return;cropPikaAuto(f).then(function(cropped){mkThumb(cropped,400).then(function(tb){var p=pika.find(function(x){return x.id===pid});if(p){p.imageBlob=tb;dbPut('pika',p);renderCart();toast('图片已添加')}})})});inp.click()}});
+  // Quality toggle
+  main.querySelectorAll('.ci-quality-toggle').forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==='金色'?'紫色':'金色';dbPut('pika',p);renderCart();toast('已切换为'+(p.quality==='金色'?'金色 ✦':'紫色 ◇'))}});
 }
 function toggleCart(pid,btn){
   if(isInCart(pid)){cart=cart.filter(function(x){return x.id!==pid});dbDel('pikaCart',pid);if(btn){btn.textContent='+ 加入购物车';btn.classList.remove('in-cart')}}
@@ -438,8 +444,8 @@ function closeDetail(){$('#detailOverlay').classList.remove('active');document.b
 function openAdd(){st.eid=null;$('#formTitle').textContent='添加搭配';$('#formImageInput').value='';$('#formImgPreview').style.display='none';$('#formPieces').innerHTML='';addRow();$('#btnAddPiece').style.display='none';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function openEdit(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.eid=id;$('#formTitle').textContent='编辑搭配';$('#formImageInput').value='';if(o.image){$('#formImgPreview').src=bu(o.image);$('#formImgPreview').style.display='block'}else{$('#formImgPreview').style.display='none'}$('#formPieces').innerHTML='';o.pieces.forEach(function(p){addRow(p)});$('#btnAddPiece').style.display='';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function closeForm(){$('#formOverlay').classList.remove('active');document.body.style.overflow='';st.eid=null}
-function addRow(data){data=data||{setName:'',slot:'头发'};var row=document.createElement('div');row.className='piece-row';var icon=SLOT_ICONS[data.slot]||'';row.innerHTML='<select class="fn-slot">'+SLOTS.map(function(s){var sIcon=SLOT_ICONS[s]||'';return'<option value="'+s+'"'+(s===data.slot?' selected':'')+'>'+sIcon+' '+esc(s)+'</option>'}).join('')+'</select><input type="text" class="fn-set" placeholder="服装名, 如: 嘟嘟锅" value="'+esc(data.setName)+'"><button class="btn-rm">🗑</button>';row.querySelector('.btn-rm').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove();upBtn()}else toast('至少保留一个部件')});var si=row.querySelector('.fn-set');ac(si,setNames);si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;if(cs==='帽子'){upBtn();return}var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});if(ns==='帽子')upBtn();var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});$('#formPieces').appendChild(row);upBtn()}
-function upBtn(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(!rows.length){$('#btnAddPiece').style.display='';return}var ls=rows[rows.length-1].querySelector('.fn-slot').value;if(ls==='帽子')$('#btnAddPiece').style.display='';else $('#btnAddPiece').style.display='none'}
+function addRow(data){data=data||{setName:'',slot:'头发'};var row=document.createElement('div');row.className='piece-row';var icon=SLOT_ICONS[data.slot]||'';row.innerHTML='<span class=\"slot-icon-svg\" style=\"width:28px;height:28px;flex-shrink:0;color:var(--mint)\">'+icon+'</span><select class=\"fn-slot\">'+SLOTS.map(function(s){return'<option value=\"'+s+'\"'+(s===data.slot?' selected':'')+'>'+esc(s)+'</option>'}).join('')+'</select><input type=\"text\" class=\"fn-set\" placeholder=\"服装名, 如: 嘟嘟锅\" value=\"'+esc(data.setName)+'\"><button class=\"btn-rm\">🗑</button>';row.querySelector('.fn-slot').addEventListener('change',function(){var svg=row.querySelector('.slot-icon-svg');if(svg)svg.innerHTML=SLOT_ICONS[this.value]||''});row.querySelector('.btn-rm').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove();upBtn()}else toast('至少保留一个部件')});var si=row.querySelector('.fn-set');ac(si,setNames);si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});$('#formPieces').appendChild(row);upBtn()}
+function upBtn(){$('#btnAddPiece').style.display=''}
 function saveForm(){var pr=$('#formPieces').querySelectorAll('.piece-row'),pieces=[];pr.forEach(function(r){var sn=r.querySelector('.fn-set').value.trim(),slot=r.querySelector('.fn-slot').value;if(sn)pieces.push({setName:sn,slot:slot})});if(!pieces.length){toast('请至少填写一个部件的服装名');return}function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbPut('outfits',o).then(function(){refresh().then(function(){closeForm();renderHome();toast(st.eid?'已更新 ✨':'已添加 ✨')})})}function processFile(f){doCrop(f).then(function(cb){imgSz(cb).then(function(sz){mkThumb(cb).then(function(tb){doSave(cb,tb,sz.w,sz.h)})})})}var fi=$('#formImageInput');if(st.eid){if(fi.files&&fi.files[0]){processFile(fi.files[0])}else{var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}}else{if(!fi.files||!fi.files[0]){toast('请选择截图 📷');return}processFile(fi.files[0])}}
 
 // ═══════ IMPORT/EXPORT ═══════
