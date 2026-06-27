@@ -278,6 +278,34 @@ var SLOTS=['头发','外套','上装','下装','袜子','鞋子','背包','帽�
 var TC=[{bg:'#FFE8E0',tx:'#C4887E'},{bg:'#FFECD2',tx:'#C4985E'},{bg:'#FFF8D6',tx:'#B89E3E'},{bg:'#E8F5E0',tx:'#6E9E6E'},{bg:'#D8F0F5',tx:'#5E8E9E'},{bg:'#F0E0F5',tx:'#8E6EAE'},{bg:'#FFE0EC',tx:'#B86E88'},{bg:'#E0F0E8',tx:'#5E987A'},{bg:'#FFF0E5',tx:'#C48A60'},{bg:'#E8E8F5',tx:'#7878A8'},{bg:'#FFE8D5',tx:'#B88058'},{bg:'#D5F0E8',tx:'#4E8E7A'},{bg:'#F5E0E8',tx:'#A87088'},{bg:'#E0F0FF',tx:'#5888B0'},{bg:'#FFF0F0',tx:'#B87070'},{bg:'#F0F0E0',tx:'#969656'},{bg:'#E8F0E8',tx:'#688868'},{bg:'#F5E8F0',tx:'#986898'},{bg:'#FFF5E0',tx:'#B89850'},{bg:'#E0F5F5',tx:'#5A8A8A'},{bg:'#FDE8E8',tx:'#B06868'},{bg:'#E8F8E8',tx:'#509050'},{bg:'#F0E8F8',tx:'#7868A8'},{bg:'#F8F0E0',tx:'#A89860'}];
 function tc(n){for(var i=0,h=0;i<n.length;i++){h=((h<<5)-h)+n.charCodeAt(i);h|=0}return TC[Math.abs(h)%TC.length]}
 
+// ═══════ PRELOADED PIKA (73 sets from 小红书 白洛汐 全图鉴) ═══════
+var DEFAULT_PIKA=[
+{id:'p01',name:'旧日的追忆',quality:'紫色'},{id:'p02',name:'松果的追忆',quality:'紫色'},{id:'p03',name:'晴空的追忆',quality:'紫色'},
+{id:'p04',name:'橙花的追忆',quality:'紫色'},{id:'p05',name:'正红的追忆',quality:'紫色'},{id:'p06',name:'反叛的水手',quality:'紫色'},
+{id:'p07',name:'唱诗班礼赞',quality:'紫色'},{id:'p08',name:'新芽的追忆',quality:'紫色'},{id:'p09',name:'宁静星愿',quality:'紫色'},
+{id:'p10',name:'浪漫星愿',quality:'紫色'},{id:'p11',name:'明朗星愿',quality:'紫色'},{id:'p12',name:'魔法学院校服',quality:'紫色'},
+{id:'p13',name:'仪典学分院服',quality:'紫色'},{id:'p14',name:'精灵学分院服',quality:'紫色'},{id:'p15',name:'炼金学分院服',quality:'紫色'},
+{id:'p16',name:'战斗学分院服',quality:'紫色'},{id:'p17',name:'爵士鹿',quality:'紫色'},{id:'p18',name:'熔岩布丁',quality:'紫色'},
+{id:'p19',name:'蹦蹦花',quality:'紫色'},{id:'p20',name:'音速犬',quality:'紫色'},{id:'p21',name:'岚鸟',quality:'紫色'},
+{id:'p22',name:'厉毒修萝',quality:'紫色'},{id:'p23',name:'翠顶夫人',quality:'紫色'},{id:'p24',name:'卡洛儿',quality:'金色'},
+{id:'p25',name:'花魁蜂后',quality:'金色'},{id:'p26',name:'皇家狮鹫',quality:'金色'},{id:'p27',name:'星光狮',quality:'金色'},
+{id:'p28',name:'烈火守护',quality:'金色'},{id:'p29',name:'蒲公英娃娃',quality:'紫色'},{id:'p30',name:'雪灵',quality:'紫色'},
+{id:'p31',name:'圣代甜甜',quality:'紫色'},{id:'p32',name:'獠牙猪',quality:'紫色'},{id:'p33',name:'异色獠牙猪',quality:'紫色'},
+{id:'p34',name:'白金独角兽',quality:'紫色'},{id:'p35',name:'异色白金独角兽',quality:'紫色'},{id:'p36',name:'花衣蝶',quality:'紫色'},
+{id:'p37',name:'红绒十字',quality:'紫色'},{id:'p38',name:'异色红绒十字',quality:'紫色'},{id:'p39',name:'琉璃水母',quality:'紫色'},
+{id:'p40',name:'嘟嘟锅',quality:'紫色'},{id:'p41',name:'异色嘟嘟锅',quality:'紫色'},{id:'p42',name:'九幽菇',quality:'紫色'},
+{id:'p43',name:'梦悠悠',quality:'紫色'},{id:'p44',name:'雪影娃娃',quality:'紫色'},{id:'p45',name:'异色雪影娃娃',quality:'紫色'},
+{id:'p46',name:'幽冥眼',quality:'紫色'},{id:'p47',name:'电球咩咩',quality:'紫色'},{id:'p48',name:'夏日暖阳',quality:'紫色'},
+{id:'p49',name:'快乐的果实',quality:'紫色'},{id:'p50',name:'轻风省的果实',quality:'紫色'},{id:'p51',name:'糖心暖阳',quality:'紫色'},
+{id:'p52',name:'晴午革风',quality:'紫色'},{id:'p53',name:'柿红革风',quality:'紫色'},{id:'p54',name:'凛冬革风',quality:'紫色'},
+{id:'p55',name:'魔草巫灵',quality:'紫色'},{id:'p56',name:'奇丽花',quality:'紫色'},{id:'p57',name:'异色奇丽花',quality:'紫色'},
+{id:'p58',name:'魔眷鸟',quality:'紫色'},{id:'p59',name:'高脚鹬',quality:'紫色'},{id:'p60',name:'咕德帽帽',quality:'紫色'},
+{id:'p61',name:'异色咕德帽帽',quality:'紫色'},{id:'p62',name:'小丑公爵',quality:'紫色'},{id:'p63',name:'异色小丑公爵',quality:'紫色'},
+{id:'p64',name:'巨鼓象',quality:'紫色'},{id:'p65',name:'异色巨鼓象',quality:'紫色'},{id:'p66',name:'烟花伯爵',quality:'紫色'},
+{id:'p67',name:'异色烟花伯爵',quality:'紫色'},{id:'p68',name:'海豹船长',quality:'紫色'},{id:'p69',name:'千棘盔',quality:'紫色'},
+{id:'p70',name:'迷迷箱怪',quality:'紫色'},{id:'p71',name:'怖哭菇',quality:'紫色'},{id:'p72',name:'幻影灵菇',quality:'紫色'},
+{id:'p73',name:'流浪鼠',quality:'紫色'}
+];
 // ═══════ DB ═══════
 var db;
 function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open('luoke-v8',2);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('outfits'))d.createObjectStore('outfits',{keyPath:'id'});if(!d.objectStoreNames.contains('pika'))d.createObjectStore('pika',{keyPath:'id'});if(!d.objectStoreNames.contains('pikaCart'))d.createObjectStore('pikaCart',{keyPath:'id'})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
@@ -454,11 +482,11 @@ var dp=null;
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('#installBanner').classList.add('show')});
 window.addEventListener('appinstalled',function(){dp=null;$('#installBanner').classList.remove('show')});
 function regPWA(){if(!document.querySelector('link[rel=manifest]')){var l=document.createElement('link');l.rel='manifest';l.href='./manifest.json';document.head.appendChild(l)}if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){})}}
-function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v8').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
+function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v9').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
 
 // ═══════ INIT ═══════
 function refresh(){return dbAll('outfits').then(function(arr){all=arr})}
-function loadPika(){return dbAll('pika').then(function(arr){pika=arr})}
+function loadPika(){return dbAll('pika').then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DEFAULT_PIKA.forEach(function(p){chain=chain.then(function(){return dbPut('pika',p)})});return chain.then(function(){return dbAll('pika')}).then(function(arr){pika=arr})}})}
 function loadCart(){return dbAll('pikaCart').then(function(arr){cart=arr})}
 function init(){
   dbo().then(function(){
