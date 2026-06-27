@@ -334,7 +334,7 @@ function bindCropEv(){
   overlay.addEventListener("touchmove",function(e){
     if(!overlay.classList.contains("active"))return;
     if(touchMode==='pinch'&&e.touches.length>=2){
-      var nd=gd(e.touches),scl=si*(nd/di);scl=Math.max(.3,Math.min(5,scl));
+      var nd=gd(e.touches),scl=si*(nd/di);scl=Math.max(.1,Math.min(5,scl));
       var cx=(e.touches[0].clientX+e.touches[1].clientX)/2;
       var cy=(e.touches[0].clientY+e.touches[1].clientY)/2;
       st.cropTX=cx-(cx-st.cropTX)*(scl/st.cropScale);
