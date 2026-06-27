@@ -411,7 +411,7 @@ function renderCart(){
   var fullCount=0;var partialCount=0;
   pika.forEach(function(p){var cs=p.collectState||'none';if(cs==='full')fullCount++;else if(cs==='partial')partialCount++});
   var pct=pika.length?Math.round(fullCount/pika.length*100):0;
-  var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+fullCount+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn" style="margin-left:auto">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn" onclick="event.stopPropagation();manageMode=!manageMode;renderCart()">⚙</button></div><div class="cart-list">';
+  var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+fullCount+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn" style="margin-left:auto">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn" onclick="return false">⚙</button></div><div class="cart-list">';
   var list=pika.slice();if(!sortAsc)list.reverse();
   list.forEach(function(p){var inCart=isInCart(p.id),q=p.quality||"紫色",price=QP[q]||98,cs=p.collectState||'none';
     var borderColor=BC[pika.indexOf(p)%8]||'#FFE8E0';
@@ -421,6 +421,7 @@ function renderCart(){
   html+='</div></div>';main.innerHTML=html;
   document.getElementById("btnAddPika").onclick=function(){$("#pikaFormOverlay").classList.add("active")};
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;manageMode=false;renderCart()};
+  document.getElementById("btnPokedexGear").onclick=function(){manageMode=!manageMode;renderCart()};
   var curRow=null,sx=0;
   main.querySelectorAll(".cart-row-h").forEach(function(row){
     row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icon")||t.closest(".cr-img")||t.closest(".ci-quality-toggle")){curRow=null;return}curRow=row;sx=e.touches[0].clientX});
