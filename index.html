@@ -13,35 +13,36 @@
 :root{
   --mint:#7EC8A3;--mint-dk:#5DAB86;--sky:#8EC5E2;--pink:#F4B5B5;--peach:#FCD5B5;--lavender:#D5C6E0;--butter:#FFF1C1;
   --bg:#FFFBF7;--surface:#FFF;--text:#5D576B;--text2:#A098AE;
-  --border:#EBE3DA;--shadow:0 2px 12px rgba(0,0,0,.04);
+  --border:#EBE3DA;--shadow:0 2px 10px rgba(0,0,0,.04);
   --radius:12px;--safe-b:env(safe-area-inset-bottom,16px);--safe-t:env(safe-area-inset-top,0px)
 }
 html,body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:var(--bg);color:var(--text);height:100%;overflow-x:hidden;
+  background:var(--bg);color:var(--text);height:100%;overflow:hidden;
   -webkit-tap-highlight-color:transparent;user-select:none
 }
-body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
-/* bg stickers */
-.bg-stickers{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;max-width:640px;margin:0 auto}
-.bg-stickers span{position:absolute;font-size:80px;opacity:.035;animation:fs 20s ease-in-out infinite}
-.bg-stickers span:nth-child(1){top:5%;left:4%;font-size:95px;animation-delay:0s}
-.bg-stickers span:nth-child(2){top:10%;right:6%;font-size:70px;animation-delay:-3s}
-.bg-stickers span:nth-child(3){top:52%;left:2%;font-size:105px;animation-delay:-7s}
-.bg-stickers span:nth-child(4){top:68%;right:3%;font-size:78px;animation-delay:-11s}
-.bg-stickers span:nth-child(5){top:32%;left:86%;font-size:88px;animation-delay:-15s}
-.bg-stickers span:nth-child(6){top:84%;left:44%;font-size:66px;animation-delay:-18s}
-.bg-stickers span:nth-child(7){top:20%;left:32%;font-size:58px;animation-delay:-5s}
-.bg-stickers span:nth-child(8){top:76%;right:16%;font-size:72px;animation-delay:-13s}
-@keyframes fs{0%,100%{transform:translateY(0)rotate(0deg)}25%{transform:translateY(-14px)rotate(3deg)}50%{transform:translateY(-6px)rotate(-2deg)}75%{transform:translateY(-20px)rotate(1deg)}}
+#app{height:100%;display:flex;flex-direction:column;max-width:640px;margin:0 auto;position:relative}
 
-/* header */
+/* header — pure mint, no emoji */
 .header{
-  background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;
-  padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;text-align:center;position:relative;z-index:2
+  background:var(--mint);color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));
+  flex-shrink:0;position:relative;z-index:2
 }
-.header h1{font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.5px}
-.search-bar{padding:8px 14px;flex-shrink:0;display:flex;gap:6px;background:var(--bg);position:relative;z-index:2}
+.header h1{font-size:19px;text-align:center;font-weight:700;letter-spacing:2px}
+
+/* tabs */
+.tabs{display:flex;padding:8px 14px 0;gap:6px;flex-shrink:0;background:var(--mint)}
+.tab{
+  flex:1;padding:9px 0;border:none;border-radius:10px 10px 0 0;
+  background:rgba(255,255,255,.2);color:rgba(255,255,255,.75);font-size:13px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-weight:500;
+  transition:all .15s
+}
+.tab.active{background:var(--bg);color:var(--text);font-weight:700}
+.tab svg{width:18px;height:18px}
+
+/* search */
+.search-bar{padding:8px 14px;flex-shrink:0;display:flex;gap:6px;background:var(--bg)}
 .search-bar input{flex:1;padding:10px 16px;border:2px solid var(--border);border-radius:24px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
 .search-bar input:focus{border-color:var(--mint)}
 .search-bar input::placeholder{color:var(--text2)}
@@ -49,37 +50,23 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
 .search-bar.searching .btn-clear{display:inline}
 
 /* main */
-.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
+.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
-/* carousel - compact, with padding */
+/* carousel */
 .carousel-wrap{padding:10px 10px 0}
-.carousel-full{display:none;width:100%;height:180px;overflow:hidden;background:#1a1a2e;border-radius:var(--radius)}
-.carousel-full.show{display:block}
-.carousel-full canvas{width:100%;height:100%;display:block;transition:opacity .6s}
-.carousel-full .cf-overlay{position:absolute;top:0;left:10px;right:10px;height:180px;
-  background:linear-gradient(transparent 55%,rgba(0,0,0,.4));border-radius:var(--radius);
-  display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;pointer-events:none}
-.carousel-full .cf-row{display:flex;align-items:center;gap:8px}
-.carousel-full .cf-row>*{pointer-events:auto}
-.carousel-full .cf-label{color:#fff;font-size:11px;letter-spacing:1px;opacity:.75;flex:1}
-.carousel-full .cf-dots{display:flex;gap:5px;align-items:center}
-.carousel-full .cf-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:all .2s}
-.carousel-full .cf-dot.active{background:#fff;transform:scale(1.5)}
-.carousel-full .cf-btns{display:flex;gap:4px}
-.carousel-full .cf-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:12px;cursor:pointer}
+.carousel-inner{width:100%;height:180px;border-radius:var(--radius);overflow:hidden;background:#1a1a2e;position:relative}
+.carousel-inner canvas{width:100%;height:100%;display:block;transition:opacity .5s}
+.carousel-inner .ci-overlay{position:absolute;inset:0;border-radius:var(--radius);background:linear-gradient(transparent 55%,rgba(0,0,0,.35));display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;pointer-events:none}
+.carousel-inner .ci-row{display:flex;align-items:center;gap:8px}
+.carousel-inner .ci-row>*{pointer-events:auto}
+.carousel-inner .ci-label{color:#fff;font-size:11px;letter-spacing:1px;opacity:.7;flex:1}
+.carousel-inner .ci-dots{display:flex;gap:5px}
+.carousel-inner .ci-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:all .2s}
+.carousel-inner .ci-dot.active{background:#fff;transform:scale(1.5)}
+.carousel-inner .ci-btns{display:flex;gap:4px}
+.carousel-inner .ci-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:12px;cursor:pointer}
 
-/* group entry */
-.group-entry{display:flex;align-items:center;gap:10px;margin:10px 10px 0;padding:14px 16px;
-  background:linear-gradient(135deg,#FFF0F5,#FFF5EE,#F5F0FF);border-radius:var(--radius);
-  cursor:pointer;box-shadow:var(--shadow);transition:transform .12s;position:relative;z-index:3}
-.group-entry:active{transform:scale(.98)}
-.group-entry .ge-icon{font-size:30px}
-.group-entry .ge-info{flex:1}
-.group-entry .ge-title{font-size:15px;font-weight:700;color:var(--text)}
-.group-entry .ge-sub{font-size:12px;color:var(--text2);margin-top:2px}
-.group-entry .ge-arrow{font-size:18px;color:var(--mint-dk)}
-
-/* gallery grid */
+/* gallery */
 .gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
 .gallery .card{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
 .gallery .card:active{transform:scale(.97)}
@@ -88,50 +75,76 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
 .gallery .card .info{padding:8px 10px;display:flex;gap:5px;flex-wrap:wrap}
 .gallery .card .chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600}
 
-/* export/import at bottom of content */
+/* export row */
 .export-row{display:flex;gap:10px;justify-content:center;padding:8px 10px calc(8px + var(--safe-b))}
-.export-row button{padding:8px 18px;border-radius:20px;border:2px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;color:var(--text)}
-.export-row button:active{background:#FFF9F5}
+.export-row button{padding:8px 20px;border-radius:20px;border:2px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;color:var(--text)}
 
-/* groups page */
-.groups-page{position:fixed;inset:0;z-index:70;background:var(--bg);display:none;flex-direction:column;max-width:640px;margin:0 auto}
-.groups-page.active{display:flex}
-.groups-header{background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;display:flex;align-items:center;gap:10px}
-.groups-header button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px}
-.groups-header h2{font-size:18px;flex:1}
-.groups-body{flex:1;overflow-y:auto;padding:8px 10px}
-.set-list{display:flex;flex-direction:column;gap:6px}
+/* ── fashion (inline tab) ── */
+.set-list{display:flex;flex-direction:column;gap:6px;padding:10px}
 .set-group{border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
-.set-header{padding:16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:16px;color:var(--text)}
+.set-header{padding:16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:15px;color:var(--text)}
 .set-header:active{background:#FFF9F5}
-.set-header .arrow{transition:transform .2s;font-size:12px;color:var(--mint-dk)}
+.set-header .arrow{transition:transform .2s;font-size:11px;color:var(--mint-dk)}
 .set-group.open .set-header .arrow{transform:rotate(90deg)}
 .slot-list{display:none}
 .set-group.open .slot-list{display:block}
 .slot-item{padding:12px 16px 12px 28px;cursor:pointer;display:flex;align-items:center;gap:10px;border-top:1px solid #F5EFE8;font-size:14px}
 .slot-item:active{background:#FFF9F5}
-.slot-item .slot-emoji{font-size:20px}
+.slot-item .sl-emoji{font-size:20px}
 .slot-item .count{margin-left:auto;color:var(--text2);font-size:12px}
 .slot-gallery{padding:6px}
 .slot-gallery .back-btn{display:flex;align-items:center;gap:6px;padding:8px 0;margin-bottom:6px;background:none;border:none;color:var(--mint-dk);font-size:15px;cursor:pointer;font-weight:600}
 .slot-gallery .gallery-title{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
 
-/* crop modal */
-.crop-overlay{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center}
-.crop-overlay.active{display:flex}
-.crop-overlay canvas{max-width:100%;max-height:60vh;touch-action:none}
-.crop-tools{display:flex;gap:10px;margin-top:16px}
-.crop-tools button{padding:10px 18px;border-radius:20px;border:none;font-size:14px;cursor:pointer;font-weight:600}
-.crop-btn-land{background:var(--mint);color:#fff}
-.crop-btn-port{background:var(--sky);color:#fff}
-.crop-btn-done{background:#fff;color:var(--text)}
+/* ── cart ── */
+.cart-wrap{padding:10px}
+.cart-add-bar{display:flex;gap:8px;margin-bottom:10px}
+.cart-add-bar button{padding:8px 16px;border-radius:20px;border:none;background:var(--mint);color:#fff;font-size:13px;cursor:pointer;font-weight:600}
+.cart-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cart-item{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.cart-item .ci-img{width:100%;height:140px;overflow:hidden;background:#F5F0EB;position:relative;display:flex;align-items:center;justify-content:center}
+.cart-item .ci-img img{width:100%;height:100%;object-fit:cover;display:block}
+.cart-item .ci-img .ci-placeholder{font-size:48px;color:#D5CCC0}
+.cart-item .ci-info{padding:10px}
+.cart-item .ci-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.cart-item .ci-quality{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;margin-bottom:6px}
+.ci-quality-gold{background:#FFF8D6;color:#B8860B}
+.ci-quality-purple{background:#F0E0F5;color:#7D3C98}
+.cart-item .ci-buy{width:100%;padding:8px;border:none;border-radius:8px;background:var(--mint);color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.cart-item .ci-buy.in-cart{background:#F5EFE8;color:var(--text2)}
+
+/* cart sidebar */
+.cart-sidebar{position:fixed;right:16px;bottom:calc(80px + var(--safe-b));z-index:25}
+.cart-badge{width:48px;height:48px;border-radius:50%;border:none;background:var(--sky);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(142,197,226,.35);position:relative}
+.cart-badge .cb-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--pink);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
+
+.cart-panel{display:none;position:fixed;inset:0;z-index:75;background:var(--bg);flex-direction:column;max-width:640px;margin:0 auto}
+.cart-panel.active{display:flex}
+.cart-panel-header{background:var(--mint);color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));display:flex;align-items:center;gap:10px;flex-shrink:0}
+.cart-panel-header button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer}
+.cart-panel-header h2{font-size:18px;flex:1}
+.cart-panel-body{flex:1;overflow-y:auto;padding:10px}
+.cart-panel-body .cart-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cart-panel-body .cart-row img{width:48px;height:48px;object-fit:cover;border-radius:8px;background:#F5F0EB}
+.cart-panel-body .cart-row .cr-name{flex:1;font-size:14px;font-weight:600}
+.cart-panel-body .cart-row .cr-del{background:none;border:none;color:var(--pink);font-size:18px;cursor:pointer}
+.cart-panel-footer{padding:10px 16px calc(10px + var(--safe-b));border-top:1px solid var(--border);text-align:center;color:var(--text2);font-size:13px}
+
+/* add pika form */
+.form-mini{display:flex;flex-direction:column;gap:8px}
+.form-mini input,.form-mini select{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
+.form-mini input:focus,.form-mini select:focus{border-color:var(--mint)}
+.form-mini .btn-row{display:flex;gap:8px}
+.form-mini .btn-row button{flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;cursor:pointer;font-weight:600}
+.form-mini .btn-row .btn-primary{background:var(--mint);color:#fff}
+.form-mini .btn-row .btn-secondary{background:#F0EBE6;color:var(--text)}
 
 /* detail */
-.detail-overlay{position:fixed;inset:0;z-index:50;background:rgba(30,20,20,.96);display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.detail-overlay{position:fixed;inset:0;z-index:50;background:rgba(25,15,15,.96);display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .detail-overlay.active{display:flex}
 .detail-close{position:sticky;top:max(10px,var(--safe-t));align-self:flex-end;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;z-index:2;margin:10px}
 .detail-img{width:100%;display:block}
-.detail-info{padding:16px;color:#fff}
+.detail-info{padding:16px;color:#fff;overflow:visible}
 .detail-info .date{font-size:12px;color:var(--peach);margin-bottom:14px}
 .pieces{display:flex;flex-direction:column;gap:8px}
 .piece-card{background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--mint)}
@@ -145,7 +158,7 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
 /* form */
 .form-overlay{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
 .form-overlay.active{display:flex}
-.form-header{background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.form-header{background:var(--mint);color:#fff;padding:10px 16px;padding-top:max(10px,var(--safe-t));flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
 .form-header button{background:none;border:none;color:#fff;font-size:16px;cursor:pointer}
 .form-header span{font-weight:700;font-size:16px}
 .form-body{flex:1;padding:16px;overflow-y:auto}
@@ -156,46 +169,52 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
 .form-body input[type=text]::placeholder{color:var(--text2)}
 .form-body input[type=file]{margin-top:8px;font-size:14px;color:var(--text)}
 .img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius);margin-top:8px;background:#F5F0EB;display:none}
-.piece-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:10px;background:var(--surface);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.02)}
-.piece-row select{width:96px;flex-shrink:0;font-size:14px;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none;-webkit-appearance:auto;appearance:auto}
+.piece-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:10px;background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.02)}
+.piece-row select{width:96px;flex-shrink:0;font-size:14px;padding:10px 6px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
 .piece-row select:focus{border-color:var(--mint)}
 .piece-row input{flex:1;min-width:60px;font-size:14px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
 .piece-row input:focus{border-color:var(--mint)}
 .piece-row input::placeholder{color:var(--text2)}
-.piece-row .btn-remove-piece{background:none;border:none;color:var(--pink);font-size:20px;cursor:pointer;padding:2px 6px;flex-shrink:0}
-.autocomplete-wrap{position:relative;flex:1;min-width:60px}
-.autocomplete-dropdown{display:none;position:absolute;top:100%;left:0;right:0;z-index:10;background:var(--surface);border:2px solid var(--border);border-radius:10px;max-height:150px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,.04)}
-.autocomplete-dropdown.show{display:block}
-.autocomplete-dropdown .ac-item{padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #F5EFE8}
-.autocomplete-dropdown .ac-item:last-child{border-bottom:none}
-.autocomplete-dropdown .ac-item:active{background:#FFF9F5}
+.piece-row .btn-rm{background:none;border:none;color:var(--pink);font-size:20px;cursor:pointer;padding:2px 6px;flex-shrink:0}
+.ac-wrap{position:relative;flex:1;min-width:60px}
+.ac-dd{display:none;position:absolute;top:100%;left:0;right:0;z-index:10;background:var(--surface);border:2px solid var(--border);border-radius:10px;max-height:150px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+.ac-dd.show{display:block}
+.ac-dd .ac-item{padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid #F5EFE8}
+.ac-dd .ac-item:last-child{border-bottom:none}
+.ac-dd .ac-item:active{background:#FFF9F5}
 .btn-add-piece{display:none;width:100%;padding:12px;border:2px dashed #E5DBD0;border-radius:12px;background:none;color:var(--mint-dk);font-size:14px;cursor:pointer;margin-top:8px;font-weight:600}
-.btn-save{width:100%;padding:15px;background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;margin-top:18px;margin-bottom:var(--safe-b)}
+.btn-save{width:100%;padding:15px;background:var(--mint);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;margin-top:18px;margin-bottom:var(--safe-b)}
+
+/* crop */
+.crop-overlay{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center}
+.crop-overlay.active{display:flex}
+.crop-overlay canvas{max-width:100%;max-height:60vh;touch-action:none}
+.crop-tools{display:flex;gap:10px;margin-top:16px}
+.crop-tools button{padding:10px 18px;border-radius:20px;border:none;font-size:14px;cursor:pointer;font-weight:600}
+.crop-btn-land{background:var(--mint);color:#fff}
+.crop-btn-port{background:var(--sky);color:var(--text)}
+.crop-btn-done{background:#fff;color:var(--text)}
 
 /* fab */
-.fab{position:fixed;bottom:calc(20px + var(--safe-b));right:20px;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--mint),var(--sky));color:#fff;font-size:28px;box-shadow:0 6px 18px rgba(126,200,163,.3);cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;transition:transform .12s}
+.fab{position:fixed;bottom:calc(20px + var(--safe-b));right:20px;width:56px;height:56px;border-radius:50%;border:none;background:var(--mint);color:#fff;font-size:28px;box-shadow:0 6px 18px rgba(126,200,163,.3);cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;transition:transform .12s}
 .fab:active{transform:scale(.9)}
 
-/* empty */
 .empty{text-align:center;padding:60px 20px;color:var(--text2)}
-.empty .empty-icon{font-size:72px;margin-bottom:16px}
+.empty .empty-icon{font-size:60px;margin-bottom:16px}
 .empty p{margin-bottom:6px;font-size:15px;line-height:1.7}
 
-/* toast */
 .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 
-/* install */
 .install-banner{display:none;position:fixed;bottom:calc(84px + var(--safe-b));left:16px;right:16px;background:var(--surface);border-radius:var(--radius);box-shadow:0 6px 20px rgba(0,0,0,.08);padding:16px;z-index:30;align-items:center;gap:12px;border:2px solid #E0F0E8}
 .install-banner.show{display:flex}
 .install-banner .ib-text{flex:1;font-size:14px}
 .install-banner button{padding:9px 18px;border-radius:20px;border:none;background:var(--mint);color:#fff;font-size:14px;cursor:pointer;white-space:nowrap;font-weight:600}
 .install-banner .ib-close{background:none;color:var(--text2);font-size:20px;padding:4px}
 
-/* confirm */
 .confirm-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.3);display:none;align-items:center;justify-content:center}
 .confirm-overlay.active{display:flex}
-.confirm-dialog{background:var(--surface);border-radius:18px;padding:24px;max-width:300px;width:90%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.1)}
+.confirm-dialog{background:var(--surface);border-radius:18px;padding:24px;max-width:300px;width:90%;text-align:center}
 .confirm-dialog p{margin-bottom:20px;font-size:15px;line-height:1.5;color:var(--text)}
 .confirm-btns{display:flex;gap:10px}
 .confirm-btns button{flex:1;padding:11px;border-radius:12px;border:none;font-size:15px;cursor:pointer;font-weight:600}
@@ -204,33 +223,38 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
 </style>
 </head>
 <body>
-<div class="bg-stickers"><span>👗</span><span>👘</span><span>👜</span><span>👠</span><span>🧥</span><span>👒</span><span>🩰</span><span>🧣</span></div>
 
-<div class="header"><h1>✨ 洛克收集簿</h1></div>
-<div class="search-bar" id="searchBar">
-  <input type="text" id="searchInput" placeholder="🔍 搜索服装名…">
-  <button class="btn-clear" id="btnClearSearch">✕</button>
-</div>
-<div class="main" id="main"></div>
-<button class="fab" id="fab">+</button>
-
-<!-- Crop overlay -->
-<div class="crop-overlay" id="cropOverlay">
-  <canvas id="cropCanvas"></canvas>
-  <div class="crop-tools">
-    <button class="crop-btn-land" id="cropLand">📐 横版 16:9</button>
-    <button class="crop-btn-port" id="cropPort">📱 竖版 3:4</button>
-    <button class="crop-btn-done" id="cropDone">✅ 确认裁剪</button>
+<div id="app">
+  <div class="header"><h1>洛克收集簿</h1></div>
+  <div class="tabs">
+    <button class="tab active" data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首页
+    </button>
+    <button class="tab" data-tab="fashion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg>时装分组
+    </button>
+    <button class="tab" data-tab="cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>购物车
+    </button>
   </div>
+  <div class="search-bar" id="searchBar">
+    <input type="text" id="searchInput" placeholder="搜索服装名…">
+    <button class="btn-clear" id="btnClearSearch">✕</button>
+  </div>
+  <div class="main" id="main"></div>
+  <button class="fab" id="fab">+</button>
 </div>
 
-<!-- Groups page (sibling to body contents, outside any stacking-context trap) -->
-<div class="groups-page" id="groupsPage">
-  <div class="groups-header"><button id="groupsBack">← 返回</button><h2>📋 时装分组</h2></div>
-  <div class="groups-body" id="groupsBody"></div>
+<!-- cart sidebar badge -->
+<div class="cart-sidebar" id="cartSidebar"><button class="cart-badge" id="cartBadge"><span class="cb-count" id="cartCount">0</span>🛒</button></div>
+<!-- cart panel -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-panel-header"><button id="cartPanelBack">← 返回</button><h2>购物车</h2></div>
+  <div class="cart-panel-body" id="cartPanelBody"></div>
+  <div class="cart-panel-footer">继续浏览时装吧 ✨</div>
 </div>
 
-<!-- Detail -->
+<!-- detail -->
 <div class="detail-overlay" id="detailOverlay">
   <button class="detail-close" id="detailClose">✕</button>
   <img class="detail-img" id="detailImg" src="" alt="">
@@ -238,7 +262,7 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
   <div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div>
 </div>
 
-<!-- Form -->
+<!-- form -->
 <div class="form-overlay" id="formOverlay">
   <div class="form-header"><button id="formCancel">取消</button><span id="formTitle">添加搭配</span><button id="formSubmit" style="font-weight:700">保存</button></div>
   <div class="form-body">
@@ -252,28 +276,47 @@ body{display:flex;flex-direction:column;max-width:640px;margin:0 auto}
   </div>
 </div>
 
-<!-- Install / Toast / Confirm -->
+<!-- add pika form -->
+<div class="form-overlay" id="pikaFormOverlay">
+  <div class="form-header"><button id="pikaFormCancel">取消</button><span>添加皮卡时装</span><button id="pikaFormSubmit" style="font-weight:700">添加</button></div>
+  <div class="form-body">
+    <div class="form-mini">
+      <label>时装名称</label><input type="text" id="pikaName" placeholder="如: 草莓甜心">
+      <label>品质</label><select id="pikaQuality"><option value="金色">金色</option><option value="紫色">紫色</option></select>
+      <label>图片（可选）</label><input type="file" accept="image/*" id="pikaImage">
+      <button style="width:100%;padding:14px;background:var(--mint);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;margin-top:10px;cursor:pointer" id="pikaDoAdd">💾 添加到列表</button>
+    </div>
+  </div>
+</div>
+
+<!-- crop -->
+<div class="crop-overlay" id="cropOverlay"><canvas id="cropCanvas"></canvas>
+  <div class="crop-tools"><button class="crop-btn-land" id="cropLand">📐 横版 16:9</button><button class="crop-btn-port" id="cropPort">📱 竖版 3:4</button><button class="crop-btn-done" id="cropDone">✅ 确认裁剪</button></div>
+</div>
+
 <div class="install-banner" id="installBanner"><span class="ib-text">📲 添加到桌面，随时翻阅</span><button id="installBtn">安装</button><button class="ib-close" id="installDismiss">✕</button></div>
 <div class="toast" id="toast"></div>
 <div class="confirm-overlay" id="confirmOverlay"><div class="confirm-dialog"><p id="confirmMsg"></p><div class="confirm-btns"><button class="btn-cancel" id="confirmCancel">取消</button><button class="btn-ok" id="confirmOk">确认</button></div></div></div>
 
 <script>
-(function(){
-'use strict';
+(function(){'use strict';
 
 var SLOTS=['头发','外套','上装','下装','袜子','鞋子','背包','帽子'];
-var EM={头发:'💇',外套:'🧥',上装:'👕',下装:'👖',袜子:'🧦',鞋子:'👟',背包:'🎒',帽子:'🎩'};
 var TC=[{bg:'#FFE8E0',tx:'#C4887E'},{bg:'#FFECD2',tx:'#C4985E'},{bg:'#FFF8D6',tx:'#B89E3E'},{bg:'#E8F5E0',tx:'#6E9E6E'},{bg:'#D8F0F5',tx:'#5E8E9E'},{bg:'#F0E0F5',tx:'#8E6EAE'},{bg:'#FFE0EC',tx:'#B86E88'},{bg:'#E0F0E8',tx:'#5E987A'},{bg:'#FFF0E5',tx:'#C48A60'},{bg:'#E8E8F5',tx:'#7878A8'},{bg:'#FFE8D5',tx:'#B88058'},{bg:'#D5F0E8',tx:'#4E8E7A'},{bg:'#F5E0E8',tx:'#A87088'},{bg:'#E0F0FF',tx:'#5888B0'},{bg:'#FFF0F0',tx:'#B87070'},{bg:'#F0F0E0',tx:'#969656'},{bg:'#E8F0E8',tx:'#688868'},{bg:'#F5E8F0',tx:'#986898'},{bg:'#FFF5E0',tx:'#B89850'},{bg:'#E0F5F5',tx:'#5A8A8A'},{bg:'#FDE8E8',tx:'#B06868'},{bg:'#E8F8E8',tx:'#509050'},{bg:'#F0E8F8',tx:'#7868A8'},{bg:'#F8F0E0',tx:'#A89860'}];
 function tc(n){for(var i=0,h=0;i<n.length;i++){h=((h<<5)-h)+n.charCodeAt(i);h|=0}return TC[Math.abs(h)%TC.length]}
 
-// DB
-var db;
-function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open('luoke-v6',1);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('outfits'))d.createObjectStore('outfits',{keyPath:'id'})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
-function dbp(o){return new Promise(function(ok,fail){var t=db.transaction('outfits','readwrite');t.objectStore('outfits').put(o);t.oncomplete=ok;t.onerror=fail})}
-function dbd(id){return new Promise(function(ok,fail){var t=db.transaction('outfits','readwrite');t.objectStore('outfits').delete(id);t.oncomplete=ok;t.onerror=fail})}
-function dba(){return new Promise(function(ok,fail){var t=db.transaction('outfits','readonly');var r=t.objectStore('outfits').getAll();r.onsuccess=function(){ok(r.result||[])};r.onerror=fail})}
+// ═══════ PRELOADED PIKA FASHIONS ═══════
+var DEFAULT_PIKA=[{id:'p01',name:'治愈童话书',quality:'金色'},{id:'p02',name:'晚安睡衣派对',quality:'金色'},{id:'p03',name:'嘭！炼金药剂',quality:'金色'},{id:'p04',name:'野外考察队',quality:'金色'},{id:'p05',name:'毛绒巡林者',quality:'紫色'},{id:'p06',name:'重逢圆舞曲',quality:'紫色'},{id:'p07',name:'誓约圣骑士',quality:'紫色'},{id:'p08',name:'壁炉边伙伴',quality:'紫色'},{id:'p09',name:'反叛的水手',quality:'紫色'},{id:'p10',name:'唱诗班礼赞',quality:'紫色'},{id:'p11',name:'天鹅套装',quality:'金色'},{id:'p12',name:'游侠装饰',quality:'金色'},{id:'p13',name:'岚鸟套装',quality:'金色'},{id:'p14',name:'烈火守护',quality:'金色'},{id:'p15',name:'黄蜂后',quality:'金色'},{id:'p16',name:'星光套装',quality:'金色'},{id:'p17',name:'卡洛尔套装',quality:'金色'},{id:'p18',name:'花魁蜂后',quality:'金色'},{id:'p19',name:'圣代甜甜',quality:'紫色'},{id:'p20',name:'雪灵',quality:'紫色'},{id:'p21',name:'蒲公英印象',quality:'紫色'},{id:'p22',name:'宁静星愿',quality:'紫色'},{id:'p23',name:'战斗学分院服',quality:'紫色'},{id:'p24',name:'松果的追忆',quality:'紫色'},{id:'p25',name:'草果的追忆',quality:'紫色'},{id:'p26',name:'新芽的追忆',quality:'紫色'},{id:'p27',name:'季风的追忆',quality:'紫色'},{id:'p28',name:'晴空追忆',quality:'紫色'},{id:'p29',name:'橙花追忆',quality:'紫色'},{id:'p30',name:'曲奇的追忆',quality:'紫色'}];
 
-// Utils
+// ═══════ DB ═══════
+var db;
+function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open('luoke-v7',2);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains('outfits'))d.createObjectStore('outfits',{keyPath:'id'});if(!d.objectStoreNames.contains('pika'))d.createObjectStore('pika',{keyPath:'id'});if(!d.objectStoreNames.contains('pikaCart'))d.createObjectStore('pikaCart',{keyPath:'id'})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
+function dbPut(store,o){return new Promise(function(ok,fail){var t=db.transaction(store,'readwrite');t.objectStore(store).put(o);t.oncomplete=ok;t.onerror=fail})}
+function dbDel(store,id){return new Promise(function(ok,fail){var t=db.transaction(store,'readwrite');t.objectStore(store).delete(id);t.oncomplete=ok;t.onerror=fail})}
+function dbAll(store){return new Promise(function(ok,fail){var t=db.transaction(store,'readonly');var r=t.objectStore(store).getAll();r.onsuccess=function(){ok(r.result||[])};r.onerror=fail})}
+function dbGet(store,id){return new Promise(function(ok,fail){var t=db.transaction(store,'readonly');var r=t.objectStore(store).get(id);r.onsuccess=function(){ok(r.result)};r.onerror=fail})}
+
+// ═══════ UTILS ═══════
 function $(s){return document.querySelector(s)}
 function uid(){return crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)}
 function fd(ts){var d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -281,299 +324,171 @@ function bu(b){return b?URL.createObjectURL(b):''}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function toast(m){var el=$('#toast');el.textContent=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},2000)}
 function confirm(m){return new Promise(function(ok){$('#confirmMsg').textContent=m;$('#confirmOverlay').classList.add('active');function c(v){$('#confirmOverlay').classList.remove('active');$('#confirmOk').onclick=null;$('#confirmCancel').onclick=null;ok(v)}$('#confirmOk').onclick=function(){c(true)};$('#confirmCancel').onclick=function(){c(false)}})}
+function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(sz/img.width,sz/img.height,1);var c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){ok(b)},'image/jpeg',.85)};img.src=bu(blob)})}
+function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
-// Thumbnail
-function mkThumb(blob,sz){sz=sz||320;return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(sz/img.width,sz/img.height,1);var c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){ok(b)},'image/jpeg',.7)};img.src=bu(blob)})}
-function imgSize(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
+// ═══════ STATE ═══════
+var all=[],pika=[],cart=[];
+var st={tab:'home',q:'',set:null,slot:null,did:null,ci:0,ct:null,cp:true,slides:[],cropFile:null,cropImg:null,cropRatio:16/9,cropX:0,cropY:0,cropW:0,cropH:0,cropResolve:null,eid:null};
 
-// State
-var all=[];
-var st={q:'',set:null,slot:null,did:null,ci:0,ct:null,cp:true,slides:[],
-  // crop state
-  cropFile:null,cropImg:null,cropRatio:16/9,cropX:0,cropY:0,cropW:0,cropH:0,cropResolve:null,
-  // form state
-  eid:null
-};
-
-// Autocomplete
+// ═══════ AUTOCOMPLETE ═══════
 function setNames(){var s=new Set();all.forEach(function(o){o.pieces.forEach(function(p){if(p.setName)s.add(p.setName)})});return Array.from(s).sort()}
 function ac(input,valsFn){
   var wrap=input.parentElement;
-  if(!wrap.classList.contains('autocomplete-wrap')){
-    wrap=document.createElement('div');wrap.className='autocomplete-wrap';
-    input.parentElement.insertBefore(wrap,input);wrap.appendChild(input);
-    var dd=document.createElement('div');dd.className='autocomplete-dropdown';wrap.appendChild(dd);
-  }
-  var dd=wrap.querySelector('.autocomplete-dropdown');
-  input.addEventListener('input',function(){
-    var vals=typeof valsFn==='function'?valsFn():valsFn,q=input.value.trim().toLowerCase();dd.innerHTML='';
-    if(!q){dd.classList.remove('show');return}
-    var m=vals.filter(function(v){return v.toLowerCase().indexOf(q)!==-1}).slice(0,8);
-    if(!m.length){dd.classList.remove('show');return}
-    m.forEach(function(v){var el=document.createElement('div');el.className='ac-item';el.textContent=v;el.addEventListener('pointerdown',function(e){e.preventDefault();input.value=v;dd.classList.remove('show')});dd.appendChild(el)});
-    dd.classList.add('show');
-  });
+  if(!wrap.classList.contains('ac-wrap')){wrap=document.createElement('div');wrap.className='ac-wrap';input.parentElement.insertBefore(wrap,input);wrap.appendChild(input);var dd=document.createElement('div');dd.className='ac-dd';wrap.appendChild(dd)}
+  var dd=wrap.querySelector('.ac-dd');
+  input.addEventListener('input',function(){var vals=typeof valsFn==='function'?valsFn():valsFn,q=input.value.trim().toLowerCase();dd.innerHTML='';if(!q){dd.classList.remove('show');return}var m=vals.filter(function(v){return v.toLowerCase().indexOf(q)!==-1}).slice(0,8);if(!m.length){dd.classList.remove('show');return}m.forEach(function(v){var el=document.createElement('div');el.className='ac-item';el.textContent=v;el.addEventListener('pointerdown',function(e){e.preventDefault();input.value=v;dd.classList.remove('show')});dd.appendChild(el)});dd.classList.add('show')});
   input.addEventListener('blur',function(){setTimeout(function(){dd.classList.remove('show')},200)});
 }
 
-// Filter
+// ═══════ FILTER ═══════
 function filt(q){if(!q)return all.slice().reverse();var lq=q.toLowerCase();return all.filter(function(o){return o.pieces.some(function(p){return p.setName.toLowerCase().indexOf(lq)!==-1})}).reverse()}
 
 // ═══════ CROP ═══════
-function doCrop(file){return new Promise(function(ok){
-  st.cropFile=file;st.cropResolve=ok;st.cropRatio=16/9;
-  var img=new Image();
-  img.onload=function(){
-    st.cropImg=img;
-    // Init crop rect
-    var r=st.cropRatio,iw=img.width,ih=img.height;
-    if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}
-    else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}
-    drawCrop();$('#cropOverlay').classList.add('active');
-  };
-  img.src=bu(file);
-})}
-
-function drawCrop(){
-  var cvs=$('#cropCanvas'),ctx=cvs.getContext('2d');
-  var img=st.cropImg,rw=Math.min(window.innerWidth-20,500),rh=window.innerHeight*.55;
-  var s=Math.min(rw/img.width,rh/img.height);cvs.width=img.width*s;cvs.height=img.height*s;
-  cvs.style.width=cvs.width+'px';cvs.style.height=cvs.height+'px';
-  ctx.drawImage(img,0,0,cvs.width,cvs.height);
-  // Dim overlay
-  ctx.fillStyle='rgba(0,0,0,.5)';
-  ctx.fillRect(0,0,cvs.width,cvs.height);
-  // Clear crop region
-  var cx=st.cropX*s,cy=st.cropY*s,cw=st.cropW*s,ch=st.cropH*s;
-  ctx.clearRect(cx,cy,cw,ch);
-  ctx.drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,cx,cy,cw,ch);
-  // Border
-  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(cx,cy,cw,ch);
-}
-
-// Crop touch handling
-function bindCropEvents(){
-  var cvs=$('#cropCanvas'),dragging=false,lastX=0,lastY=0;
-  cvs.addEventListener('touchstart',function(e){dragging=true;lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;e.preventDefault()});
-  cvs.addEventListener('touchmove',function(e){
-    if(!dragging)return;
-    var dx=e.touches[0].clientX-lastX,dy=e.touches[0].clientY-lastY;
-    var s=st.cropImg;if(!s)return;
-    var scale=st.cropImg.width/cvs.width;
-    st.cropX=Math.max(0,Math.min(st.cropImg.width-st.cropW,st.cropX-dx*scale));
-    st.cropY=Math.max(0,Math.min(st.cropImg.height-st.cropH,st.cropY-dy*scale));
-    lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
-    drawCrop();e.preventDefault();
-  });
-  cvs.addEventListener('touchend',function(){dragging=false});
-}
-
-function setCropRatio(r){
-  st.cropRatio=r;var img=st.cropImg,iw=img.width,ih=img.height;
-  if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}
-  else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}
-  drawCrop();
-}
-
-function applyCrop(){
-  var img=st.cropImg,c=document.createElement('canvas');
-  c.width=st.cropW;c.height=st.cropH;
-  c.getContext('2d').drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,0,0,st.cropW,st.cropH);
-  c.toBlob(function(b){
-    $('#cropOverlay').classList.remove('active');
-    var r=st.cropResolve;st.cropResolve=null;st.cropImg=null;
-    if(r)r(b);
-  },'image/jpeg',.92);
-}
+function doCrop(file){return new Promise(function(ok){st.cropFile=file;st.cropResolve=ok;st.cropRatio=16/9;var img=new Image();img.onload=function(){st.cropImg=img;var r=st.cropRatio,iw=img.width,ih=img.height;if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}drawCrop();$('#cropOverlay').classList.add('active')};img.src=bu(file)})}
+function drawCrop(){var cvs=$('#cropCanvas'),ctx=cvs.getContext('2d'),img=st.cropImg,rw=Math.min(window.innerWidth-20,500),rh=window.innerHeight*.55,s=Math.min(rw/img.width,rh/img.height);cvs.width=img.width*s;cvs.height=img.height*s;cvs.style.width=cvs.width+'px';cvs.style.height=cvs.height+'px';ctx.drawImage(img,0,0,cvs.width,cvs.height);ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(0,0,cvs.width,cvs.height);var cx=st.cropX*s,cy=st.cropY*s,cw=st.cropW*s,ch=st.cropH*s;ctx.clearRect(cx,cy,cw,ch);ctx.drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,cx,cy,cw,ch);ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(cx,cy,cw,ch)}
+function bindCropEv(){var cvs=$('#cropCanvas'),drag=false,lx=0,ly=0;cvs.addEventListener('touchstart',function(e){drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;e.preventDefault()});cvs.addEventListener('touchmove',function(e){if(!drag)return;var dx=e.touches[0].clientX-lx,dy=e.touches[0].clientY-ly,img=st.cropImg;if(!img)return;var sc=img.width/cvs.width;st.cropX=Math.max(0,Math.min(img.width-st.cropW,st.cropX-dx*sc));st.cropY=Math.max(0,Math.min(img.height-st.cropH,st.cropY-dy*sc));lx=e.touches[0].clientX;ly=e.touches[0].clientY;drawCrop();e.preventDefault()});cvs.addEventListener('touchend',function(){drag=false})}
+function setCropRatio(r){st.cropRatio=r;var img=st.cropImg,iw=img.width,ih=img.height;if(iw/ih>r){st.cropH=ih;st.cropW=ih*r;st.cropX=(iw-st.cropW)/2;st.cropY=0}else{st.cropW=iw;st.cropH=iw/r;st.cropX=0;st.cropY=(ih-st.cropH)/2}drawCrop()}
+function applyCrop(){var img=st.cropImg,c=document.createElement('canvas');c.width=st.cropW;c.height=st.cropH;c.getContext('2d').drawImage(img,st.cropX,st.cropY,st.cropW,st.cropH,0,0,st.cropW,st.cropH);c.toBlob(function(b){$('#cropOverlay').classList.remove('active');var r=st.cropResolve;st.cropResolve=null;st.cropImg=null;if(r)r(b)},'image/jpeg',.92)}
 
 // ═══════ CAROUSEL ═══════
-function buildSlides(){
-  var slides=[],land=[],port=[];
-  all.forEach(function(o){var iw=o.imageWidth,ih=o.imageHeight;if(iw&&ih){if(iw>=ih)land.push(o);else port.push(o)}else{land.push(o)}});
-  land.forEach(function(o){slides.push({t:'s',items:[o]})});
-  port.sort(function(){return Math.random()-.5});
-  for(var i=0;i<port.length;i+=2){if(i+1<port.length)slides.push({t:'p',items:[port[i],port[i+1]]});else slides.push({t:'s',items:[port[i]]})}
-  slides.sort(function(){return Math.random()-.5});
-  return slides;
-}
-function drawSlide(slide,cvs){
-  var dpr=window.devicePixelRatio||1,cw=cvs.width/dpr,ch=cvs.height/dpr,ctx=cvs.getContext('2d');ctx.clearRect(0,0,cw,ch);
-  if(slide.t==='s'){var o=slide.items[0],img=new Image();img.onload=function(){var s=Math.min(cw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh)};img.src=bu(o.image)}
-  else{var hw=cw/2;slide.items.forEach(function(o,i){var img=new Image();img.onload=function(){var s=Math.min(hw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,i*hw+(hw-dw)/2,(ch-dh)/2,dw,dh);if(i===0){ctx.fillStyle='rgba(255,255,255,.06)';ctx.fillRect(hw-1,0,2,ch)}};img.src=bu(o.image)})}
-}
+function buildSlides(){var slides=[],land=[],port=[];all.forEach(function(o){var iw=o.imageWidth,ih=o.imageHeight;if(iw&&ih){if(iw>=ih)land.push(o);else port.push(o)}else{land.push(o)}});land.forEach(function(o){slides.push({t:'s',items:[o]})});port.sort(function(){return Math.random()-.5});for(var i=0;i<port.length;i+=2){if(i+1<port.length)slides.push({t:'p',items:[port[i],port[i+1]]});else slides.push({t:'s',items:[port[i]]})}slides.sort(function(){return Math.random()-.5});return slides}
+function drawSlide(slide,cvs){var dpr=window.devicePixelRatio||1,cw=cvs.width/dpr,ch=cvs.height/dpr,ctx=cvs.getContext('2d');ctx.clearRect(0,0,cw,ch);if(slide.t==='s'){var o=slide.items[0],img=new Image();img.onload=function(){var s=Math.min(cw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh)};img.src=bu(o.image)}else{var hw=cw/2;slide.items.forEach(function(o,i){var img=new Image();img.onload=function(){var s=Math.min(hw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,i*hw+(hw-dw)/2,(ch-dh)/2,dw,dh);if(i===0){ctx.fillStyle='rgba(255,255,255,.06)';ctx.fillRect(hw-1,0,2,ch)}};img.src=bu(o.image)})}}
 function renderCarousel(){
-  var wrap=document.getElementById('carouselWrap'),el=document.getElementById('carouselEl');
+  var wrap=document.getElementById('cw'),el=document.getElementById('ce');
   if(!all.length){if(el)el.style.display='none';return}
   st.slides=buildSlides();if(!st.slides.length){if(el)el.style.display='none';return}st.ci=0;
-  if(!wrap){wrap=document.createElement('div');wrap.id='carouselWrap';wrap.className='carousel-wrap';el=document.createElement('div');el.id='carouselEl';el.className='carousel-full show';el.innerHTML='<canvas id="carouselCanvas"></canvas><div class="cf-overlay"><div class="cf-row"><span class="cf-label">🎡 灵感轮播</span><div class="cf-dots" id="carouselDots"></div><div class="cf-btns"><button class="cf-btn" id="carouselPrev">◀</button><button class="cf-btn" id="carouselPlay">⏯</button><button class="cf-btn" id="carouselNext">▶</button></div></div></div>';wrap.appendChild(el);$('#main').insertBefore(wrap,$('#main').firstChild);bindCarousel(el)}
-  else{el.style.display='block'}
-  upDots();loadSlide();startTimer();
-}
-function bindCarousel(el){
-  var cvs=el.querySelector('#carouselCanvas');
-  function sz(){var rect=cvs.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cvs.width=rect.width*dpr;cvs.height=rect.height*dpr;cvs.style.width=rect.width+'px';cvs.style.height=rect.height+'px';cvs.getContext('2d').setTransform(1,0,0,1,0,0);cvs.getContext('2d').scale(dpr,dpr)}sz();window.addEventListener('resize',function(){sz();loadSlide()});
-  el.querySelector('#carouselPrev').addEventListener('click',function(){st.ci=(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()});
-  el.querySelector('#carouselNext').addEventListener('click',function(){st.ci=(st.ci+1)%st.slides.length;loadSlide();startTimer()});
-  el.querySelector('#carouselPlay').addEventListener('click',function(){st.cp=!st.cp;this.textContent=st.cp?'⏯':'▶';if(st.cp)startTimer();else clearInterval(st.ct)});
-  var tx=0;el.addEventListener('touchstart',function(e){tx=e.touches[0].clientX});el.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){st.ci=dx<0?(st.ci+1)%st.slides.length:(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()}});
-}
-function upDots(){var dots=$('#carouselDots');if(!dots)return;var h='';for(var i=0;i<st.slides.length;i++)h+='<button class="cf-dot'+(i===st.ci?' active':'')+'" data-i="'+i+'"></button>';dots.innerHTML=h;dots.querySelectorAll('.cf-dot').forEach(function(d){d.addEventListener('click',function(){st.ci=parseInt(this.dataset.i);loadSlide();startTimer()})})}
+  if(!wrap){wrap=document.createElement('div');wrap.id='cw';wrap.className='carousel-wrap';el=document.createElement('div');el.id='ce';el.className='carousel-inner';el.innerHTML='<canvas id="carouselCanvas"></canvas><div class="ci-overlay"><div class="ci-row"><span class="ci-label">🎡 灵感轮播</span><div class="ci-dots" id="carouselDots"></div><div class="ci-btns"><button class="ci-btn" id="carouselPrev">◀</button><button class="ci-btn" id="carouselPlay">⏯</button><button class="ci-btn" id="carouselNext">▶</button></div></div></div>';wrap.appendChild(el);$('#main').insertBefore(wrap,$('#main').firstChild);bindCarousel(el)}else{el.style.display='block'}upDots();loadSlide();startTimer()}
+function bindCarousel(el){var cvs=el.querySelector('#carouselCanvas');function sz(){var rect=cvs.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cvs.width=rect.width*dpr;cvs.height=rect.height*dpr;cvs.style.width=rect.width+'px';cvs.style.height=rect.height+'px';cvs.getContext('2d').setTransform(1,0,0,1,0,0);cvs.getContext('2d').scale(dpr,dpr)}sz();window.addEventListener('resize',function(){sz();loadSlide()});el.querySelector('#carouselPrev').addEventListener('click',function(){st.ci=(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()});el.querySelector('#carouselNext').addEventListener('click',function(){st.ci=(st.ci+1)%st.slides.length;loadSlide();startTimer()});el.querySelector('#carouselPlay').addEventListener('click',function(){st.cp=!st.cp;this.textContent=st.cp?'⏯':'▶';if(st.cp)startTimer();else clearInterval(st.ct)});var tx=0;el.addEventListener('touchstart',function(e){tx=e.touches[0].clientX});el.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){st.ci=dx<0?(st.ci+1)%st.slides.length:(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()}})}
+function upDots(){var dots=$('#carouselDots');if(!dots)return;var h='';for(var i=0;i<st.slides.length;i++)h+='<button class="ci-dot'+(i===st.ci?' active':'')+'" data-i="'+i+'"></button>';dots.innerHTML=h;dots.querySelectorAll('.ci-dot').forEach(function(d){d.addEventListener('click',function(){st.ci=parseInt(this.dataset.i);loadSlide();startTimer()})})}
 function loadSlide(){var cvs=document.getElementById('carouselCanvas');if(!cvs||!st.slides.length)return;var s=st.slides[st.ci];if(s)drawSlide(s,cvs);upDots()}
 function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=setInterval(function(){st.ci=(st.ci+1)%st.slides.length;loadSlide()},3500)}
-function stopTimer(){clearInterval(st.ct);st.ct=null}
 
-// ═══════ HOMEPAGE ═══════
-function home(){
-  var main=$('#main'),outfits=filt(st.q);
-  // Remove old carousel wrap
-  var cw=document.getElementById('carouselWrap');if(cw)cw.remove();
+// ═══════ RENDER: HOME ═══════
+function renderHome(){
+  $('#fab').style.display='flex';$('#cartSidebar').style.display='block';
+  var main=$('#main'),outfits=filt(st.q),cw=document.getElementById('cw');if(cw)cw.remove();
   var html='';
-  if(!outfits.length){html='<div class="empty"><div class="empty-icon">📸</div><p>还没有收藏穿搭</p><p>点击右下角 <b>+</b> 添加游戏截图吧</p></div>'}
-  else{
-    var nGroups=buildTree().length;
-    // Group entry
-    html+='<div class="group-entry" id="ge"><span class="ge-icon">👔</span><div class="ge-info"><div class="ge-title">时装分组</div><div class="ge-sub">共 '+nGroups+' 个服装组 · 点击查看</div></div><span class="ge-arrow">▶</span></div>';
-    // Gallery
-    html+='<div class="gallery">';
-    outfits.forEach(function(o){
-      var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});
-      var chips='';sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+';color:'+c.tx+'">'+esc(s)+'</span>'});
-      html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+'</div></div>';
-    });
-    html+='</div>';
-    // Export/import at the very bottom
-    html+='<div class="export-row"><button id="btnExport">📤 导出数据</button><button id="btnImport">📥 导入数据</button></div>';
-  }
+  if(!outfits.length){html+='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>还没有收藏穿搭</p><p>点击右下角 <b>+</b> 添加游戏截图吧</p></div>'}
+  else{html+='<div class="gallery">';outfits.forEach(function(o){var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});var chips='';sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+';color:'+c.tx+'">'+esc(s)+'</span>'});html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+'</div></div>'});html+='</div>';html+='<div class="export-row"><button id="btnExport">📤 导出数据</button><button id="btnImport">📥 导入数据</button></div>'}
   main.innerHTML=html;
-  // Bind
   main.querySelectorAll('.card').forEach(function(c){c.addEventListener('click',function(){showDetail(c.dataset.id)})});
-  // Group entry — direct onclick, simplest possible
-  var ge=document.getElementById('ge');if(ge){ge.onclick=function(e){e.stopPropagation();openGroups()}}
-  // Export/import (re-bind since they're now in content)
   var be=document.getElementById('btnExport');if(be)be.onclick=exportData;
   var bi=document.getElementById('btnImport');if(bi)bi.onclick=importData;
-  // Carousel
   renderCarousel();
 }
 
-// ═══════ GROUPS ═══════
-function openGroups(){renderGroups();$('#groupsPage').classList.add('active');document.body.style.overflow='hidden'}
-function closeGroups(){$('#groupsPage').classList.remove('active');document.body.style.overflow='';st.set=null;st.slot=null}
-function buildTree(){
-  var tree=new Map();
-  all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(!tree.has(sn))tree.set(sn,new Map());var slots=tree.get(sn);if(!slots.has(p.slot))slots.set(p.slot,new Set());slots.get(p.slot).add(o.id)})});
-  var entries=Array.from(tree.entries());entries.sort(function(a,b){if(a[0]==='未分组')return 1;if(b[0]==='未分组')return -1;return a[0].localeCompare(b[0],'zh')});
-  return entries;
-}
-function renderGroups(){
-  var body=$('#groupsBody');if(st.set&&st.slot){renderSlotG();return}
-  if(!all.length){body.innerHTML='<div class="empty"><div class="empty-icon">👔</div><p>还没有收藏搭配</p><p>添加搭配后时装会自动归类到这里</p></div>';return}
+// ═══════ RENDER: FASHION ═══════
+function renderFashion(){
+  $('#fab').style.display='flex';$('#cartSidebar').style.display='block';
+  var cw=document.getElementById('cw');if(cw)cw.remove();
+  if(st.set&&st.slot){renderSlotG();return}var main=$('#main');
+  if(!all.length){main.innerHTML='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>还没有收藏搭配</p><p>添加搭配后时装会自动归类到这里</p></div>';return}
   var tree=buildTree(),html='<div class="set-list">';
-  tree.forEach(function(slots,sn){
-    var isOpen=st.set===sn,total=new Set();slots.forEach(function(ids){ids.forEach(function(id){total.add(id)})});
-    html+='<div class="set-group'+(isOpen?' open':'')+'" data-set="'+esc(sn)+'">';
-    html+='<div class="set-header"><span>👔 '+esc(sn)+'</span><span style="font-size:12px;color:var(--text2)">'+total.size+'张</span><span class="arrow">▶</span></div><div class="slot-list">';
-    var se=Array.from(slots.entries());se.sort(function(a,b){return SLOTS.indexOf(a[0])-SLOTS.indexOf(b[0])});
-    se.forEach(function(e){html+='<div class="slot-item" data-set="'+esc(sn)+'" data-slot="'+esc(e[0])+'"><span class="slot-emoji">'+(EM[e[0]]||'?')+'</span><span>'+esc(e[0])+'</span><span class="count">'+e[1].size+'张</span></div>'});
+  tree.forEach(function(slots,sn){var isOpen=st.set===sn,total=new Set();slots.forEach(function(ids){ids.forEach(function(id){total.add(id)})});html+='<div class="set-group'+(isOpen?' open':'')+'" data-set="'+esc(sn)+'"><div class="set-header"><span>👔 '+esc(sn)+'</span><span style="font-size:12px;color:var(--text2)">'+total.size+'张</span><span class="arrow">▶</span></div><div class="slot-list">';var se=Array.from(slots.entries());se.sort(function(a,b){return SLOTS.indexOf(a[0])-SLOTS.indexOf(b[0])});se.forEach(function(e){var em='?';var si=SLOTS.indexOf(e[0]);if(si>=0&&si<8)em=String.fromCodePoint(0x1F453+si);html+='<div class="slot-item" data-set="'+esc(sn)+'" data-slot="'+esc(e[0])+'"><span class="sl-emoji">'+em+'</span><span>'+esc(e[0])+'</span><span class="count">'+e[1].size+'张</span></div>'});html+='</div></div>'});html+='</div>';main.innerHTML=html;
+  main.querySelectorAll('.set-header').forEach(function(h){h.onclick=function(){var sn=h.parentElement.dataset.set;st.set=st.set===sn?null:sn;renderFashion()}});
+  main.querySelectorAll('.slot-item').forEach(function(item){item.onclick=function(){st.set=item.dataset.set;st.slot=item.dataset.slot;renderFashion()}});
+}
+function buildTree(){var tree=new Map();all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(!tree.has(sn))tree.set(sn,new Map());var sl=tree.get(sn);if(!sl.has(p.slot))sl.set(p.slot,new Set());sl.get(p.slot).add(o.id)})});var e=Array.from(tree.entries());e.sort(function(a,b){if(a[0]==='未分组')return 1;if(b[0]==='未分组')return -1;return a[0].localeCompare(b[0],'zh')});return e}
+function renderSlotG(){var main=$('#main'),ids=new Set();all.forEach(function(o){o.pieces.forEach(function(p){if((p.setName||'未分组')===st.set&&p.slot===st.slot)ids.add(o.id)})});var outfits=all.filter(function(o){return ids.has(o.id)}).reverse(),html='<div class="slot-gallery"><button class="back-btn" id="btnSlotBack">← 返回时装列表</button><div class="gallery-title">'+esc(st.set)+' · '+esc(st.slot)+' ('+outfits.length+'张)</div>';if(!outfits.length){html+='<div class="empty"><p>该槽位暂无图片</p></div>'}else{html+='<div class="gallery">';outfits.forEach(function(o){html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info"><span class="chip" style="background:'+tc(st.set).bg+';color:'+tc(st.set).tx+'">'+esc(st.set)+'</span></div></div>'});html+='</div>'}html+='</div>';main.innerHTML=html;var bb=$('#btnSlotBack');if(bb)bb.onclick=function(){st.slot=null;renderFashion()};main.querySelectorAll('.card').forEach(function(c){c.onclick=function(){showDetail(c.dataset.id)}})}
+
+// ═══════ RENDER: CART ═══════
+function cartCount(){return cart.length}
+function updateCartBadge(){$('#cartCount').textContent=cartCount()}
+function isInCart(pid){return cart.some(function(x){return x.id===pid})}
+function renderCart(){
+  $('#fab').style.display='none';$('#cartSidebar').style.display='none';
+  var cw=document.getElementById('cw');if(cw)cw.remove();var main=$('#main'),html='<div class="cart-wrap">';
+  html+='<div class="cart-add-bar"><button id="btnAddPika">+ 添加皮卡时装</button><span style="font-size:12px;color:var(--text2);display:flex;align-items:center">共 '+pika.length+' 款</span></div>';
+  html+='<div class="cart-list">';
+  pika.forEach(function(p){
+    var inCart=isInCart(p.id);
+    html+='<div class="cart-item"><div class="ci-img">';
+    if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}
+    else{html+='<span class="ci-placeholder">👔</span>'}
+    html+='</div><div class="ci-info"><div class="ci-name">'+esc(p.name)+'</div>';
+    if(p.quality==='金色')html+='<span class="ci-quality ci-quality-gold">✦ 金色</span>';
+    else html+='<span class="ci-quality ci-quality-purple">◇ 紫色</span>';
+    html+='<button class="ci-buy'+(inCart?' in-cart':'')+'" data-pid="'+p.id+'">'+(inCart?'✓ 已加入':'+ 加入购物车')+'</button>';
     html+='</div></div>';
   });
-  html+='</div>';body.innerHTML=html;
-  body.querySelectorAll('.set-header').forEach(function(h){h.addEventListener('click',function(){var sn=h.parentElement.dataset.set;st.set=st.set===sn?null:sn;renderGroups()})});
-  body.querySelectorAll('.slot-item').forEach(function(item){item.addEventListener('click',function(){st.set=item.dataset.set;st.slot=item.dataset.slot;renderGroups()})});
+  html+='</div></div>';main.innerHTML=html;
+  document.getElementById('btnAddPika').onclick=function(){$('#pikaFormOverlay').classList.add('active')};
+  main.querySelectorAll('.ci-buy').forEach(function(btn){btn.onclick=function(){toggleCart(this.dataset.pid,this)}});
 }
-function renderSlotG(){
-  var body=$('#groupsBody'),ids=new Set();
-  all.forEach(function(o){o.pieces.forEach(function(p){if((p.setName||'未分组')===st.set&&p.slot===st.slot)ids.add(o.id)})});
-  var outfits=all.filter(function(o){return ids.has(o.id)}).reverse(),html='<div class="slot-gallery">';
-  html+='<button class="back-btn" id="groupsSlotBack">← 返回时装列表</button>';
-  html+='<div class="gallery-title">'+esc(st.set)+' · '+(EM[st.slot]||'')+' '+esc(st.slot)+' ('+outfits.length+'张)</div>';
-  if(!outfits.length){html+='<div class="empty"><p>该槽位暂无图片</p></div>'}
-  else{html+='<div class="gallery">';outfits.forEach(function(o){html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info"><span class="chip" style="background:'+tc(st.set).bg+';color:'+tc(st.set).tx+'">'+esc(st.set)+'</span></div></div>'});html+='</div>'}
-  html+='</div>';body.innerHTML=html;
-  var bb=$('#groupsSlotBack');if(bb)bb.addEventListener('click',function(){st.slot=null;renderGroups()});
-  body.querySelectorAll('.card').forEach(function(c){c.addEventListener('click',function(){showDetail(c.dataset.id)})});
+function toggleCart(pid,btn){
+  if(isInCart(pid)){cart=cart.filter(function(x){return x.id!==pid});dbDel('pikaCart',pid);if(btn){btn.textContent='+ 加入购物车';btn.classList.remove('in-cart')}}
+  else{var p=pika.find(function(x){return x.id===pid});if(!p)return;var ci={id:p.id,name:p.name,quality:p.quality,imageBlob:p.imageBlob||null};cart.push(ci);dbPut('pikaCart',ci);if(btn){btn.textContent='✓ 已加入';btn.classList.add('in-cart')}}
+  updateCartBadge();
+}
+
+// ═══════ CART PANEL ═══════
+function openCartPanel(){var body=$('#cartPanelBody'),html='';if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去购物车标签页添加皮卡时装吧</p></div>'}else{cart.forEach(function(c){html+='<div class="cart-row">';if(c.imageBlob)html+='<img src="'+bu(c.imageBlob)+'" alt="">';else html+='<span style="font-size:32px">👔</span>';html+='<span class="cr-name">'+esc(c.name)+' <span style="font-size:11px;color:var(--text2)">'+(c.quality==='金色'?'✦金色':'◇紫色')+'</span></span>';html+='<button class="cr-del" data-pid="'+c.id+'">🗑</button></div>'})}body.innerHTML=html;body.querySelectorAll('.cr-del').forEach(function(b){b.onclick=function(){cart=cart.filter(function(x){return x.id!==b.dataset.pid});dbDel('pikaCart',b.dataset.pid);updateCartBadge();openCartPanel()}});$('#cartPanel').classList.add('active')}
+function closeCartPanel(){$('#cartPanel').classList.remove('active')}
+
+// ═══════ ADD PIKA ═══════
+function addPikaFashion(){
+  var name=$('#pikaName').value.trim(),quality=$('#pikaQuality').value;if(!name){toast('请输入时装名称');return}
+  var id='p'+uid(),obj={id:id,name:name,quality:quality,imageBlob:null};
+  var fi=$('#pikaImage');if(fi.files&&fi.files[0]){mkThumb(fi.files[0],400).then(function(tb){obj.imageBlob=tb;dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';$('#pikaImage').value='';renderCart();toast('已添加')})})}
+  else{dbPut('pika',obj).then(function(){pika.push(obj);$('#pikaFormOverlay').classList.remove('active');$('#pikaName').value='';renderCart();toast('已添加')})}
 }
 
 // ═══════ DETAIL ═══════
-function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$('#detailImg').src=bu(o.image);$('#detailDate').textContent='📅 添加于 '+fd(o.createdAt);var html='';o.pieces.forEach(function(p){html+='<div class="piece-card"><span style="font-size:28px">'+(EM[p.slot]||'?')+'</span><div><div class="p-set">'+esc(p.setName||'未分组')+'</div><div class="p-slot">'+esc(p.slot)+'</div></div></div>'});$('#detailPieces').innerHTML=html;$('#detailOverlay').classList.add('active');document.body.style.overflow='hidden'}
+function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$('#detailImg').src=bu(o.image);$('#detailDate').textContent='📅 添加于 '+fd(o.createdAt);var html='';o.pieces.forEach(function(p){html+='<div class="piece-card"><span style="font-size:28px">'+(SLOTS.indexOf(p.slot)>=0?String.fromCodePoint(0x1F453+SLOTS.indexOf(p.slot)):'?')+'</span><div><div class="p-set">'+esc(p.setName||'未分组')+'</div><div class="p-slot">'+esc(p.slot)+'</div></div></div>'});$('#detailPieces').innerHTML=html;$('#detailOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function closeDetail(){$('#detailOverlay').classList.remove('active');document.body.style.overflow='';st.did=null}
 
 // ═══════ FORM ═══════
 function openAdd(){st.eid=null;$('#formTitle').textContent='添加搭配';$('#formImageInput').value='';$('#formImgPreview').style.display='none';$('#formPieces').innerHTML='';addRow();$('#btnAddPiece').style.display='none';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function openEdit(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.eid=id;$('#formTitle').textContent='编辑搭配';$('#formImageInput').value='';if(o.image){$('#formImgPreview').src=bu(o.image);$('#formImgPreview').style.display='block'}else{$('#formImgPreview').style.display='none'}$('#formPieces').innerHTML='';o.pieces.forEach(function(p){addRow(p)});$('#btnAddPiece').style.display='';$('#formOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function closeForm(){$('#formOverlay').classList.remove('active');document.body.style.overflow='';st.eid=null}
-function addRow(data){
-  data=data||{setName:'',slot:'头发'};
-  var row=document.createElement('div');row.className='piece-row';
-  row.innerHTML='<select class="fn-slot">'+SLOTS.map(function(s){return'<option value="'+s+'"'+(s===data.slot?' selected':'')+'>'+(EM[s]||'')+s+'</option>'}).join('')+'</select><input type="text" class="fn-set" placeholder="服装名, 如: 嘟嘟锅" value="'+esc(data.setName)+'"><button class="btn-remove-piece">🗑</button>';
-  row.querySelector('.btn-remove-piece').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove();upBtn()}else toast('至少保留一个部件')});
-  var si=row.querySelector('.fn-set');ac(si,setNames);
-  si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;if(cs==='帽子'){upBtn();return}var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});if(ns==='帽子')upBtn();var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});
-  $('#formPieces').appendChild(row);upBtn();
-}
+function addRow(data){data=data||{setName:'',slot:'头发'};var row=document.createElement('div');row.className='piece-row';row.innerHTML='<select class="fn-slot">'+SLOTS.map(function(s){return'<option value="'+s+'"'+(s===data.slot?' selected':'')+'>'+esc(SLOTS.indexOf(s)>=0?String.fromCodePoint(0x1F453+SLOTS.indexOf(s)):'?')+' '+esc(s)+'</option>'}).join('')+'</select><input type="text" class="fn-set" placeholder="服装名, 如: 嘟嘟锅" value="'+esc(data.setName)+'"><button class="btn-rm">🗑</button>';row.querySelector('.btn-rm').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows.length>1){row.remove();upBtn()}else toast('至少保留一个部件')});var si=row.querySelector('.fn-set');ac(si,setNames);si.addEventListener('change',function(){var v=this.value.trim(),cs=row.querySelector('.fn-slot').value;if(!v)return;if(cs==='帽子'){upBtn();return}var rows=$('#formPieces').querySelectorAll('.piece-row');if(rows[rows.length-1]!==row)return;var idx=SLOTS.indexOf(cs),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});if(ns==='帽子')upBtn();var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});$('#formPieces').appendChild(row);upBtn()}
 function upBtn(){var rows=$('#formPieces').querySelectorAll('.piece-row');if(!rows.length){$('#btnAddPiece').style.display='';return}var ls=rows[rows.length-1].querySelector('.fn-slot').value;if(ls==='帽子')$('#btnAddPiece').style.display='';else $('#btnAddPiece').style.display='none'}
-function saveForm(){
-  var pr=$('#formPieces').querySelectorAll('.piece-row'),pieces=[];pr.forEach(function(r){var sn=r.querySelector('.fn-set').value.trim(),slot=r.querySelector('.fn-slot').value;if(sn)pieces.push({setName:sn,slot:slot})});
-  if(!pieces.length){toast('请至少填写一个部件的服装名');return}
-  function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbp(o).then(function(){refresh().then(function(){closeForm();home();toast(st.eid?'已更新 ✨':'已添加 ✨')})})}
-  function processFile(f){
-    // Crop first
-    doCrop(f).then(function(croppedBlob){
-      imgSize(croppedBlob).then(function(sz){mkThumb(croppedBlob).then(function(tb){doSave(croppedBlob,tb,sz.w,sz.h)})});
-    });
-  }
-  var fi=$('#formImageInput');
-  if(st.eid){if(fi.files&&fi.files[0]){processFile(fi.files[0])}else{var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}}
-  else{if(!fi.files||!fi.files[0]){toast('请选择截图 📷');return}processFile(fi.files[0])}
-}
+function saveForm(){var pr=$('#formPieces').querySelectorAll('.piece-row'),pieces=[];pr.forEach(function(r){var sn=r.querySelector('.fn-set').value.trim(),slot=r.querySelector('.fn-slot').value;if(sn)pieces.push({setName:sn,slot:slot})});if(!pieces.length){toast('请至少填写一个部件的服装名');return}function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbPut('outfits',o).then(function(){refresh().then(function(){closeForm();renderHome();toast(st.eid?'已更新 ✨':'已添加 ✨')})})}function processFile(f){doCrop(f).then(function(cb){imgSz(cb).then(function(sz){mkThumb(cb).then(function(tb){doSave(cb,tb,sz.w,sz.h)})})})}var fi=$('#formImageInput');if(st.eid){if(fi.files&&fi.files[0]){processFile(fi.files[0])}else{var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}}else{if(!fi.files||!fi.files[0]){toast('请选择截图 📷');return}processFile(fi.files[0])}}
 
-// ═══════ IMPORT / EXPORT ═══════
+// ═══════ IMPORT/EXPORT ═══════
 function b64(b){return new Promise(function(ok,fail){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=fail;r.readAsDataURL(b)})}
 function b2b(b64){var parts=b64.split(','),mime=parts[0].match(/:(.*?);/)[1],bytes=atob(parts[1]),arr=new Uint8Array(bytes.length);for(var i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);return new Blob([arr],{type:mime})}
-function exportData(){
-  if(!all.length){toast('没有数据可导出');return}toast('正在导出…');
-  var ps=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});
-  Promise.all(ps).then(function(data){var json=JSON.stringify({version:1,exportedAt:Date.now(),count:data.length,data:data}),blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='luoke-'+fd(Date.now())+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast('导出成功 📤')}).catch(function(e){toast('导出失败: '+e.message)});
-}
-function importData(){
-  var inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.addEventListener('change',function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);if(!json.data||!Array.isArray(json.data))throw new Error('无效备份');toast('正在导入 '+json.data.length+' 条…');var chain=Promise.resolve();json.data.forEach(function(item){chain=chain.then(function(){return new Promise(function(ok){var tx=db.transaction('outfits','readonly');var r=tx.objectStore('outfits').get(item.id);r.onsuccess=function(){ok(r.result)};r.onerror=function(){ok(null)}})}).then(function(ex){if(ex)return;return dbp({id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})});chain.then(function(){refresh().then(function(){home();toast('导入完成 🎉')})})}).catch(function(e){toast('导入失败: '+e.message)})});inp.click();
-}
+function exportData(){if(!all.length){toast('没有数据可导出');return}toast('正在导出…');var ps=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});Promise.all(ps).then(function(data){var json=JSON.stringify({version:1,exportedAt:Date.now(),count:data.length,data:data}),blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='luoke-'+fd(Date.now())+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast('导出成功 📤')}).catch(function(e){toast('导出失败: '+e.message)})}
+function importData(){var inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.addEventListener('change',function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);if(!json.data||!Array.isArray(json.data))throw new Error('无效备份');toast('正在导入 '+json.data.length+' 条…');var chain=Promise.resolve();json.data.forEach(function(item){chain=chain.then(function(){return dbGet('outfits',item.id).then(function(ex){if(ex)return;return dbPut('outfits',{id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})})});chain.then(function(){refresh().then(function(){renderHome();toast('导入完成 🎉')})})}).catch(function(e){toast('导入失败: '+e.message)})});inp.click()}
 
 // ═══════ SEARCH ═══════
-function updSearch(){st.q=$('#searchInput').value.trim();if(st.q)$('#searchBar').classList.add('searching');else $('#searchBar').classList.remove('searching');home()}
+function updSearch(){st.q=$('#searchInput').value.trim();if(st.q)$('#searchBar').classList.add('searching');else $('#searchBar').classList.remove('searching');if(st.tab==='home')renderHome();else renderFashion()}
+
+// ═══════ TAB SWITCH ═══════
+function switchTab(tab){st.tab=tab;st.set=null;st.slot=null;var cw=document.getElementById('cw');if(cw)cw.remove();document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab)});if(tab==='cart'){renderCart()}else if(tab==='fashion'){renderFashion()}else{renderHome()}}
 
 // ═══════ EVENTS ═══════
 function bind(){
-  // Groups page
-  $('#groupsBack').addEventListener('click',closeGroups);
-  $('#groupsPage').addEventListener('click',function(e){if(e.target===this)closeGroups()});
-  // FAB
+  document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){switchTab(t.dataset.tab)})});
   $('#fab').addEventListener('click',openAdd);
-  // Search
   $('#searchInput').addEventListener('input',updSearch);
   $('#btnClearSearch').addEventListener('click',function(){$('#searchInput').value='';updSearch()});
-  // Detail
   $('#detailClose').addEventListener('click',closeDetail);
   $('#detailOverlay').addEventListener('click',function(e){if(e.target===this)closeDetail()});
   $('#detailEdit').addEventListener('click',function(){var id=st.did;closeDetail();if(id)openEdit(id)});
-  $('#detailDelete').addEventListener('click',function(){var id=st.did;if(!id)return;confirm('确定删除这张搭配吗？').then(function(ok){if(!ok)return;dbd(id).then(function(){closeDetail();refresh().then(function(){home();toast('已删除 🗑')})})})});
-  // Form
+  $('#detailDelete').addEventListener('click',function(){var id=st.did;if(!id)return;confirm('确定删除这张搭配吗？').then(function(ok){if(!ok)return;dbDel('outfits',id).then(function(){closeDetail();refresh().then(function(){renderHome();toast('已删除 🗑')})})})});
   $('#formCancel').addEventListener('click',closeForm);
   $('#formOverlay').addEventListener('click',function(e){if(e.target===this)closeForm()});
   $('#formSubmit').addEventListener('click',saveForm);
   $('#btnSaveForm').addEventListener('click',saveForm);
   $('#btnAddPiece').addEventListener('click',function(){var rows=$('#formPieces').querySelectorAll('.piece-row'),ls='头发';if(rows.length)ls=rows[rows.length-1].querySelector('.fn-slot').value;var idx=SLOTS.indexOf(ls),ns=SLOTS[(idx+1)%SLOTS.length];addRow({setName:'',slot:ns});var nrs=$('#formPieces').querySelectorAll('.piece-row');setTimeout(function(){nrs[nrs.length-1].querySelector('.fn-set').focus()},100)});
   $('#formImageInput').addEventListener('change',function(){var f=this.files[0];if(f){$('#formImgPreview').src=URL.createObjectURL(f);$('#formImgPreview').style.display='block'}});
-  // Crop
+  // crop
   $('#cropLand').addEventListener('click',function(){setCropRatio(16/9)});
   $('#cropPort').addEventListener('click',function(){setCropRatio(3/4)});
-  $('#cropDone').addEventListener('click',applyCrop);
-  bindCropEvents();
-  // Install
+  $('#cropDone').addEventListener('click',applyCrop);bindCropEv();
+  // pika form
+  $('#pikaFormCancel').addEventListener('click',function(){$('#pikaFormOverlay').classList.remove('active')});
+  $('#pikaDoAdd').addEventListener('click',addPikaFashion);
+  // cart panel
+  $('#cartBadge').addEventListener('click',openCartPanel);
+  $('#cartPanelBack').addEventListener('click',closeCartPanel);
+  // install
   $('#installBtn').addEventListener('click',function(){if(dp){dp.prompt().then(function(r){if(r.outcome==='accepted'){toast('已安装');$('#installBanner').classList.remove('show');dp=null}}).catch(function(){})}else toast('浏览器菜单 → 添加到主屏幕')});
   $('#installDismiss').addEventListener('click',function(){$('#installBanner').classList.remove('show')});
-  // Escape
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#detailOverlay').classList.contains('active'))closeDetail();else if($('#formOverlay').classList.contains('active'))closeForm();else if($('#groupsPage').classList.contains('active'))closeGroups()}});
+  // esc
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#detailOverlay').classList.contains('active'))closeDetail();else if($('#formOverlay').classList.contains('active'))closeForm()}});
 }
 
 // ═══════ PWA ═══════
@@ -581,11 +496,19 @@ var dp=null;
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('#installBanner').classList.add('show')});
 window.addEventListener('appinstalled',function(){dp=null;$('#installBanner').classList.remove('show')});
 function regPWA(){if(!document.querySelector('link[rel=manifest]')){var l=document.createElement('link');l.rel='manifest';l.href='./manifest.json';document.head.appendChild(l)}if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){})}}
-function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v6').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
+function cachePg(){if('caches' in window){setTimeout(function(){var h='<!DOCTYPE html>\n'+document.documentElement.outerHTML;caches.open('luoke-v7').then(function(c){c.put('./',new Response(h,{headers:{'Content-Type':'text/html; charset=utf-8'}}))}).catch(function(){})},3000)}}
 
 // ═══════ INIT ═══════
-function refresh(){return dba().then(function(arr){all=arr})}
-function init(){dbo().then(function(){return refresh()}).then(function(){bind();regPWA();home();cachePg()})}
+function refresh(){return dbAll('outfits').then(function(arr){all=arr})}
+function loadPika(){return dbAll('pika').then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DEFAULT_PIKA.forEach(function(p){chain=chain.then(function(){return dbPut('pika',p)})});return chain.then(function(){return dbAll('pika')}).then(function(arr){pika=arr})}})}
+function loadCart(){return dbAll('pikaCart').then(function(arr){cart=arr})}
+function init(){
+  dbo().then(function(){
+    return Promise.all([refresh(),loadPika(),loadCart()]);
+  }).then(function(){
+    bind();regPWA();renderHome();cachePg();updateCartBadge();
+  });
+}
 document.addEventListener('DOMContentLoaded',init);
 
 })();
