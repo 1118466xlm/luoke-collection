@@ -410,7 +410,7 @@ function renderCart(){
   var fullCount=0;var partialCount=0;
   pika.forEach(function(p){var cs=p.collectState||'none';if(cs==='full')fullCount++;else if(cs==='partial')partialCount++});
   var pct=pika.length?Math.round(fullCount/pika.length*100):0;
-  var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+fullCount+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn" style="margin-left:auto">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn">⚙</button></div><div class="cart-list">';
+  var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+fullCount+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnImportPika" class="cart-sort-btn" style="margin-right:4px">📥 导入</button><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn">⚙</button></div><div class="cart-list">';
   var list=pika.slice();if(!sortAsc)list.reverse();
   list.forEach(function(p,li){var inCart=isInCart(p.id),q=p.quality||"紫色",price=QP[q]||98,cs=p.collectState||'none';
     var borderColor=BC[li%8]||'#FFE8E0';
@@ -420,7 +420,8 @@ function renderCart(){
   html+='</div></div>';main.innerHTML=html;
   document.getElementById("btnAddPika").onclick=function(){$("#pikaFormOverlay").classList.add("active")};
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;manageMode=false;renderCart()};
-  var gearBtn=document.getElementById("btnPokedexGear");if(gearBtn)gearBtn.addEventListener("click",function(){manageMode=!manageMode;renderCart()});
+  var gearBtn=document.getElementById("btnPokedexGear");if(gearBtn)gearBtn.onclick=function(){manageMode=!manageMode;renderCart()};
+  var impBtn=document.getElementById("btnImportPika");if(impBtn)impBtn.onclick=function(){importData()};
   var curRow=null,sx=0;
   main.querySelectorAll(".cart-row-h").forEach(function(row){
     row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icons")||t.closest(".cr-img")||t.closest(".ci-quality-toggle")){curRow=null;return}curRow=row;sx=e.touches[0].clientX});
@@ -495,8 +496,29 @@ function saveForm(){var pr=$("#formPieces").querySelectorAll(".piece-row"),piece
 // ═══════ IMPORT/EXPORT ═══════
 function b64(b){return new Promise(function(ok,fail){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=fail;r.readAsDataURL(b)})}
 function b2b(b64){var parts=b64.split(","),mime=parts[0].match(/:(.*?);/)[1],bytes=atob(parts[1]),arr=new Uint8Array(bytes.length);for(var i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);return new Blob([arr],{type:mime})}
-function exportData(){if(!all.length){toast("没有数据可导出");return}toast("正在导出…");var ps=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});Promise.all(ps).then(function(data){var json=JSON.stringify({version:1,exportedAt:Date.now(),count:data.length,data:data}),blob=new Blob([json],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="luoke-"+fd(Date.now())+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast("导出成功 📤")}).catch(function(e){toast("导出失败: "+e.message)})}
-function importData(){var inp=document.createElement("input");inp.type="file";inp.accept=".json";inp.addEventListener("change",function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);if(!json.data||!Array.isArray(json.data))throw new Error("无效备份");toast("正在导入 "+json.data.length+" 条…");var chain=Promise.resolve();json.data.forEach(function(item){chain=chain.then(function(){return new Promise(function(ok2){var t=db.transaction("outfits","readonly"),r=t.objectStore("outfits").get(item.id);r.onsuccess=function(){ok2(r.result)};r.onerror=function(){ok2(null)}})}).then(function(ex){if(ex)return;return dbPut("outfits",{id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})});chain.then(function(){refresh().then(function(){renderHome();toast("导入完成 🎉")})})}).catch(function(e){toast("导入失败: "+e.message)})});inp.click()}
+function exportData(){
+  if(!all.length&&!pika.length){toast("没有数据可导出");return}toast("正在导出…");
+  var ouf=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});
+  var pkf=pika.map(function(p){if(!p.imageBlob)return Promise.resolve({id:p.id,name:p.name,quality:p.quality,collectState:p.collectState||'none'});return b64(p.imageBlob).then(function(b){return{id:p.id,name:p.name,quality:p.quality,collectState:p.collectState||'none',imageBase64:b}})});
+  var ctf=cart.map(function(c){if(!c.imageBlob)return Promise.resolve({id:c.id,name:c.name,quality:c.quality,price:c.price});return b64(c.imageBlob).then(function(b){return{id:c.id,name:c.name,quality:c.quality,price:c.price,imageBase64:b}})});
+  Promise.all([Promise.all(ouf),Promise.all(pkf),Promise.all(ctf)]).then(function(r){var json=JSON.stringify({version:2,exportedAt:Date.now(),outfits:r[0],pika:r[1],cart:r[2]}),blob=new Blob([json],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="luoke-"+fd(Date.now())+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast("导出成功 📤 共 "+r[0].length+" 搭配 + "+r[1].length+" 时装 + "+r[2].length+" 购物车")}).catch(function(e){toast("导出失败: "+e.message)});
+}
+function importData(){var inp=document.createElement("input");inp.type="file";inp.accept=".json";inp.addEventListener("change",function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);var chain=Promise.resolve();
+  if(json.version===1){
+    // old format: outfits only
+    if(!json.data||!Array.isArray(json.data))throw new Error("无效备份");
+    toast("正在导入 v1 "+json.data.length+" 条(仅搭配)…");
+    json.data.forEach(function(item){chain=chain.then(function(){return new Promise(function(ok2){var t=db.transaction("outfits","readonly"),r=t.objectStore("outfits").get(item.id);r.onsuccess=function(){ok2(r.result)};r.onerror=function(){ok2(null)}})}).then(function(ex){if(ex)return;return dbPut("outfits",{id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})});
+  }else if(json.version===2){
+    // new format: outfits + pika + cart
+    var ocount=(json.outfits||[]).length,pcount=(json.pika||[]).length,ccount=(json.cart||[]).length;
+    toast("正在导入: "+ocount+"搭配 + "+pcount+"时装 + "+ccount+"购物车…");
+    (json.outfits||[]).forEach(function(item){chain=chain.then(function(){return new Promise(function(ok2){var t=db.transaction("outfits","readonly"),r=t.objectStore("outfits").get(item.id);r.onsuccess=function(){ok2(r.result)};r.onerror=function(){ok2(null)}})}).then(function(ex){if(ex)return;return dbPut("outfits",{id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})});
+    (json.pika||[]).forEach(function(item){chain=chain.then(function(){return new Promise(function(ok2){var t=db.transaction("pika","readonly"),r=t.objectStore("pika").get(item.id);r.onsuccess=function(){ok2(r.result)};r.onerror=function(){ok2(null)}})}).then(function(ex){if(ex)return;var obj={id:item.id,name:item.name,quality:item.quality||"紫色",collectState:item.collectState||"none"};if(item.imageBase64)obj.imageBlob=b2b(item.imageBase64);return dbPut("pika",obj)})});
+    (json.cart||[]).forEach(function(item){chain=chain.then(function(){return new Promise(function(ok2){var t=db.transaction("pikaCart","readonly"),r=t.objectStore("pikaCart").get(item.id);r.onsuccess=function(){ok2(r.result)};r.onerror=function(){ok2(null)}})}).then(function(ex){if(ex)return;var obj={id:item.id,name:item.name,quality:item.quality||"紫色",price:item.price||98};if(item.imageBase64)obj.imageBlob=b2b(item.imageBase64);return dbPut("pikaCart",obj)})});
+  }else{throw new Error("未知备份版本")}
+  chain.then(function(){return Promise.all([refresh(),loadPika(),loadCart()])}).then(function(){renderHome();updateCartBadge();toast("导入完成 🎉")});
+}).catch(function(e){toast("导入失败: "+e.message)})});inp.click()}
 
 function updSearch(){st.q=$("#searchInput").value.trim();if(st.q)$("#searchBar").classList.add("searching");else $("#searchBar").classList.remove("searching");if(st.tab==="home")renderHome()}
 function switchTab(tab){st.tab=tab;var cw=document.getElementById("cw");if(cw)cw.remove();document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("active",t.dataset.tab===tab)});if(tab==="cart"){renderCart()}else if(tab==="fashion"){renderFashion()}else{renderHome()}}
