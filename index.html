@@ -80,8 +80,8 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .cart-sort-btn{padding:8px 14px;border-radius:20px;border:none;background:var(--surface);color:var(--text2);font-size:12px;cursor:pointer;font-weight:500;margin-left:auto}
 .cart-list{display:flex;flex-direction:column;gap:8px}
 .cart-row-h{display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow)}
-.cart-row-h:nth-child(odd){border-left:3px solid var(--m4t)}
-.cart-row-h:nth-child(even){border-left:3px solid var(--m6t)}
+.cart-row-h:nth-child(odd){border-left:3px solid var(--m4)}
+.cart-row-h:nth-child(even){border-left:3px solid var(--m6)}
 .cart-row-h .cr-img{width:56px;height:42px;flex-shrink:0;border-radius:6px;overflow:hidden;background:#F5F0EB;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
 .cart-row-h .cr-img .cr-plus{font-size:18px;color:rgba(0,0,0,.12);pointer-events:none}
 .cart-row-h .cr-img img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
@@ -113,7 +113,9 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .cart-panel .panel-row .pr-name{flex:1;font-size:14px;font-weight:600}
 .cart-panel .panel-row .pr-del{background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer}
 .cart-panel .panel-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2)}
-.cart-panel .panel-chk{width:20px;height:20px;accent-color:var(--m4t)}
+.cart-panel .panel-chk{width:22px;height:22px;border-radius:50%;appearance:none;-webkit-appearance:none;border:2px solid var(--border);background:var(--surface);cursor:pointer;flex-shrink:0;position:relative}
+.cart-panel .panel-chk:checked{background:var(--m4);border-color:var(--m4t)}
+.cart-panel .panel-chk:checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--m4t);font-weight:700}
 
 /* pika form */
 .form-mini{display:flex;flex-direction:column;gap:8px}
@@ -131,15 +133,15 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 
 /* pieces — 2-column grid */
 .pieces{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.piece-card{background:var(--m4);border-radius:10px;padding:8px 10px;border-left:3px solid var(--m4t)}
-.piece-card:nth-child(8n+1){background:var(--m1);border-left-color:var(--m1t)}
-.piece-card:nth-child(8n+2){background:var(--m2);border-left-color:var(--m2t)}
-.piece-card:nth-child(8n+3){background:var(--m4);border-left-color:var(--m4t)}
-.piece-card:nth-child(8n+4){background:var(--m5);border-left-color:var(--m5t)}
-.piece-card:nth-child(8n+5){background:var(--m6);border-left-color:var(--m6t)}
-.piece-card:nth-child(8n+6){background:var(--m7);border-left-color:var(--m7t)}
-.piece-card:nth-child(8n+7){background:var(--m3);border-left-color:var(--m3t)}
-.piece-card:nth-child(8n+0){background:var(--m8);border-left-color:var(--m8t)}
+.piece-card{border-radius:10px;padding:8px 10px}
+.piece-card:nth-child(8n+1){background:var(--m1)}
+.piece-card:nth-child(8n+2){background:var(--m2)}
+.piece-card:nth-child(8n+3){background:var(--m4)}
+.piece-card:nth-child(8n+4){background:var(--m5)}
+.piece-card:nth-child(8n+5){background:var(--m6)}
+.piece-card:nth-child(8n+6){background:var(--m7)}
+.piece-card:nth-child(8n+7){background:var(--m3)}
+.piece-card:nth-child(8n+0){background:var(--m8)}
 .piece-card .p-set{font-size:12px;font-weight:700}
 .piece-card .p-slot{font-size:11px;color:var(--text2)}
 .detail-actions{display:flex;gap:10px;padding:12px 14px}
@@ -233,7 +235,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 <button class="fab" id="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
 </div>
 <div class="cart-sidebar" id="cartSidebar"><button class="cart-badge" id="cartBadge"><span class="cb-count" id="cartCount">0</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></button></div>
-<div class="cart-panel" id="cartPanel"><div class="panel-header"><button id="cartPanelBack">←</button><span class="ph-title">购物车结算</span><button id="btnSelectAll" style="font-size:13px;font-weight:600;color:var(--m4t)">☐ 全选</button><button id="btnManage" style="font-size:13px;font-weight:600;color:var(--m8t)">✏️ 管理</button></div><div class="panel-body" id="cartPanelBody"></div><div class="panel-footer" id="cartPanelFooter"><span>共 0 件</span><span><b>0 星</b></span></div></div>
+<div class="cart-panel" id="cartPanel"><div class="panel-header"><button id="cartPanelBack">←</button><span class="ph-title">购物车结算</span><button id="btnManage" style="font-size:13px;font-weight:600;color:var(--m8t)">✏️ 管理</button></div><div class="panel-body" id="cartPanelBody"></div><div class="panel-footer" id="cartPanelFooter"><span>共 0 件</span><span><b>0 星</b></span></div></div>
 <div class="detail-overlay" id="detailOverlay"><div class="detail-card"><button class="detail-close" id="detailClose">✕</button><img class="dc-img" id="detailImg" src="" alt=""><div class="detail-info"><div class="date" id="detailDate"></div><div class="pieces" id="detailPieces"></div></div><div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div></div></div>
 <div class="form-overlay" id="formOverlay"><div class="form-header"><button id="formCancel">取消</button><span id="formTitle">添加搭配</span><button id="formSubmit" style="font-weight:700">保存</button></div><div class="form-body"><label>📷 游戏截图</label><input type="file" accept="image/*" id="formImageInput"><img class="img-preview" id="formImgPreview" src="" alt=""><label>🧩 部件列表</label><div id="formPieces"></div><button class="btn-add-piece" id="btnAddPiece">+ 添加部件</button><button class="btn-save" id="btnSaveForm">💾 保存搭配</button></div></div>
 <div class="form-overlay" id="pikaFormOverlay"><div class="form-header" style="background:var(--m7);color:var(--m7t)"><button id="pikaFormCancel" style="color:var(--m7t)">取消</button><span>添加皮卡时装</span><button id="pikaFormSubmit" style="font-weight:700;color:var(--m7t)">添加</button></div><div class="form-body"><div class="form-mini"><label>时装名称</label><input type="text" id="pikaName" placeholder="如: 嘟嘟锅"><label>品质</label><select id="pikaQuality"><option value="金色">金色</option><option value="紫色">紫色</option></select><label>图片</label><input type="file" accept="image/*" id="pikaImage"><button style="width:100%;padding:14px;background:var(--m7);color:var(--m7t);border:none;border-radius:12px;font-size:16px;font-weight:700;margin-top:10px;cursor:pointer" id="pikaDoAdd">添加到列表</button></div></div></div>
@@ -342,18 +344,17 @@ function cartCount(){return cart.length}function updateCartBadge(){var el=$("#ca
 function toggleCart(pid,btn){if(isInCart(pid)){cart=cart.filter(function(x){return x.id!==pid});dbDel("pikaCart",pid);updateCartBadge();if(btn){btn.textContent="+ 加入";btn.classList.remove("in-cart")}}else{var p=pika.find(function(x){return x.id===pid});if(!p)return;var q=p.quality||"紫色";cart.push({id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null});dbPut("pikaCart",{id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null});updateCartBadge();if(btn){btn.textContent="✓ 已加入";btn.classList.add("in-cart")}}}
 
 // ═══════ CART PANEL — settlement (opened from badge on homepage) ═══════
-function openCartPanel(){panelMode=false;selAll=false;$("#btnSelectAll").textContent="☐ 全选";$("#btnManage").textContent="✏️ 管理";renderCartPanel();$("#cartPanel").classList.add("active")}
+function openCartPanel(){panelMode=false;$("#btnManage").textContent="✏️ 管理";renderCartPanel();$("#cartPanel").classList.add("active")}
 function closeCartPanel(){$("#cartPanel").classList.remove("active")}
 function renderCartPanel(){
   var body=$("#cartPanelBody"),html="",total=0;
-  if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去购物车标签页添加皮卡时装吧</p></div>';$("#btnSelectAll").style.display="none";$("#btnManage").style.display="none"}
+  if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去购物车标签页添加皮卡时装吧</p></div>';$("#btnManage").style.display="none"}
   else{
-    $("#btnSelectAll").style.display="";$("#btnManage").style.display="";
+    $("#btnManage").style.display="";
     cart.forEach(function(c){total+=(c.price||0);
-      html+='<div class="panel-row">';
-      if(panelMode){html+='<input type="checkbox" class="panel-chk" data-pid="'+c.id+'">'}
+      html+='<div class="panel-row"><input type="checkbox" class="panel-chk" data-pid="'+c.id+'">';
       if(c.imageBlob){html+='<img src="'+bu(c.imageBlob)+'" alt="" style="width:48px;height:48px;object-fit:cover">'}else{html+='<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#F5F0EB;border-radius:8px;font-size:22px;color:rgba(0,0,0,.15)">+</span>'}
-      html+='<span class="pr-name">'+esc(c.name)+' <span style="font-size:11px;color:var(--text2)">'+(c.quality==="金色"?"✦金色":"◇紫色")+' ⭐'+(c.price||0)+'星</span></span>';
+      html+='<span class="pr-name">'+esc(c.name)+' <span class="ci-quality-toggle '+(c.quality==="金色"?"ci-quality-gold":"ci-quality-purple")+'">'+(c.quality==="金色"?"✦ 金色":"◇ 紫色")+'</span> ⭐'+(c.price||0)+'星</span>';
       if(panelMode){html+='<button class="pr-del" data-pid="'+c.id+'">🗑</button>'}
       html+='</div>';
     });
@@ -366,9 +367,6 @@ function updatePanelFooter(){
   var cbs=document.querySelectorAll(".panel-chk:checked"),c=cbs.length,p=0;cbs.forEach(function(cb){var ct=cart.find(function(x){return x.id===cb.dataset.pid});if(ct)p+=ct.price||0});
   var total=0;cart.forEach(function(c){total+=c.price||0});$("#cartPanelFooter").innerHTML="<span>共 "+cart.length+" 件"+(panelMode&&cart.length?"，已勾 "+c+" 件":"")+"</span><span><b>"+total+" 星</b></span>";
 }
-// panel header buttons re-bound every render
-$("#btnSelectAll").onclick=function(){selAll=!selAll;this.textContent=selAll?"☑ 取消":"☐ 全选";document.querySelectorAll(".panel-chk").forEach(function(cb){cb.checked=selAll});updatePanelFooter()};
-$("#btnManage").onclick=function(){panelMode=!panelMode;selAll=false;$("#btnSelectAll").textContent="☐ 全选";this.textContent=panelMode?"✅ 完成":"✏️ 管理";renderCartPanel()};
 function addPikaFashion(){var name=$("#pikaName").value.trim(),quality=$("#pikaQuality").value;if(!name){toast("请输入时装名称");return}var id="p"+uid(),obj={id:id,name:name,quality:quality,imageBlob:null};var fi=$("#pikaImage");if(fi.files&&fi.files[0]){startCrop(fi.files[0],3/4,function(cropped){obj.imageBlob=cropped;dbPut("pika",obj).then(function(){pika.push(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";$("#pikaImage").value="";renderCart();toast("已添加")})})}else{dbPut("pika",obj).then(function(){pika.push(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";renderCart();toast("已添加")})}}
 
 // ═══════ DETAIL ═══════
@@ -419,7 +417,7 @@ function bind(){
   bindCropEv();
   $("#pikaFormCancel").addEventListener("click",function(){$("#pikaFormOverlay").classList.remove("active")});
   $("#pikaDoAdd").addEventListener("click",addPikaFashion);
-  $("#cartPanelBack").addEventListener("click",closeCartPanel);
+  $("#cartPanelBack").addEventListener("click",closeCartPanel);$("#btnManage").addEventListener("click",function(){panelMode=!panelMode;this.textContent=panelMode?"✅ 完成":"✏️ 管理";renderCartPanel()});
   $("#installBtn").addEventListener("click",function(){if(dp){dp.prompt().then(function(r){if(r.outcome==="accepted"){toast("已安装");$("#installBanner").classList.remove("show");dp=null}}).catch(function(){})}else toast("浏览器菜单 → 添加到主屏幕")});
   $("#installDismiss").addEventListener("click",function(){$("#installBanner").classList.remove("show")});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"){if($("#detailOverlay").classList.contains("active"))closeDetail();else if($("#formOverlay").classList.contains("active"))closeForm()}});
