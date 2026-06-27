@@ -446,7 +446,7 @@ function openCartPanel(){panelMode=false;$("#btnManage").textContent="⚙";rende
 function closeCartPanel(){$("#cartPanel").classList.remove("active")}
 function renderCartPanel(){
   var body=$("#cartPanelBody"),html="",total=0;
-  if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去购物车标签页添加时装吧</p></div>';$("#btnManage").style.display="none"}
+  if(!cart.length){html='<div class="empty"><p>购物车是空的</p><p>去图鉴左滑时装即可加购</p></div>';$("#btnManage").style.display="none"}
   else{
     $("#btnManage").style.display="";
     cart.forEach(function(c){total+=(c.price||0);
