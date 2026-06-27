@@ -309,7 +309,7 @@ function setCropRatio(r){st.cropRatio=r;var mw=window.innerWidth,mh=window.inner
 function applyCrop(){var img=st.cropImg,mw=window.innerWidth,mh=window.innerHeight*.65,bx=(mw-st.boxW)/2,by=(mh-st.boxH)/2;var sx=(bx-st.cropTX)/st.cropScale,sy=(by-st.cropTY)/st.cropScale,sw=st.boxW/st.cropScale,sh=st.boxH/st.cropScale;sx=Math.max(0,Math.min(img.width-sw,sx));sy=Math.max(0,Math.min(img.height-sh,sy));var c=document.createElement("canvas");c.width=sw;c.height=sh;c.getContext("2d").drawImage(img,sx,sy,sw,sh,0,0,sw,sh);c.toBlob(function(b){$("#cropOverlay").classList.remove("active");var r=st.cropRes;st.cropRes=null;st.cropImg=null;if(r)r(b)},"image/png")}
 function bindCropEv(){
   var w=$("#cropImgWrap");
-  var ds=0,di=0,si=0,dx0=0,dy0=0,// pinch: startDist, initialDist, initialScale, anchor
+  var ds=0,di=0,si=0,dx0=0,dy0=0,// pinch vars
       fx0=0,fy0=0,             // drag: finger start
       touchMode='none';
 
@@ -334,11 +334,9 @@ function bindCropEv(){
   overlay.addEventListener("touchmove",function(e){
     if(!overlay.classList.contains("active"))return;
     if(touchMode==='pinch'&&e.touches.length>=2){
-      ds=gd(e.touches);
-      var scl=si*(ds/di);scl=Math.max(.3,Math.min(5,scl));
+      var nd=gd(e.touches),scl=si*(nd/di);scl=Math.max(.3,Math.min(5,scl));
       var cx=(e.touches[0].clientX+e.touches[1].clientX)/2;
       var cy=(e.touches[0].clientY+e.touches[1].clientY)/2;
-      scl=si*(ds/di);if(scl<.3)scl=.3;if(scl>5)scl=5;
       st.cropTX=cx-(cx-st.cropTX)*(scl/st.cropScale);
       st.cropTY=cy-(cy-st.cropTY)*(scl/st.cropScale);
       st.cropScale=scl;updateCropImg();
