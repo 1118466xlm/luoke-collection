@@ -365,13 +365,13 @@ function renderCartPanel(){
       html+='</div>';
     });
   }
-  body.innerHTML=html;$("#cartPanelFooter").innerHTML="<span>共 "+cart.length+" 件"+((panelMode&&cart.length)?"，已勾 0 件":"")+"</span><span><b>"+total+" 星</b></span>";
+  body.innerHTML=html;$("#cartPanelFooter").innerHTML="<span>已选 0 件</span><span><b>0 星</b></span>";
   body.querySelectorAll(".pr-del").forEach(function(b){b.onclick=function(){cart=cart.filter(function(x){return x.id!==b.dataset.pid});dbDel("pikaCart",b.dataset.pid);updateCartBadge();renderCartPanel()}});
   body.querySelectorAll(".panel-chk").forEach(function(cb){cb.addEventListener("change",function(){updatePanelFooter()})});
 }
 function updatePanelFooter(){
   var cbs=document.querySelectorAll(".panel-chk:checked"),c=cbs.length,p=0;cbs.forEach(function(cb){var ct=cart.find(function(x){return x.id===cb.dataset.pid});if(ct)p+=ct.price||0});
-  var total=0;cart.forEach(function(c){total+=c.price||0});$("#cartPanelFooter").innerHTML="<span>共 "+cart.length+" 件"+(panelMode&&cart.length?"，已勾 "+c+" 件":"")+"</span><span><b>"+total+" 星</b></span>";
+  $("#cartPanelFooter").innerHTML="<span>已选 "+c+" 件</span><span><b>"+p+" 星</b></span>";
 }
 function addPikaFashion(){var name=$("#pikaName").value.trim(),quality=$("#pikaQuality").value;if(!name){toast("请输入时装名称");return}var id="p"+uid(),obj={id:id,name:name,quality:quality,imageBlob:null};var fi=$("#pikaImage");if(fi.files&&fi.files[0]){startCrop(fi.files[0],3/4,function(cropped){obj.imageBlob=cropped;dbPut("pika",obj).then(function(){pika.push(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";$("#pikaImage").value="";renderCart();toast("已添加")})})}else{dbPut("pika",obj).then(function(){pika.push(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";renderCart();toast("已添加")})}}
 
