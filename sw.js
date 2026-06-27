@@ -1,4 +1,4 @@
-const CACHE = 'luoke-v7';
+const CACHE = 'luoke-v8';
 const PAGE = '/';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
