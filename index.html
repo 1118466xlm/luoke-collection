@@ -413,8 +413,8 @@ function renderCart(){
   var pct=pika.length?Math.round(fullCount/pika.length*100):0;
   var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+fullCount+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn" style="margin-left:auto">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn" onclick="return false">⚙</button></div><div class="cart-list">';
   var list=pika.slice();if(!sortAsc)list.reverse();
-  list.forEach(function(p){var inCart=isInCart(p.id),q=p.quality||"紫色",price=QP[q]||98,cs=p.collectState||'none';
-    var borderColor=BC[pika.indexOf(p)%8]||'#FFE8E0';
+  list.forEach(function(p,li){var inCart=isInCart(p.id),q=p.quality||"紫色",price=QP[q]||98,cs=p.collectState||'none';
+    var borderColor=BC[li%8]||'#FFE8E0';
     var bgStyle='';if(cs==='full')bgStyle='background:linear-gradient(90deg,'+borderColor+' 0%,var(--surface) 30%)';else if(cs==='partial')bgStyle='background:linear-gradient(90deg,'+borderColor+' 0%,var(--surface) 20%)';
     html+='<div class="swipe-wrap"><div class="swipe-bg'+(inCart?' in-cart':'')+'" data-pid="'+p.id+'">'+(inCart?'移除':'加入购物车')+'</div><div class="cart-row-h'+(cs==='full'?' collected-full':(cs==='partial'?' collected-partial':''))+'" data-pid="'+p.id+'" style="'+bgStyle+'"><div class="cr-img" data-pid="'+p.id+'">';if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}else{html+='<span class="cr-plus">+</span>'}html+='</div><div class="cr-info"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-meta"><button class="ci-quality-toggle '+(q==="金色"?"ci-quality-gold":"ci-quality-purple")+'" data-pid="'+p.id+'">'+(q==="金色"?"✦ 金色":"◇ 紫色")+'</button><span class="cr-price">⭐'+price+'星</span></div></div>'+hangerIcon(cs,borderColor)+'</div></div>';
   });
