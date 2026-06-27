@@ -16,7 +16,6 @@
   --sB:env(safe-area-inset-bottom,16px);--sT:env(safe-area-inset-top,0px);
   --bg:#FFFBF7;--surface:#FFF;--text:#5D576B;--text2:#A098AE;
   --border:#EBE3DA;--shadow:0 2px 10px rgba(0,0,0,.04);--radius:12px;
-  /* macaron palette from gallery tags */
   --m1:#FFE8E0;--m1t:#C4887E;--m2:#FFECD2;--m2t:#C4985E;
   --m3:#FFF8D6;--m3t:#B89E3E;--m4:#E8F5E0;--m4t:#6E9E6E;
   --m5:#D8F0F5;--m5t:#5E8E9E;--m6:#F0E0F5;--m6t:#8E6EAE;
@@ -25,8 +24,7 @@
 html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);height:100%;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
 #app{height:100%;display:flex;flex-direction:column;max-width:640px;margin:0 auto;position:relative}
 
-/* header + tabs — shared gradient */
-.header{background:linear-gradient(135deg,#F4C2C2 0%,#FFF5F0 30%,#FBE0C8 60%,#CDC0E0 100%);padding:10px 16px 0;padding-top:max(10px,var(--sT));flex-shrink:0;z-index:2}
+.header{background:linear-gradient(135deg,#F4C2C2 0%,#FFFBF7 30%,#FBE0C8 60%,#CDC0E0 100%);padding:10px 16px 0;padding-top:max(10px,var(--sT));flex-shrink:0;z-index:2}
 .header h1{font-size:19px;text-align:center;font-weight:700;letter-spacing:3px;color:#6E6068;padding-bottom:8px}
 .tabs{display:flex;gap:6px;padding-bottom:8px}
 .tab{flex:1;padding:10px 0;border:none;border-radius:10px 10px 0 0;background:rgba(255,255,255,.35);color:rgba(0,0,0,.45);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;font-weight:500;transition:all .15s}
@@ -36,9 +34,6 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .search-bar{padding:8px 14px;flex-shrink:0;display:flex;gap:6px;background:var(--bg)}
 .search-bar input{flex:1;padding:10px 16px;border:2px solid var(--border);border-radius:24px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
 .search-bar input:focus{border-color:var(--m4t)}
-.search-bar input::placeholder{color:var(--text2)}
-.search-bar .btn-clear{display:none;background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:0 6px}
-.search-bar.searching .btn-clear{display:inline}
 .main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
 /* carousel */
@@ -55,7 +50,6 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .carousel-inner .ci-btns{display:flex;gap:4px}
 .carousel-inner .ci-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:12px;cursor:pointer}
 
-/* gallery with tag-color borders */
 .gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
 .gallery .card{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
 .gallery .card:nth-child(8n+1){border-top:3px solid var(--m1t)}
@@ -73,7 +67,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600}
 .export-row{display:flex;gap:10px;justify-content:center;padding:8px 10px calc(8px + var(--sB))}
 .export-row button{padding:8px 20px;border-radius:20px;border:2px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;color:var(--text)}
-.fashion-placeholder{text-align:center;padding:80px 20px;color:var(--text2);background:var(--bg)}
+.fashion-placeholder{text-align:center;padding:80px 20px;color:var(--text2)}
 
 /* cart */
 .cart-wrap{padding:10px;padding-bottom:60px}
@@ -82,11 +76,11 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .cart-sort-btn{padding:8px 14px;border-radius:20px;border:none;background:var(--surface);color:var(--text2);font-size:12px;cursor:pointer;font-weight:500;margin-left:auto}
 .cart-list{display:flex;flex-direction:column;gap:8px}
 .cart-row-h{display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow)}
-.cart-row-h:nth-child(odd){border-left:3px solid var(--m4t)}
-.cart-row-h:nth-child(even){border-left:3px solid var(--m6t)}
-.cart-row-h .cr-chk{width:22px;height:22px;flex-shrink:0;accent-color:var(--m4t)}
+.cart-row-h:nth-child(odd){border-left:3px solid var(--m4)}
+.cart-row-h:nth-child(even){border-left:3px solid var(--m6)}
+.cart-row-h .cr-chk{width:20px;height:20px;flex-shrink:0;accent-color:var(--m4t)}
 .cart-row-h .cr-img{width:56px;height:42px;flex-shrink:0;border-radius:6px;overflow:hidden;background:#F5F0EB;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
-.cart-row-h .cr-img .cr-plus{font-size:18px;color:rgba(0,0,0,.12);font-weight:300;pointer-events:none}
+.cart-row-h .cr-img .cr-plus{font-size:18px;color:rgba(0,0,0,.12);pointer-events:none}
 .cart-row-h .cr-img img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
 .cart-row-h .cr-info{flex:1;min-width:0}
 .cart-row-h .cr-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
@@ -97,46 +91,41 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .ci-quality-toggle{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:600;border:none;cursor:pointer}
 .ci-quality-gold{background:var(--m3);color:var(--m3t)}
 .ci-quality-purple{background:var(--m6);color:var(--m6t)}
-
-/* cart settlement footer */
 .cart-settle{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px calc(10px + var(--sB));display:flex;align-items:center;gap:10px;z-index:5}
 .cart-settle .cs-info{flex:1;font-size:13px;color:var(--text2)}
 .cart-settle .cs-info b{color:var(--text);font-size:16px}
 .cart-settle .cs-btn{padding:10px 24px;border:none;border-radius:20px;background:var(--m4);color:var(--m4t);font-size:14px;cursor:pointer;font-weight:700}
 
-.cart-sidebar{position:fixed;right:20px;bottom:calc(88px + var(--sB));z-index:21}
-.cart-badge{width:48px;height:48px;border-radius:50%;border:none;background:var(--m7);color:var(--m7t);font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(248,184,168,.4);position:relative;display:flex;align-items:center;justify-content:center}
-.cart-badge .cb-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--m5);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
-.cart-badge svg{width:22px;height:22px}
+/* cart panel — settlement mode */
 .cart-panel{display:none;position:fixed;inset:0;z-index:75;background:var(--bg);flex-direction:column;max-width:640px;margin:0 auto}
 .cart-panel.active{display:flex}
-.cart-panel-header{background:var(--m7);color:var(--m7t);padding:10px 16px;padding-top:max(10px,var(--sT));display:flex;align-items:center;gap:10px;flex-shrink:0}
-.cart-panel-header button{background:none;border:none;color:var(--m7t);font-size:18px;cursor:pointer}
-.cart-panel-header h2{font-size:18px;flex:1}
-.cart-panel-body{flex:1;overflow-y:auto;padding:10px}
-.cart-panel-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2)}
+.cart-panel .panel-header{background:var(--m4);color:var(--m4t);padding:10px 16px;padding-top:max(10px,var(--sT));display:flex;align-items:center;gap:8px;flex-shrink:0}
+.cart-panel .panel-header button{background:none;border:none;color:var(--m4t);font-size:16px;cursor:pointer}
+.cart-panel .panel-header .ph-title{font-size:18px;flex:1;font-weight:700}
+.cart-panel .panel-body{flex:1;overflow-y:auto;padding:10px}
+.cart-panel .panel-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cart-panel .panel-row img{width:48px;height:48px;object-fit:cover;border-radius:8px;background:#F5F0EB}
+.cart-panel .panel-row .pr-name{flex:1;font-size:14px;font-weight:600}
+.cart-panel .panel-row .pr-del{background:none;border:none;color:var(--m8t);font-size:16px;cursor:pointer}
+.cart-panel .panel-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2)}
+.cart-panel .panel-chk{width:20px;height:20px;accent-color:var(--m4t)}
 
-.form-mini{display:flex;flex-direction:column;gap:8px}
-.form-mini input,.form-mini select{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:14px;background:var(--surface);outline:none;color:var(--text)}
-.form-mini input:focus,.form-mini select:focus{border-color:var(--m7t)}
-
-/* detail — card overlay, not fullscreen */
-.detail-overlay{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:50px 16px 24px}
+/* detail — compact card */
+.detail-overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center}
 .detail-overlay.active{display:flex}
-.detail-close{position:fixed;top:max(14px,var(--sT));right:16px;width:36px;height:36px;border-radius:50%;border:none;background:var(--m3);color:var(--m3t);font-size:16px;cursor:pointer;z-index:51;font-weight:700;display:none}
-.detail-overlay.active .detail-close{display:flex;align-items:center;justify-content:center}
-.detail-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
-.detail-card img{width:100%;max-height:320px;object-fit:contain;display:block;background:#F5F0EB}
-.detail-info{padding:16px;color:var(--text)}
-.detail-info .date{font-size:12px;color:var(--text2);margin-bottom:14px}
-.pieces{display:flex;flex-direction:column;gap:8px}
-.piece-card{background:var(--m4);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid var(--m4t)}
+.detail-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.15);width:calc(100vw - 40px);max-width:400px;max-height:80vh;overflow-y:auto;position:relative}
+.detail-card .dc-img{width:100%;max-height:220px;object-fit:contain;display:block;background:#F5F0EB}
+.detail-close{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.3);color:#fff;font-size:14px;cursor:pointer;z-index:1;display:flex;align-items:center;justify-content:center;font-weight:700}
+.detail-info{padding:12px 14px;color:var(--text)}
+.detail-info .date{font-size:12px;color:var(--text2);margin-bottom:10px}
+.pieces{display:flex;flex-direction:column;gap:6px}
+.piece-card{background:var(--m4);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;border-left:3px solid var(--m4t)}
 .piece-card:nth-child(odd){background:var(--m1);border-left-color:var(--m1t)}
 .piece-card:nth-child(even){background:var(--m2);border-left-color:var(--m2t)}
-.piece-card .p-set{font-size:14px;font-weight:700}
-.piece-card .p-slot{font-size:13px;color:var(--text2)}
-.detail-actions{display:flex;gap:10px;padding:16px}
-.detail-actions button{flex:1;padding:13px;border-radius:12px;border:none;font-size:15px;cursor:pointer;font-weight:600}
+.piece-card .p-set{font-size:13px;font-weight:700}
+.piece-card .p-slot{font-size:12px;color:var(--text2)}
+.detail-actions{display:flex;gap:10px;padding:12px 14px}
+.detail-actions button{flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;cursor:pointer;font-weight:600}
 .btn-edit{background:var(--m4);color:var(--m4t)}
 .btn-delete{background:var(--m8);color:var(--m8t)}
 
@@ -150,18 +139,16 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .form-body label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin:14px 0 6px}
 .form-body label:first-child{margin-top:0}
 .form-body input[type=text],.form-body select{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-size:15px;background:var(--surface);outline:none;color:var(--text)}
-.form-body input[type=text]:focus,.form-body select:focus{border-color:var(--m4t)}
-.form-body input[type=text]::placeholder{color:var(--text2)}
+.form-body input[type=text]:focus{border-color:var(--border)}
 .form-body input[type=file]{margin-top:8px;font-size:14px;color:var(--text)}
 .img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:var(--radius);margin-top:8px;background:#F5F0EB;display:none}
 
 .piece-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:10px;background:var(--surface);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.02)}
-.piece-row select{width:80px;flex-shrink:0;font-size:14px;padding:10px 8px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23A098AE' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:22px}
+.piece-row select{width:80px;flex-shrink:0;font-size:14px;padding:10px 8px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
 .piece-row select:focus{border-color:var(--m4t)}
 .piece-row input{flex:1;min-width:60px;font-size:14px;padding:10px 12px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);outline:none}
-.piece-row input:focus{border-color:var(--m4t);background:var(--m3)}
-.piece-row input::placeholder{color:var(--text2)}
-.piece-row .btn-rm{background:none;border:none;color:var(--m8t);font-size:20px;cursor:pointer;padding:2px 6px;flex-shrink:0}
+.piece-row input:focus{border-color:var(--border)}
+.piece-row .btn-rm{background:none;border:none;color:var(--m8t);font-size:16px;cursor:pointer;padding:2px 4px;flex-shrink:0}
 .ac-wrap{position:relative;flex:1;min-width:60px}
 .ac-dd{display:none;position:absolute;top:100%;left:0;right:0;z-index:10;background:var(--surface);border:2px solid var(--border);border-radius:10px;max-height:150px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,.06)}
 .ac-dd.show{display:block}
@@ -194,7 +181,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .install-banner.show{display:flex}
 .install-banner .ib-text{flex:1;font-size:14px}
 .install-banner button{padding:9px 18px;border-radius:20px;border:none;background:var(--m4);color:var(--m4t);font-size:14px;cursor:pointer;white-space:nowrap;font-weight:600}
-.install-banner .ib-close{background:none;color:var(--text2);font-size:20px;padding:4px}
+.install-banner .ib-close{background:none;color:var(--text2);font-size:16px;padding:4px}
 .confirm-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.3);display:none;align-items:center;justify-content:center}
 .confirm-overlay.active{display:flex}
 .confirm-dialog{background:var(--surface);border-radius:18px;padding:24px;max-width:300px;width:90%;text-align:center}
@@ -218,8 +205,8 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 <button class="fab" id="fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
 </div>
 <div class="cart-sidebar" id="cartSidebar"><button class="cart-badge" id="cartBadge"><span class="cb-count" id="cartCount">0</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></button></div>
-<div class="cart-panel" id="cartPanel"><div class="cart-panel-header"><button id="cartPanelBack">← 返回</button><h2>购物车结算</h2></div><div class="cart-panel-body" id="cartPanelBody"></div><div class="cart-panel-footer" id="cartPanelFooter"><span>共 0 件</span><span><b>0 星</b></span></div></div>
-<div class="detail-overlay" id="detailOverlay"><button class="detail-close" id="detailClose">✕</button><div class="detail-card"><img class="detail-img" id="detailImg" src="" alt=""><div class="detail-info"><div class="date" id="detailDate"></div><div class="pieces" id="detailPieces"></div></div><div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div></div></div>
+<div class="cart-panel" id="cartPanel"><div class="panel-header"><button id="cartPanelBack">←</button><span class="ph-title">购物车结算</span><button id="btnSelectAll" style="font-size:13px;font-weight:600">☐ 全选</button><button id="btnManage" style="font-size:13px;font-weight:600;color:var(--m8t)">✏️ 管理</button></div><div class="panel-body" id="cartPanelBody"></div><div class="panel-footer" id="cartPanelFooter"><span>共 0 件</span><span><b>0 星</b></span></div></div>
+<div class="detail-overlay" id="detailOverlay"><div class="detail-card"><button class="detail-close" id="detailClose">✕</button><img class="dc-img" id="detailImg" src="" alt=""><div class="detail-info"><div class="date" id="detailDate"></div><div class="pieces" id="detailPieces"></div></div><div class="detail-actions"><button class="btn-edit" id="detailEdit">✏️ 编辑</button><button class="btn-delete" id="detailDelete">🗑 删除</button></div></div></div>
 <div class="form-overlay" id="formOverlay"><div class="form-header"><button id="formCancel">取消</button><span id="formTitle">添加搭配</span><button id="formSubmit" style="font-weight:700">保存</button></div><div class="form-body"><label>📷 游戏截图</label><input type="file" accept="image/*" id="formImageInput"><img class="img-preview" id="formImgPreview" src="" alt=""><label>🧩 部件列表</label><div id="formPieces"></div><button class="btn-add-piece" id="btnAddPiece">+ 添加部件</button><button class="btn-save" id="btnSaveForm">💾 保存搭配</button></div></div>
 <div class="form-overlay" id="pikaFormOverlay"><div class="form-header" style="background:var(--m7);color:var(--m7t)"><button id="pikaFormCancel" style="color:var(--m7t)">取消</button><span>添加皮卡时装</span><button id="pikaFormSubmit" style="font-weight:700;color:var(--m7t)">添加</button></div><div class="form-body"><div class="form-mini"><label>时装名称</label><input type="text" id="pikaName" placeholder="如: 嘟嘟锅"><label>品质</label><select id="pikaQuality"><option value="金色">金色</option><option value="紫色">紫色</option></select><label>图片</label><input type="file" accept="image/*" id="pikaImage"><button style="width:100%;padding:14px;background:var(--m7);color:var(--m7t);border:none;border-radius:12px;font-size:16px;font-weight:700;margin-top:10px;cursor:pointer" id="pikaDoAdd">添加到列表</button></div></div></div>
 <div class="crop-overlay" id="cropOverlay"><div id="cropImgWrap"><img id="cropImg" src=""><div id="cropBox"></div></div><div class="crop-hint" id="cropHint"></div><div class="crop-tools" id="cropTools"><button class="crop-btn-land" id="cropLand">📐 16:9</button><button class="crop-btn-port" id="cropPort">📱 3:4</button><button class="crop-btn-done" id="cropDone">✅ 确认</button></div></div>
@@ -236,7 +223,7 @@ function tc(n){for(var i=0,h=0;i<n.length;i++){h=((h<<5)-h)+n.charCodeAt(i);h|=0
 var DP=[{id:"p01",name:"旧日追忆"},{id:"p02",name:"松果追忆"},{id:"p03",name:"晴空追忆"},{id:"p04",name:"橙花追忆"},{id:"p05",name:"正红追忆"},{id:"p06",name:"反叛水手"},{id:"p07",name:"唱诗班礼赞"},{id:"p08",name:"新芽追忆"},{id:"p09",name:"宁静星愿"},{id:"p10",name:"浪漫星愿"},{id:"p11",name:"明朗星愿"},{id:"p12",name:"魔法学院校服"},{id:"p13",name:"仪典学分院服"},{id:"p14",name:"精灵学分院服"},{id:"p15",name:"炼金学分院服"},{id:"p16",name:"战斗学分院服"},{id:"p17",name:"爵士鹿"},{id:"p18",name:"熔岩布丁"},{id:"p19",name:"蹦蹦花"},{id:"p20",name:"音速犬"},{id:"p21",name:"岚鸟"},{id:"p22",name:"厉毒修萝"},{id:"p23",name:"翠顶夫人"},{id:"p24",name:"卡洛儿",quality:"金色"},{id:"p25",name:"花魁蜂后",quality:"金色"},{id:"p26",name:"皇家狮鹫",quality:"金色"},{id:"p27",name:"星光狮",quality:"金色"},{id:"p28",name:"烈火守护",quality:"金色"},{id:"p29",name:"蒲公英娃娃"},{id:"p30",name:"雪灵"},{id:"p31",name:"圣代甜甜"},{id:"p32",name:"獠牙猪"},{id:"p33",name:"异色獠牙猪"},{id:"p34",name:"白金独角兽"},{id:"p35",name:"异色白金独角兽"},{id:"p36",name:"花衣蝶"},{id:"p37",name:"红绒十字"},{id:"p38",name:"异色红绒十字"},{id:"p39",name:"琉璃水母"},{id:"p40",name:"嘟嘟锅"},{id:"p41",name:"异色嘟嘟锅"},{id:"p42",name:"九幽菇"},{id:"p43",name:"梦悠悠"},{id:"p44",name:"雪影娃娃"},{id:"p45",name:"异色雪影娃娃"},{id:"p46",name:"幽冥眼"},{id:"p47",name:"电球咩咩"},{id:"p48",name:"夏日暖阳"},{id:"p49",name:"快乐果实"},{id:"p50",name:"轻风省果实"},{id:"p51",name:"糖心暖阳"},{id:"p52",name:"晴午革风"},{id:"p53",name:"柿红革风"},{id:"p54",name:"凛冬革风"},{id:"p55",name:"魔草巫灵"},{id:"p56",name:"奇丽花"},{id:"p57",name:"异色奇丽花"},{id:"p58",name:"魔眷鸟"},{id:"p59",name:"高脚鹬"},{id:"p60",name:"咕德帽帽"},{id:"p61",name:"异色咕德帽帽"},{id:"p62",name:"小丑公爵"},{id:"p63",name:"异色小丑公爵"},{id:"p64",name:"巨鼓象"},{id:"p65",name:"异色巨鼓象"},{id:"p66",name:"烟花伯爵"},{id:"p67",name:"异色烟花伯爵"},{id:"p68",name:"海豹船长"},{id:"p69",name:"千棘盔"},{id:"p70",name:"迷迷箱怪"},{id:"p71",name:"怖哭菇"},{id:"p72",name:"幻影灵菇"},{id:"p73",name:"流浪鼠"}];
 
 var db;
-function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open("luoke-v17",2);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("outfits"))d.createObjectStore("outfits",{keyPath:"id"});if(!d.objectStoreNames.contains("pika"))d.createObjectStore("pika",{keyPath:"id"});if(!d.objectStoreNames.contains("pikaCart"))d.createObjectStore("pikaCart",{keyPath:"id"})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
+function dbo(){return new Promise(function(ok,fail){var r=indexedDB.open("luoke-v18",2);r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains("outfits"))d.createObjectStore("outfits",{keyPath:"id"});if(!d.objectStoreNames.contains("pika"))d.createObjectStore("pika",{keyPath:"id"});if(!d.objectStoreNames.contains("pikaCart"))d.createObjectStore("pikaCart",{keyPath:"id"})};r.onsuccess=function(e){db=e.target.result;ok(db)};r.onerror=fail})}
 function dbPut(s,o){return new Promise(function(ok,fail){var t=db.transaction(s,"readwrite");t.objectStore(s).put(o);t.oncomplete=ok;t.onerror=fail})}
 function dbDel(s,id){return new Promise(function(ok,fail){var t=db.transaction(s,"readwrite");t.objectStore(s).delete(id);t.oncomplete=ok;t.onerror=fail})}
 function dbAll(s){return new Promise(function(ok,fail){var t=db.transaction(s,"readonly");var r=t.objectStore(s).getAll();r.onsuccess=function(){ok(r.result||[])};r.onerror=fail})}
@@ -251,7 +238,7 @@ function confirm(msg){return new Promise(function(ok){$("#confirmMsg").textConte
 function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new Image();img.onload=function(){var s=Math.min(sz/img.width,sz/img.height,1);var c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){ok(b)},"image/png")};img.src=bu(blob)})}
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
-var all=[],pika=[],cart=[],sortAsc=true;
+var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,
   cropRes:null,cropMode:0,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
@@ -306,13 +293,12 @@ function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=set
 
 // ═══════ HOME ═══════
 function renderHome(){$("#fab").style.display="flex";$("#cartSidebar").style.display="block";var main=$("#main"),outfits=filt(st.q),cw=document.getElementById("cw");if(cw)cw.remove();var html="";if(!outfits.length){html='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>还没有收藏穿搭</p><p>点击右下角 + 添加游戏截图吧</p></div>'}else{html+='<div class="gallery">';outfits.forEach(function(o){var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});var chips="";sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+";color:"+c.tx+'">'+esc(s)+"</span>"});html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+"</div></div>"});html+="</div>";html+='<div class="export-row"><button id="btnExport">📤 导出数据</button><button id="btnImport">📥 导入数据</button></div>'}main.innerHTML=html;main.querySelectorAll(".card").forEach(function(c){c.addEventListener("click",function(){showDetail(c.dataset.id)})});var be=document.getElementById("btnExport"),bi=document.getElementById("btnImport");if(be)be.onclick=exportData;if(bi)bi.onclick=importData;renderCarousel()}
-function renderFashion(){$("#fab").style.display="flex";$("#cartSidebar").style.display="block";var cw=document.getElementById("cw");if(cw)cw.remove();$("#main").innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>时装分组功能调整中</p><p>请稍候…</p></div>'}
+function renderFashion(){var cw=document.getElementById("cw");if(cw)cw.remove();$("#main").innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>时装分组功能调整中</p><p>请稍候…</p></div>'}
 
-// ═══════ CART with checkboxes ═══════
-function cartCount(){return cart.length}function updateCartBadge(){$("#cartCount").textContent=cartCount()}function isInCart(pid){return cart.some(function(x){return x.id===pid})}
+// ═══════ CART ═══════
+function cardCount(){return cart.length}function updateCartBadge(){var el=$("#cartCount");if(el)el.textContent=cardCount()}function isInCart(pid){return cart.some(function(x){return x.id===pid})}
 function renderCart(){
-  $("#fab").style.display="none";$("#cartSidebar").style.display="none";var cw=document.getElementById("cw");if(cw)cw.remove();
-  var main=$("#main"),html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加皮卡时装</button><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button></div><div class="cart-list">';
+  var cw=document.getElementById("cw");if(cw)cw.remove();var main=$("#main"),html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加皮卡时装</button><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button></div><div class="cart-list">';
   var list=pika.slice();if(!sortAsc)list.reverse();
   list.forEach(function(p){var inCart=isInCart(p.id),q=p.quality||"紫色",price=QP[q]||98;
     html+='<div class="cart-row-h"><input type="checkbox" class="cr-chk" data-pid="'+p.id+'"><div class="cr-img" data-pid="'+p.id+'">';if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}else{html+='<span class="cr-plus">+</span>'}html+='</div><div class="cr-info"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-meta"><button class="ci-quality-toggle '+(q==="金色"?"ci-quality-gold":"ci-quality-purple")+'" data-pid="'+p.id+'">'+(q==="金色"?"✦ 金色":"◇ 紫色")+'</button></div></div><span class="cr-price">⭐'+price+'星</span><button class="cr-buy'+(inCart?" in-cart":"")+'" data-pid="'+p.id+'">'+(inCart?"✓ 已加入":"+ 加入")+'</button></div>';
@@ -320,17 +306,48 @@ function renderCart(){
   html+='</div><div class="cart-settle" id="cartSettle"><label class="cs-info">已选 <b id="selCount">0</b> 件 · 合计 <b id="selPrice">0</b> 星</label><button class="cs-btn" id="btnSettle">结算</button></div></div>';
   main.innerHTML=html;
   document.getElementById("btnAddPika").onclick=function(){$("#pikaFormOverlay").classList.add("active")};
-  document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;renderCart()};
-  document.getElementById("btnSettle").onclick=function(){var c=0,p=0;main.querySelectorAll(".cr-chk:checked").forEach(function(cb){c++;var pid=cb.dataset.pid;var pk=pika.find(function(x){return x.id===pid});if(pk){p+=QP[pk.quality||"紫色"]||98}});toast(c?"共 "+c+" 件 · "+p+" 星":"请先勾选时装")};
+  document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;renderCart()};document.getElementById("btnSettle").onclick=function(){var c=0,p=0;main.querySelectorAll(".cr-chk:checked").forEach(function(cb){c++;var pid=cb.dataset.pid;var pk=pika.find(function(x){return x.id===pid});if(pk){p+=QP[pk.quality||"紫色"]||98}});toast(c?"共 "+c+" 件 · "+p+" 星":"请先勾选时装")};
   main.querySelectorAll(".cr-buy").forEach(function(btn){btn.onclick=function(){toggleCart(this.dataset.pid,this)}});
   main.querySelectorAll(".cr-img").forEach(function(el){el.onclick=function(e){e.stopPropagation();addPikaImage(this.dataset.pid)}});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart();toast("已切换")}});
-  main.querySelectorAll(".cr-chk").forEach(function(cb){cb.addEventListener("change",function(){updateSettle()})});
+  main.querySelectorAll(".cr-chk").forEach(function(cb){cb.addEventListener("change",function(){updateSettle()})});$("#fab").style.display="none";
 }
 function updateSettle(){var cbs=document.querySelectorAll(".cr-chk:checked"),c=cbs.length,p=0;cbs.forEach(function(cb){var pid=cb.dataset.pid;var pk=pika.find(function(x){return x.id===pid});if(pk){p+=QP[pk.quality||"紫色"]||98}});var sc=document.getElementById("selCount"),sp=document.getElementById("selPrice");if(sc)sc.textContent=c;if(sp)sp.textContent=p}
-function toggleCart(pid,btn){if(isInCart(pid)){cart=cart.filter(function(x){return x.id!==pid});dbDel("pikaCart",pid);if(btn){btn.textContent="+ 加入";btn.classList.remove("in-cart")}}else{var p=pika.find(function(x){return x.id===pid});if(!p)return;var q=p.quality||"紫色";var ci={id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null};cart.push(ci);dbPut("pikaCart",ci);if(btn){btn.textContent="✓ 已加入";btn.classList.add("in-cart")}}updateCartBadge()}
-function openCartPanel(){updateCartBadge();var body=$("#cartPanelBody"),html="",total=0;if(!cart.length){html='<div class="empty"><p>购物车是空的</p></div>'}else{cart.forEach(function(c){total+=(c.price||0);html+='<div class="cart-row">';if(c.imageBlob){html+='<img src="'+bu(c.imageBlob)+'" alt="" style="width:48px;height:48px;object-fit:cover">'}else{html+='<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#F5F0EB;border-radius:8px;font-size:22px;color:rgba(0,0,0,.15)">+</span>'}html+='<span class="cr-name">'+esc(c.name)+' <span style="font-size:11px;color:var(--text2)">'+(c.quality==="金色"?"✦金色":"◇紫色")+' ⭐'+(c.price||0)+'星</span></span>';html+='<button class="cr-del" data-pid="'+c.id+'">🗑</button></div>'})}body.innerHTML=html;$("#cartPanelFooter").innerHTML="<span>共 "+cart.length+" 件</span><span><b>"+total+" 星</b></span>";body.querySelectorAll(".cr-del").forEach(function(b){b.onclick=function(){cart=cart.filter(function(x){return x.id!==b.dataset.pid});dbDel("pikaCart",b.dataset.pid);updateCartBadge();openCartPanel()}});$("#cartPanel").classList.add("active");document.body.style.overflow="hidden"}function closeCartPanel(){$("#cartPanel").classList.remove("active");document.body.style.overflow=""}
-function addPikaFashion(){var name=$("#pikaName").value.trim(),quality=$("#pikaQuality").value;if(!name){toast("请输入时装名称");return}var id="p"+uid(),obj={id:id,name:name,quality:quality,imageBlob:null};var fi=$("#pikaImage");if(fi.files&&fi.files[0]){startCrop(fi.files[0],3/4,1,function(cropped){obj.imageBlob=cropped;dbPut("pika",obj).then(function(){pika.push(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";$("#pikaImage").value="";renderCart();toast("已添加")})})}else{dbPut("pika",obj).then(function(){pika.push(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";renderCart();toast("已添加")})}}
+function toggleCart(pid,btn){if(isInCart(pid)){cart=cart.filter(function(x){return x.id!==pid});dbDel("pikaCart",pid);updateCartBadge();if(btn){btn.textContent="+ 加入";btn.classList.remove("in-cart")}}else{var p=pika.find(function(x){return x.id===pid});if(!p)return;var q=p.quality||"紫色";cart.push({id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null});dbPut("pikaCart",{id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null});updateCartBadge();if(btn){btn.textContent="✓ 已加入";btn.classList.add("in-cart")}}}
+
+// ═══════ CART PANEL — settlement ═══════
+function openCartPanel(){panelMode=false;renderCartPanel();$("#cartPanel").classList.add("active")}
+function closeCartPanel(){$("#cartPanel").classList.remove("active")}
+function renderCartPanel(){
+  var body=$("#cartPanelBody"),html="",total=0;
+  if(!cart.length){html='<div class="empty"><p>购物车是空的</p></div>';$("#btnSelectAll").style.display="none";$("#btnManage").style.display="none"}
+  else{
+    $("#btnSelectAll").style.display="";$("#btnManage").style.display="";
+    cart.forEach(function(c){total+=(c.price||0);
+      html+='<div class="panel-row">';
+      if(panelMode){html+='<input type="checkbox" class="panel-chk" data-pid="'+c.id+'">'}
+      if(c.imageBlob){html+='<img src="'+bu(c.imageBlob)+'" alt="" style="width:48px;height:48px;object-fit:cover">'}else{html+='<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#F5F0EB;border-radius:8px;font-size:22px;color:rgba(0,0,0,.15)">+</span>'}
+      html+='<span class="pr-name">'+esc(c.name)+' <span style="font-size:11px;color:var(--text2)">'+(c.quality==="金色"?"✦金色":"◇紫色")+' ⭐'+(c.price||0)+'星</span></span>';
+      if(panelMode){html+='<button class="pr-del" data-pid="'+c.id+'">🗑</button>'}
+      html+='</div>';
+    });
+  }
+  body.innerHTML=html;$("#cartPanelFooter").innerHTML="<span>共 "+cart.length+" 件"+((panelMode&&cart.length)?"，已勾 0 件":"")+"</span><span><b>"+total+" 星</b></span>";
+  body.querySelectorAll(".pr-del").forEach(function(b){b.onclick=function(){cart=cart.filter(function(x){return x.id!==b.dataset.pid});dbDel("pikaCart",b.dataset.pid);renderCartPanel()}});
+  body.querySelectorAll(".panel-chk").forEach(function(cb){cb.addEventListener("change",function(){updatePanelFooter()})});
+}
+function updatePanelFooter(){
+  var cbs=document.querySelectorAll(".panel-chk:checked"),c=cbs.length,p=0;cbs.forEach(function(cb){var pid=cb.dataset.pid;var ct=cart.find(function(x){return x.id===pid});if(ct)p+=ct.price||0});
+  var total=0;cart.forEach(function(c){total+=c.price||0});$("#cartPanelFooter").innerHTML="<span>共 "+cart.length+" 件"+(panelMode&&cart.length?"，已勾 "+c+" 件":"")+"</span><span><b>"+total+" 星</b></span>";
+}
+// select all & manage buttons in panel
+function bindPanelHeader(){
+  $("#btnSelectAll").onclick=function(){
+    selAll=!selAll;this.textContent=selAll?"☑ 取消":"☐ 全选";
+    document.querySelectorAll(".panel-chk").forEach(function(cb){cb.checked=selAll});updatePanelFooter();
+  };
+  $("#btnManage").onclick=function(){panelMode=!panelMode;selAll=false;$("#btnSelectAll").textContent="☐ 全选";$("#btnManage").textContent=panelMode?"✅ 完成":"✏️ 管理";renderCartPanel()};
+}
 
 // ═══════ DETAIL ═══════
 function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$("#detailImg").src=bu(o.image);$("#detailDate").textContent="📅 添加于 "+fd(o.createdAt);var html="";o.pieces.forEach(function(p){html+='<div class="piece-card"><div><div class="p-set">'+esc(p.setName||"未分组")+'</div><div class="p-slot">'+esc(p.slot)+"</div></div></div>"});$("#detailPieces").innerHTML=html;$("#detailOverlay").classList.add("active");document.body.style.overflow="hidden"}function closeDetail(){$("#detailOverlay").classList.remove("active");document.body.style.overflow="";st.did=null}
@@ -348,7 +365,7 @@ function b2b(b64){var parts=b64.split(","),mime=parts[0].match(/:(.*?);/)[1],byt
 function exportData(){if(!all.length){toast("没有数据可导出");return}toast("正在导出…");var ps=all.map(function(o){return Promise.all([b64(o.image),b64(o.thumbnail)]).then(function(p){return{id:o.id,createdAt:o.createdAt,pieces:o.pieces,imageBase64:p[0],thumbBase64:p[1],imageWidth:o.imageWidth||0,imageHeight:o.imageHeight||0}})});Promise.all(ps).then(function(data){var json=JSON.stringify({version:1,exportedAt:Date.now(),count:data.length,data:data}),blob=new Blob([json],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="luoke-"+fd(Date.now())+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);toast("导出成功 📤")}).catch(function(e){toast("导出失败: "+e.message)})}
 function importData(){var inp=document.createElement("input");inp.type="file";inp.accept=".json";inp.addEventListener("change",function(){var file=this.files[0];if(!file)return;file.text().then(function(text){var json=JSON.parse(text);if(!json.data||!Array.isArray(json.data))throw new Error("无效备份");toast("正在导入 "+json.data.length+" 条…");var chain=Promise.resolve();json.data.forEach(function(item){chain=chain.then(function(){return new Promise(function(ok2){var t=db.transaction("outfits","readonly"),r=t.objectStore("outfits").get(item.id);r.onsuccess=function(){ok2(r.result)};r.onerror=function(){ok2(null)}})}).then(function(ex){if(ex)return;return dbPut("outfits",{id:item.id,createdAt:item.createdAt,pieces:item.pieces||[],image:b2b(item.imageBase64),thumbnail:b2b(item.thumbBase64||item.imageBase64),imageWidth:item.imageWidth||0,imageHeight:item.imageHeight||0})})});chain.then(function(){refresh().then(function(){renderHome();toast("导入完成 🎉")})})}).catch(function(e){toast("导入失败: "+e.message)})});inp.click()}
 
-function updSearch(){st.q=$("#searchInput").value.trim();if(st.q)$("#searchBar").classList.add("searching");else $("#searchBar").classList.remove("searching");if(st.tab==="home")renderHome()}
+function updSearch(){st.q=$("#searchInput").value.trim();if(st.tab==="home")renderHome()}
 function switchTab(tab){st.tab=tab;var cw=document.getElementById("cw");if(cw)cw.remove();document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("active",t.dataset.tab===tab)});if(tab==="cart"){renderCart()}else if(tab==="fashion"){renderFashion()}else{renderHome()}}
 
 function bind(){
@@ -362,12 +379,11 @@ function bind(){
   $("#formCancel").addEventListener("click",closeForm);$("#formOverlay").addEventListener("click",function(e){if(e.target===this)closeForm()});
   $("#formSubmit").addEventListener("click",saveForm);$("#btnSaveForm").addEventListener("click",saveForm);
   $("#btnAddPiece").addEventListener("click",function(){var rows=$("#formPieces").querySelectorAll(".piece-row"),ls="头发";if(rows.length)ls=rows[rows.length-1].querySelector(".fn-slot").value;var idx=SL.indexOf(ls),ns=SL[(idx+1)%SL.length];addRow({setName:"",slot:ns});var nrs=$("#formPieces").querySelectorAll(".piece-row");setTimeout(function(){nrs[nrs.length-1].querySelector(".fn-set").focus()},100)});
-  // form crop: default 3/4 portrait mode with free zoom+drag
   $("#formImageInput").addEventListener("change",function(){var f=this.files[0];if(!f)return;startCrop(f,3/4,1,function(cropped){st.croppedImgBlob=cropped;$("#formImgPreview").src=bu(cropped);$("#formImgPreview").style.display="block"})});
   bindCropEv();
   $("#pikaFormCancel").addEventListener("click",function(){$("#pikaFormOverlay").classList.remove("active")});
   $("#pikaDoAdd").addEventListener("click",addPikaFashion);
-  $("#cartBadge").addEventListener("click",openCartPanel);$("#cartPanelBack").addEventListener("click",closeCartPanel);
+  bindPanelHeader();$("#cartPanelBack").addEventListener("click",closeCartPanel);
   $("#installBtn").addEventListener("click",function(){if(dp){dp.prompt().then(function(r){if(r.outcome==="accepted"){toast("已安装");$("#installBanner").classList.remove("show");dp=null}}).catch(function(){})}else toast("浏览器菜单 → 添加到主屏幕")});
   $("#installDismiss").addEventListener("click",function(){$("#installBanner").classList.remove("show")});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"){if($("#detailOverlay").classList.contains("active"))closeDetail();else if($("#formOverlay").classList.contains("active"))closeForm()}});
@@ -377,7 +393,7 @@ var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;$("#installBanner").classList.add("show")});
 window.addEventListener("appinstalled",function(){dp=null;$("#installBanner").classList.remove("show")});
 function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){})}}
-function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v17").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
+function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v18").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
 function refresh(){return dbAll("outfits").then(function(arr){all=arr})}
 function loadPika(){return dbAll("pika").then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut("pika",p)})});return chain.then(function(){return dbAll("pika")}).then(function(arr){pika=arr})}})}
 function loadCart(){return dbAll("pikaCart").then(function(arr){cart=arr})}
