@@ -434,16 +434,15 @@ function renderCart(){
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;manageMode=false;renderCart()};
   main.querySelectorAll(".cr-img").forEach(function(el){el.onclick=function(e){e.stopPropagation();addPikaImage(this.dataset.pid)}});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart()}});
-  // Swipe
-  var curRow=null,sx=0,sy=0,locked=false;
+  // Swipe — per-row state via DOM property, no shared variable
   main.querySelectorAll(".cart-row-h").forEach(function(row){
-    row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icon-btn")||t.closest(".cr-img")||t.closest(".ci-quality-toggle"))return;curRow=row;sx=e.touches[0].clientX;sy=e.touches[0].clientY;locked=false;row.style.transition="none"},{passive:false});
-    row.addEventListener("touchmove",function(e){if(curRow!==row)return;var dx=e.touches[0].clientX-sx,dy=e.touches[0].clientY-sy;if(!locked&&Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>10){locked=true;e.preventDefault()}if(locked){if(dx<-20){row.classList.add("swiped");var w=row.closest(".swipe-wrap");if(w)w.classList.add("swiped")}else if(dx>20){row.classList.remove("swiped");var w=row.closest(".swipe-wrap");if(w)w.classList.remove("swiped")}}},{passive:false});
-    row.addEventListener("touchend",function(){if(curRow===row){row.style.transition="transform .2s ease";curRow=null}locked=false});
+    row._swx=null;row._swy=null;row._swl=false;
+    row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icon-btn")||t.closest(".cr-img")||t.closest(".ci-quality-toggle")){this._swl=false;return}this._swx=e.touches[0].clientX;this._swy=e.touches[0].clientY;this._swl=false;this.style.transition="none"},{passive:false});
+    row.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-this._swx,dy=e.touches[0].clientY-this._swy;if(!this._swl){if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>8){this._swl=true;e.preventDefault()}else return}if(this._swl){if(dx<-25){this.classList.add("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.add("swiped")}else if(dx>25){this.classList.remove("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.remove("swiped")}e.preventDefault()}},{passive:false});
+    row.addEventListener("touchend",function(){this.style.transition="transform .2s ease";this._swl=false});
   });
   main.querySelectorAll(".swipe-bg").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();toggleCart(this.dataset.pid,this)}});
-  main.addEventListener("click",function(e){if(e.target.closest("#btnPokedexGear")){manageMode=!manageMode;renderCart()}});
-  if(manageMode){document.getElementById("btnPokedexGear").style.color="var(--m8t)";main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<15)return;var del=document.createElement("button");del.textContent="🗑";del.style.cssText="position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);manageMode=false;renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}else{var g=document.getElementById("btnPokedexGear");if(g)g.style.color=""}
+  if(manageMode){var gm=document.getElementById("btnPokedexGear");if(gm)gm.style.color="var(--m8t)";main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<15)return;var del=document.createElement("button");del.textContent="🗑";del.style.cssText="position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);manageMode=false;renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}else{var gm2=document.getElementById("btnPokedexGear");if(gm2)gm2.style.color=""}
 }
 
 function showPikaDetail(p){var ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:90;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer";ov.innerHTML='<img src="'+bu(p.imageBlob)+'" style="max-width:95vw;max-height:95vh;object-fit:contain">';ov.addEventListener("click",function(){document.body.removeChild(ov)});document.body.appendChild(ov)}
@@ -555,6 +554,8 @@ function bind(){
   $("#installBtn").addEventListener("click",function(){if(dp){dp.prompt().then(function(r){if(r.outcome==="accepted"){toast("已安装");$("#installBanner").classList.remove("show");dp=null}}).catch(function(){})}else toast("浏览器菜单 → 添加到主屏幕")});
   $("#installDismiss").addEventListener("click",function(){$("#installBanner").classList.remove("show")});
   document.addEventListener("keydown",function(e){if(e.key==="Escape"){if($("#detailOverlay").classList.contains("active"))closeDetail();else if($("#formOverlay").classList.contains("active"))closeForm()}});
+  // Gear button: delegate once (not in renderCart which runs every time)
+  document.getElementById("main").addEventListener("click",function(e){if(e.target.closest("#btnPokedexGear")){manageMode=!manageMode;renderCart()}});
 }
 
 var dp=null;
