@@ -523,7 +523,7 @@ function importData(){var inp=document.createElement("input");inp.type="file";in
 }).catch(function(e){toast("导入失败: "+e.message)})});inp.click()}
 
 function updSearch(){st.q=$("#searchInput").value.trim();if(st.q)$("#searchBar").classList.add("searching");else $("#searchBar").classList.remove("searching");if(st.tab==="home")renderHome()}
-function switchTab(tab){st.tab=tab;var cw=document.getElementById("cw");if(cw)cw.remove();document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("active",t.dataset.tab===tab)});if(tab==="cart"){renderCart()}else if(tab==="fashion"){renderFashion()}else{renderHome()}}
+function switchTab(tab){st.tab=tab;var cw=document.getElementById("cw");if(cw)cw.remove();document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("active",t.dataset.tab===tab)});if(tab==="cart"){$("#main").innerHTML='<div class="empty"><p>图鉴加载中…pika:'+(pika?pika.length:"?")+'</p></div>';setTimeout(function(){try{renderCart()}catch(e){$("#main").innerHTML='<div class="empty"><p>图鉴出错:'+e.message+'</p></div>'}},100)}else if(tab==="fashion"){renderFashion()}else{renderHome()}}
 
 function bind(){
   document.querySelectorAll(".tab").forEach(function(t){t.addEventListener("click",function(){switchTab(t.dataset.tab)})});
