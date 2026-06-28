@@ -420,7 +420,7 @@ function renderCart(){
   var list=pika.slice().sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0)});if(!sortAsc)list.reverse();
   var full=0,part=0;pika.forEach(function(p){var cs=p.collectState||"none";if(cs==="full")full++;else if(cs==="partial")part++});
   var pct=pika.length?Math.round(full/pika.length*100):0;
-  var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+full+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button class="cart-gear-btn" onclick="window._toggleGear()">⚙</button></div><div class="cart-list">';
+  var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+full+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn">⚙</button></div><div class="cart-list">';
   var BC=["#FFE8E0","#FFECD2","#E8F5E0","#D8F0F5","#F0E0F5","#FFE0EC","#FFF8D6","#FDE8E8"];
   list.forEach(function(p,li){var cs=p.collectState||"none",borderColor=BC[li%8];var q=p.quality||"紫色",price=QP[q]||98;
     var inCart=isInCart(p.id);
@@ -432,6 +432,7 @@ function renderCart(){
   html+='</div></div>';main.innerHTML=html;
   document.getElementById("btnAddPika").onclick=function(){$("#pikaFormOverlay").classList.add("active")};
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;manageMode=false;renderCart()};
+  document.getElementById("btnPokedexGear").onclick=function(){manageMode=!manageMode;renderCart()};
   main.querySelectorAll(".cr-img").forEach(function(el){el.onclick=function(e){e.stopPropagation();addPikaImage(this.dataset.pid)}});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart()}});
   // Swipe — per-row state via DOM property, no shared variable
@@ -442,7 +443,7 @@ function renderCart(){
     row.addEventListener("touchend",function(){this.style.transition="transform .2s ease";this._swl=false});
   });
   main.querySelectorAll(".swipe-bg").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();toggleCart(this.dataset.pid,this)}});
-  if(manageMode){var gm=main.querySelector(".cart-gear-btn");if(gm)gm.style.color="var(--m8t)";main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<15)return;var del=document.createElement("button");del.textContent="🗑";del.style.cssText="position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);manageMode=false;renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}else{var gm2=main.querySelector(".cart-gear-btn");if(gm2)gm2.style.color=""}
+  if(manageMode){var gm=document.getElementById("btnPokedexGear");if(gm)gm.style.color="var(--m8t)";main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<15)return;var del=document.createElement("button");del.textContent="🗑";del.style.cssText="position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);manageMode=false;renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}else{var gm2=document.getElementById("btnPokedexGear");if(gm2)gm2.style.color=""}
 }
 
 function showPikaDetail(p){var ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:90;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer";ov.innerHTML='<img src="'+bu(p.imageBlob)+'" style="max-width:95vw;max-height:95vh;object-fit:contain">';ov.addEventListener("click",function(){document.body.removeChild(ov)});document.body.appendChild(ov)}
