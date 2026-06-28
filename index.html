@@ -408,6 +408,7 @@ function iconsRow(cs,borderColor){
 }
 function isInCart(pid){return cart.some(function(x){return x.id===pid})}
 function renderCart(){
+  try{
   if(!pika||!pika.length){$("#main").innerHTML='<div class="empty"><p>图鉴数据为空 #E1</p><p>pika长度:'+(pika?pika.length:'null')+'</p></div>';return}
   var cw=document.getElementById("cw");if(cw)cw.remove();$("#cartSidebar").style.display="none";$("#fab").style.display="none";var main=$("#main");
   var BC=['#FFE8E0','#FFECD2','#E8F5E0','#D8F0F5','#F0E0F5','#FFE0EC','#FFF8D6','#FDE8E8'];
@@ -437,7 +438,7 @@ function renderCart(){
   main.querySelectorAll('.collect-icon-btn[data-action="mag"]').forEach(function(btn){btn.addEventListener("click",function(e){e.stopPropagation();var row=this.closest(".cart-row-h");if(!row)return;var pid=row.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p||!p.imageBlob)return;showPikaDetail(p)})});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart();toast("已切换")}});
   if(manageMode){main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<20)return;var del=document.createElement("button");del.textContent="🗑";del.style.cssText="position:absolute;right:76px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}
-}
+  }catch(err){$("#main").innerHTML='<div class="empty"><p>图鉴页面出错 #E2</p><p>'+err.message+'</p></div>'}}
 function showPikaDetail(p){var ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:90;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer";ov.innerHTML='<img src="'+bu(p.imageBlob)+'" style="max-width:95vw;max-height:95vh;object-fit:contain">';ov.addEventListener("click",function(){document.body.removeChild(ov)});document.body.appendChild(ov)}
 function cartCount(){return cart.length}function updateCartBadge(){var el=$("#cartCount");if(el)el.textContent=cartCount()}
 function toggleCart(pid,btn){if(isInCart(pid)){cart=cart.filter(function(x){return x.id!==pid});dbDel("pikaCart",pid);updateCartBadge()}else{var p=pika.find(function(x){return x.id===pid});if(!p)return;var q=p.quality||"紫色";cart.push({id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null});dbPut("pikaCart",{id:p.id,name:p.name,quality:q,price:QP[q]||98,imageBlob:p.imageBlob||null});updateCartBadge()}
