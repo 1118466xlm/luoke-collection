@@ -406,12 +406,21 @@ function renderFashion(){var cw=document.getElementById("cw");if(cw)cw.remove();
 
 // ═══ 图鉴 — 衣架收集 + 左滑加购 + 齿轮管理 + 进度条 ═══
 var manageMode=false;
-function hBtn(bc,isFilled){var c=isFilled?bc:'#AAA';return'<button class="collect-icon-btn" data-action="hanger"><svg viewBox="0 0 20 20"><line x1="10" y1="1.5" x2="10" y2="4.5" stroke="'+c+'" stroke-width="1.5"/><path d="M2.5 6.5h15" stroke="'+c+'" stroke-width="1.8"/><path d="M10 6.5l-6 8.5 2.8 1L10 12l4.5 4 2.5-.8L10 6.5z" fill="'+(isFilled?c:'none')+'" fill-opacity=".15" stroke="'+c+'" stroke-width="1.3" stroke-linejoin="round"/></svg></button>'}
-function gBtn(bc,isActive){var c=isActive?bc:'#AAA';return'<button class="collect-icon-btn" data-action="gift"><svg viewBox="0 0 20 20"><rect x="2" y="5" width="16" height="13" rx="2" fill="none" stroke="'+c+'" stroke-width="1.3"/><line x1="10" y1="5" x2="10" y2="18" stroke="'+c+'" stroke-width="1"/><line x1="2" y1="11" x2="18" y2="11" stroke="'+c+'" stroke-width="1"/><path d="M10 5l-3-3a2 2 0 014 0L10 5zm0 0l3-3a2 2 0 00-4 0L10 5z" fill="none" stroke="'+c+'" stroke-width="1.2"/></svg></button>'}
-function mBtn(){return'<button class="collect-icon-btn" data-action="mag"><svg viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5" fill="none" stroke="#999" stroke-width="1.3"/><line x1="12.5" y1="12.5" x2="17" y2="17" stroke="#999" stroke-width="1.5" stroke-linecap="round"/></svg></button>'}
-function iconsRow(cs,borderColor){
+function hBtn(bc,pid,isFilled){var c=isFilled?bc:'#AAA';return'<button class="collect-icon-btn" onclick="collectClick(\x27hanger\x27,\x27'+pid+'\x27,event)"><svg viewBox="0 0 20 20"><line x1="10" y1="1.5" x2="10" y2="4.5" stroke="'+c+'" stroke-width="1.5"/><path d="M2.5 6.5h15" stroke="'+c+'" stroke-width="1.8"/><path d="M10 6.5l-6 8.5 2.8 1L10 12l4.5 4 2.5-.8L10 6.5z" fill="'+(isFilled?c:'none')+'" fill-opacity=".15" stroke="'+c+'" stroke-width="1.3" stroke-linejoin="round"/></svg></button>'}
+function gBtn(bc,pid,isActive){var c=isActive?bc:'#AAA';return'<button class="collect-icon-btn" onclick="collectClick(\x27gift\x27,\x27'+pid+'\x27,event)"><svg viewBox="0 0 20 20"><rect x="2" y="5" width="16" height="13" rx="2" fill="none" stroke="'+c+'" stroke-width="1.3"/><line x1="10" y1="5" x2="10" y2="18" stroke="'+c+'" stroke-width="1"/><line x1="2" y1="11" x2="18" y2="11" stroke="'+c+'" stroke-width="1"/><path d="M10 5l-3-3a2 2 0 014 0L10 5zm0 0l3-3a2 2 0 00-4 0L10 5z" fill="none" stroke="'+c+'" stroke-width="1.2"/></svg></button>'}
+function mBtn(pid){return'<button class="collect-icon-btn" onclick="collectClick(\x27mag\x27,\x27'+pid+'\x27,event)"><svg viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5" fill="none" stroke="#999" stroke-width="1.3"/><line x1="12.5" y1="12.5" x2="17" y2="17" stroke="#999" stroke-width="1.5" stroke-linecap="round"/></svg></button>'}
+function iconsRow(cs,borderColor,pid){
   var bc=borderColor;
-  return'<span class="collect-icons">'+hBtn(bc,cs!=='none')+gBtn(bc,cs==='partial')+mBtn()+'</span>';
+  return'<span class="collect-icons">'+hBtn(bc,pid,cs!=='none')+gBtn(bc,pid,cs==='partial')+mBtn(pid)+'</span>';
+}
+// Global onclick handler for collect-icon-btn (inline onclick)
+window.collectClick=function(action,pid,e){
+  if(e){e.stopPropagation();e.preventDefault()}
+  var p=pika.find(function(x){return x.id===pid});if(!p)return;
+  if(action==='hanger'){p.collectState=p.collectState==='full'?'partial':(p.collectState==='partial'?'none':'full');if(p.collectState==='none')delete p.collectState}
+  else if(action==='gift'){p.collectState=p.collectState==='partial'?'none':'partial';if(p.collectState==='none')delete p.collectState}
+  else if(action==='mag'){if(!p.imageBlob)return;showPikaDetail(p);return}
+  dbPut('pika',p);renderCart()
 }
 function isInCart(pid){return cart.some(function(x){return x.id===pid})}
 function renderCart(){
@@ -422,19 +431,13 @@ function renderCart(){
   var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+full+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button></div><div class="cart-list">';
   var BC=["#FFE8E0","#FFECD2","#E8F5E0","#D8F0F5","#F0E0F5","#FFE0EC","#FFF8D6","#FDE8E8"];
   list.forEach(function(p,li){var cs=p.collectState||"none",borderColor=BC[li%8];var q=p.quality||"紫色",price=QP[q]||98;
-    html+='<div class="cart-row-h"><div class="cr-img" data-pid="'+p.id+'">';if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}else{html+='<span class="cr-plus">+</span>'}html+='</div><div class="cr-info"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-meta"><span class="ci-quality-toggle '+(q==="金色"?"ci-quality-gold":"ci-quality-purple")+'" data-pid="'+p.id+'">'+(q==="金色"?"✦ 金色":"◇ 紫色")+'</span><span class="cr-price">⭐'+price+'星</span></div></div>'+iconsRow(cs,borderColor)+'</div>';
+    html+='<div class="cart-row-h"><div class="cr-img" data-pid="'+p.id+'">';if(p.imageBlob){html+='<img src="'+bu(p.imageBlob)+'" alt="">'}else{html+='<span class="cr-plus">+</span>'}html+='</div><div class="cr-info"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-meta"><span class="ci-quality-toggle '+(q==="金色"?"ci-quality-gold":"ci-quality-purple")+'" data-pid="'+p.id+'">'+(q==="金色"?"✦ 金色":"◇ 紫色")+'</span><span class="cr-price">⭐'+price+'星</span></div></div>'+iconsRow(cs,borderColor,p.id)+'</div>';
   });
   html+='</div></div>';main.innerHTML=html;
   document.getElementById("btnAddPika").onclick=function(){$("#pikaFormOverlay").classList.add("active")};
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;renderCart()};
   main.querySelectorAll(".cr-img").forEach(function(el){el.onclick=function(e){e.stopPropagation();addPikaImage(this.dataset.pid)}});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart()}});
-  main.querySelectorAll('.collect-icon-btn').forEach(function(btn){btn.onclick=function(e){e.stopPropagation();var action=btn.getAttribute("data-action");var row=btn.closest(".cart-row-h");if(!row)return;var pid=row.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;
-    if(action==="hanger"){p.collectState=p.collectState==="full"?"partial":(p.collectState==="partial"?"none":"full");if(p.collectState==="none")delete p.collectState}
-    else if(action==="gift"){p.collectState=p.collectState==="partial"?"none":"partial";if(p.collectState==="none")delete p.collectState}
-    else if(action==="mag"){if(!p.imageBlob)return;showPikaDetail(p);return}
-    dbPut("pika",p);renderCart()
-  }});
 }
 
 function showPikaDetail(p){var ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:90;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer";ov.innerHTML='<img src="'+bu(p.imageBlob)+'" style="max-width:95vw;max-height:95vh;object-fit:contain">';ov.addEventListener("click",function(){document.body.removeChild(ov)});document.body.appendChild(ov)}
