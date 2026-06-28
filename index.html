@@ -432,7 +432,6 @@ function renderCart(){
   html+='</div></div>';main.innerHTML=html;
   document.getElementById("btnAddPika").onclick=function(){$("#pikaFormOverlay").classList.add("active")};
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;manageMode=false;renderCart()};
-  document.getElementById("btnPokedexGear").onclick=function(){manageMode=!manageMode;renderCart()};
   main.querySelectorAll(".cr-img").forEach(function(el){el.onclick=function(e){e.stopPropagation();addPikaImage(this.dataset.pid)}});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart()}});
   // Swipe
@@ -443,6 +442,7 @@ function renderCart(){
     row.addEventListener("touchend",function(){if(curRow===row){row.style.transition="transform .2s ease";curRow=null}locked=false});
   });
   main.querySelectorAll(".swipe-bg").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();toggleCart(this.dataset.pid,this)}});
+  main.addEventListener("click",function(e){if(e.target.closest("#btnPokedexGear")){manageMode=!manageMode;renderCart()}});
   if(manageMode){document.getElementById("btnPokedexGear").style.color="var(--m8t)";main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<15)return;var del=document.createElement("button");del.textContent="🗑";del.style.cssText="position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);manageMode=false;renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}else{var g=document.getElementById("btnPokedexGear");if(g)g.style.color=""}
 }
 
