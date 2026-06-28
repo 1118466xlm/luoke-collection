@@ -115,7 +115,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .collect-icons{display:inline-flex;align-items:center;gap:2px;z-index:2;margin-left:auto;margin-right:10px;flex-shrink:0;cursor:default}
 .collect-icon-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;border-radius:50%}
 .collect-icon-btn:active{background:var(--m3)}
-.collect-icon-btn svg{width:16px;height:16px;pointer-events:none}
+.collect-icon-btn svg{width:16px;height:16px;pointer-events:auto}
 .cart-row-h .cr-img{width:48px;height:48px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#F5F0EB;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;z-index:1}
 .cart-row-h .cr-img .cr-plus{font-size:18px;color:rgba(0,0,0,.12);pointer-events:none}
 .cart-row-h .cr-img img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
@@ -406,7 +406,7 @@ function renderFashion(){var cw=document.getElementById("cw");if(cw)cw.remove();
 
 // ═══ 图鉴 — 衣架收集 + 左滑加购 + 齿轮管理 + 进度条 ═══
 var manageMode=false;
-function hBtn(bc,isFilled){var c=isFilled?bc:'#AAA',fc=isFilled?c:'none';return'<button class="collect-icon-btn" data-action="hanger"><svg viewBox="0 0 20 20"><line x1="10" y1="3" x2="10" y2="6" stroke="'+c+'" stroke-width="1.5"/><path d="M4 8h12" stroke="'+c+'" stroke-width="1.5"/><path d="M10 8l-5 8 2.5.5L10 12l2.5 3.5 2.5-.5z" fill="'+fc+'" opacity=".25" stroke="'+c+'" stroke-width="1.2"/></svg></button>'}
+function hBtn(bc,isFilled){var c=isFilled?bc:'#AAA';return'<button class="collect-icon-btn" data-action="hanger"><svg viewBox="0 0 20 20"><circle cx="10" cy="3" r="1.2" fill="none" stroke="'+c+'" stroke-width="1.2"/><line x1="10" y1="4" x2="10" y2="6.5" stroke="'+c+'" stroke-width="1.2"/><path d="M10 6.5l-6 1.5" stroke="'+c+'" stroke-width="1.3" stroke-linecap="round"/><path d="M10 6.5l6 1.5" stroke="'+c+'" stroke-width="1.3" stroke-linecap="round"/><path d="M4 8l-1.5 7c-.2.5.3 1 .8.8L6 15l4-4 4 4 2.7.8c.5.2 1-.3.8-.8L16 8" fill="'+(isFilled?c:'none')+'" fill-opacity=".15" stroke="'+c+'" stroke-width="1.1" stroke-linejoin="round"/></svg></button>'}
 function gBtn(bc,isActive){var c=isActive?bc:'#AAA';return'<button class="collect-icon-btn" data-action="gift"><svg viewBox="0 0 20 20"><rect x="2" y="5" width="16" height="13" rx="2" fill="none" stroke="'+c+'" stroke-width="1.3"/><line x1="10" y1="5" x2="10" y2="18" stroke="'+c+'" stroke-width="1"/><line x1="2" y1="11" x2="18" y2="11" stroke="'+c+'" stroke-width="1"/><path d="M10 5l-3-3a2 2 0 014 0L10 5zm0 0l3-3a2 2 0 00-4 0L10 5z" fill="none" stroke="'+c+'" stroke-width="1.2"/></svg></button>'}
 function mBtn(){return'<button class="collect-icon-btn" data-action="mag"><svg viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5" fill="none" stroke="#999" stroke-width="1.3"/><line x1="12.5" y1="12.5" x2="17" y2="17" stroke="#999" stroke-width="1.5" stroke-linecap="round"/></svg></button>'}
 function iconsRow(cs,borderColor){
