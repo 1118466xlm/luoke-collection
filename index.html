@@ -408,6 +408,7 @@ function iconsRow(cs,borderColor){
 }
 function isInCart(pid){return cart.some(function(x){return x.id===pid})}
 function renderCart(){
+  if(!pika||!pika.length){$("#main").innerHTML='<div class="empty"><p>图鉴数据为空 #E1</p><p>pika长度:'+(pika?pika.length:'null')+'</p></div>';return}
   var cw=document.getElementById("cw");if(cw)cw.remove();$("#cartSidebar").style.display="none";$("#fab").style.display="none";var main=$("#main");
   var BC=['#FFE8E0','#FFECD2','#E8F5E0','#D8F0F5','#F0E0F5','#FFE0EC','#FFF8D6','#FDE8E8'];
   var fullCount=0;var partialCount=0;
