@@ -430,12 +430,12 @@ function renderCart(){
   document.getElementById("btnSort").onclick=function(){sortAsc=!sortAsc;renderCart()};
   main.querySelectorAll(".cr-img").forEach(function(el){el.onclick=function(e){e.stopPropagation();addPikaImage(this.dataset.pid)}});
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart()}});
-  main.querySelectorAll('.collect-icon-btn').forEach(function(btn){btn.removeEventListener('click',function(){});btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var action=btn.getAttribute('data-action');var row=this.closest('.cart-row-h');if(!row)return;var pid=row.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;
+  main.querySelectorAll('.collect-icon-btn').forEach(function(btn){btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var action=btn.getAttribute('data-action');var row=btn.closest('.cart-row-h');if(!row)return;var pid=row.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;
     if(action==='hanger'){p.collectState=p.collectState==='full'?'partial':(p.collectState==='partial'?'none':'full');if(p.collectState==='none')delete p.collectState}
     else if(action==='gift'){p.collectState=p.collectState==='partial'?'none':'partial';if(p.collectState==='none')delete p.collectState}
     else if(action==='mag'){if(!p.imageBlob)return;showPikaDetail(p);return}
     dbPut('pika',p);renderCart()
-  }.bind(this))});
+  })});
 }catch(err){var s=(err.stack||'').split('\n').slice(0,4).join('\n');$("#main").innerHTML='<div class="empty"><p>图鉴报错</p><pre style="font-size:10px;text-align:left">'+err.message.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'\n\n'+s.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre></div>';console.error(err)}
 }
 function showPikaDetail(p){var ov=document.createElement("div");ov.style.cssText="position:fixed;inset:0;z-index:90;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer";ov.innerHTML='<img src="'+bu(p.imageBlob)+'" style="max-width:95vw;max-height:95vh;object-fit:contain">';ov.addEventListener("click",function(){document.body.removeChild(ov)});document.body.appendChild(ov)}
