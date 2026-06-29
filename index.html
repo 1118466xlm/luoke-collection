@@ -46,9 +46,9 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .carousel-projector .proj-dots{display:flex;gap:5px}
 .carousel-projector .proj-dot{width:3.5px;height:3.5px;border-radius:50%;background:var(--m4);border:1px solid var(--m4t);padding:0;transition:all .2s;opacity:.5}
 .carousel-projector .proj-dot.on{background:var(--m4t);opacity:1}
-.carousel-inner{width:100%;height:140px;border-radius:10px;overflow:hidden;background:var(--bg);position:relative}
-.carousel-inner::after{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
-  background:radial-gradient(ellipse 65% 55% at 50% 50%,transparent 55%,rgba(180,200,210,.15) 85%,rgba(160,180,195,.25) 100%)}
+.carousel-inner{width:100%;height:140px;border-radius:10px;overflow:hidden;background:#EEF5F8;position:relative}
+.carousel-inner::after{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse 65% 55% at 50% 50%,transparent 55%,rgba(216,240,245,.20) 85%,rgba(190,225,235,.35) 100%)}
 .carousel-inner canvas{width:100%;height:100%;display:block;transition:opacity .5s;position:relative;z-index:1}
 .ci-controls{display:flex;align-items:center;gap:6px;width:100%;padding:0 4px}
 .ci-controls .ci-label{color:var(--m5t);font-size:11px;letter-spacing:1px;opacity:.8;flex:1}
@@ -629,7 +629,7 @@ var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;$("#installBanner").classList.add("show")});
 window.addEventListener("appinstalled",function(){dp=null;$("#installBanner").classList.remove("show")});
 function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){})}}
-function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v46").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
+function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v47").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
 function refresh(){return dbAll("outfits").then(function(arr){all=arr})}
 function loadPika(){return dbAll("pika").then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut("pika",p)})});return chain.then(function(){return dbAll("pika")}).then(function(arr){pika=arr})}}).catch(function(err){console.error("loadPika失败",err);pika=DP.slice();return Promise.resolve()})}
 function loadCart(){return dbAll("pikaCart").then(function(arr){cart=arr})}
