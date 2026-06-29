@@ -401,7 +401,59 @@ function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=set
 
 // ═══════ HOME ═══════
 function renderHome(){$("#fab").style.display="flex";$("#cartSidebar").style.display="block";var main=$("#main"),outfits=filt(st.q),cw=document.getElementById("cw");if(cw)cw.remove();var html="";if(!outfits.length){html+='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>还没有收藏穿搭</p><p>点击右下角 + 添加游戏截图吧</p></div>'}else{html+='<div class="gallery">';outfits.forEach(function(o){var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});var chips="";sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+";color:"+c.tx+'">'+esc(s)+"</span>"});html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+"</div></div>"});html+="</div>"}html+='<div class="export-row"><button id="btnExport">📤 导出数据</button><button id="btnImport">📥 导入数据</button></div>';main.innerHTML=html;main.querySelectorAll(".card").forEach(function(c){c.addEventListener("click",function(){showDetail(c.dataset.id)})});var be=document.getElementById("btnExport"),bi=document.getElementById("btnImport");if(be)be.onclick=exportData;if(bi)bi.onclick=importData;renderCarousel()}
-function renderFashion(){var cw=document.getElementById("cw");if(cw)cw.remove();$("#main").innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>时装分组功能调整中</p><p>请稍候…</p></div>'}
+function renderFashion(){
+  var cw=document.getElementById("cw");if(cw)cw.remove();
+  var tree=fashionTree();if(!tree.length){$("#main").innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>还没有添加搭配</p><p>去首页添加带部件的搭配吧</p></div>';return}
+  var html='<div style="padding:10px;display:flex;gap:6px;margin-bottom:8px">';
+  html+='<button id="faA" style="flex:1;padding:8px;border:none;border-radius:20px;background:var(--m4);color:var(--m4t);cursor:pointer;font-size:12px;font-weight:600">A 卡片</button>';
+  html+='<button id="faB" style="flex:1;padding:8px;border:none;border-radius:20px;background:var(--border);color:var(--text2);cursor:pointer;font-size:12px">B 人形</button>';
+  html+='<button id="faC" style="flex:1;padding:8px;border:none;border-radius:20px;background:var(--border);color:var(--text2);cursor:pointer;font-size:12px">C 进度</button>';
+  html+='</div><div id="fashionContent"></div>';
+  $("#main").innerHTML=html;
+  var mode='A';renderFashionMode(mode);
+  document.getElementById("faA").onclick=function(){mode='A';renderFashionMode(mode);[faA,faB,faC].forEach(function(b,i){b.style.background=i===0?'var(--m4)':'var(--border)';b.style.color=i===0?'var(--m4t)':'var(--text2)'})};
+  document.getElementById("faB").onclick=function(){mode='B';renderFashionMode(mode);[faA,faB,faC].forEach(function(b,i){b.style.background=i===1?'var(--m4)':'var(--border)';b.style.color=i===1?'var(--m4t)':'var(--text2)'})};
+  document.getElementById("faC").onclick=function(){mode='C';renderFashionMode(mode);[faA,faB,faC].forEach(function(b,i){b.style.background=i===2?'var(--m4)':'var(--border)';b.style.color=i===2?'var(--m4t)':'var(--text2)'})};
+  var faA=document.getElementById("faA"),faB=document.getElementById("faB"),faC=document.getElementById("faC");
+}
+function fashionTree(){var t=new Map();all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(!t.has(sn))t.set(sn,new Map());var m=t.get(sn);if(!m.has(p.slot))m.set(p.slot,[]);m.get(p.slot).push(o.id)})});var e=Array.from(t.entries());e.sort(function(a,b){return a[0]==='未分组'?1:b[0]==='未分组'?-1:a[0].localeCompare(b[0],'zh')});return e}
+function renderFashionMode(mode){
+  var tree=fashionTree(),c=$("#fashionContent"),h='';
+  tree.forEach(function(entry){var sn=entry[0],slots=entry[1];var imgs=[],total=0;slots.forEach(function(ids){ids.forEach(function(id){var o=all.find(function(x){return x.id===id});if(o&&imgs.length<4)imgs.push(o);total++})});
+    h+='<div style="background:var(--surface);border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow);border-left:4px solid var(--m4)">';
+    if(mode==='A'){
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="font-size:15px">👘 '+esc(sn)+'</b><span style="font-size:12px;color:var(--text2)">'+total+'张</span></div>';
+      h+='<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap">';
+      SLOTS.forEach(function(s){var has=slots.has(s);h+='<span style="padding:4px 8px;border-radius:8px;font-size:10px;background:'+(has?'var(--m4)':'var(--bg)')+';color:'+(has?'var(--m4t)':'var(--text2)')+'">'+(s.substring(0,2))+'</span>'});
+      h+='</div>';
+      h+='<div style="display:flex;gap:6px">'+imgs.map(function(o){return'<img src="'+bu(o.thumbnail)+'" style="width:50px;height:50px;object-fit:cover;border-radius:6px;background:#F5F0EB">'}).join('')+'</div>';
+    }else if(mode==='B'){
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-size:15px">👘 '+esc(sn)+'</b><span style="font-size:12px;color:var(--text2)">'+total+'张</span></div>';
+      h+='<div style="display:flex;gap:10px;align-items:center">';
+      h+='<div style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;width:80px">';
+      h+='<span style="font-size:28px">'+(slots.has('帽子')?'🎩':'⚪')+'</span><span>帽</span>';
+      h+='<span style="font-size:28px">'+(slots.has('头发')?'💇':'⚪')+'</span><span>发</span>';
+      h+='</div>';
+      h+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px">';
+      h+='<span style="padding:3px 8px;border-radius:6px;background:'+(slots.has('外套')?'var(--m4)':'var(--bg)')+';color:'+(slots.has('外套')?'var(--m4t)':'var(--text2)')+'">🧥 外套</span>';
+      h+='<span style="padding:3px 8px;border-radius:6px;background:'+(slots.has('上装')?'var(--m4)':'var(--bg)')+';color:'+(slots.has('上装')?'var(--m4t)':'var(--text2)')+'">👕 上装</span>';
+      h+='<span style="padding:3px 8px;border-radius:6px;background:'+(slots.has('下装')?'var(--m4)':'var(--bg)')+';color:'+(slots.has('下装')?'var(--m4t)':'var(--text2)')+'">👖 下装</span>';
+      h+='</div>';
+      h+='<div style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;width:80px">';
+      h+='<span style="font-size:28px">'+(slots.has('背包')?'🎒':'⚪')+'</span><span>包</span>';
+      h+='<span style="font-size:28px">'+(slots.has('鞋子')?'👟':'⚪')+'</span><span>鞋</span>';
+      h+='<span style="font-size:28px">'+(slots.has('袜子')?'🧦':'⚪')+'</span><span>袜</span>';
+      h+='</div></div>';
+    }else{
+      var pct=Math.round((Array.from(slots.keys()).length/8)*100);
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-size:15px">👘 '+esc(sn)+'</b><span style="font-size:12px;color:var(--text2)">'+total+'张</span></div>';
+      h+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--text)">'+Array.from(slots.keys()).length+'/8</span><div style="flex:1;height:8px;border-radius:4px;background:var(--border);overflow:hidden"><div style="height:100%;border-radius:4px;background:var(--m4t);width:'+pct+'%;min-width:4px"></div></div><span style="font-size:12px;color:var(--m4t);font-weight:700">'+pct+'%</span></div>';
+      h+='<div style="display:flex;gap:4px;margin-top:6px">'+imgs.map(function(o){return'<img src="'+bu(o.thumbnail)+'" style="width:44px;height:44px;object-fit:cover;border-radius:6px;background:#F5F0EB">'}).join('')+'</div>';
+    }
+    h+='</div>';
+  });
+  c.innerHTML=h||'<div class="fashion-placeholder"><p>还没有添加搭配</p></div>';
+}
 
 // ═══ 图鉴 — 衣架收集 + 左滑加购 + 齿轮管理 + 进度条 ═══
 var manageMode=false;
