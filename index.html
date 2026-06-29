@@ -40,30 +40,36 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .search-bar.searching .btn-clear{display:block}
 .main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
-/* carousel */
-.carousel-wrap{padding:10px 10px 0}
-.carousel-inner{width:100%;height:180px;border-radius:var(--radius);overflow:hidden;background:#1a1a2e;position:relative}
+/* carousel — projector frame (马卡龙8色 only) */
+.carousel-wrap{padding:14px 10px 12px}
+.carousel-projector{background:var(--m5);border-radius:18px;padding:4px 4px 8px;box-shadow:var(--shadow)}
+.carousel-projector .proj-lens{display:flex;justify-content:center;gap:6px;margin-bottom:3px}
+.carousel-projector .proj-lens span{width:8px;height:8px;border-radius:50%;background:var(--m5t)}
+.carousel-projector .proj-reel{display:flex;align-items:center;gap:4px;padding:2px 6px 6px}
+.carousel-projector .proj-reel .reel{width:14px;height:14px;border-radius:50%;border:2px solid var(--m5t);position:relative}
+.carousel-projector .proj-reel .reel::after{content:'';position:absolute;inset:2px;border-radius:50%;border:1px solid var(--m5t)}
+.carousel-inner{width:100%;height:170px;border-radius:10px;overflow:hidden;background:var(--bg);position:relative}
 .carousel-inner canvas{width:100%;height:100%;display:block;transition:opacity .5s}
-.carousel-inner .ci-overlay{position:absolute;inset:0;border-radius:var(--radius);background:linear-gradient(transparent 55%,rgba(0,0,0,.35));display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;pointer-events:none}
+.carousel-inner .ci-overlay{position:absolute;inset:0;border-radius:10px;background:linear-gradient(transparent 55%,var(--m2) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;pointer-events:none}
 .carousel-inner .ci-row{display:flex;align-items:center;gap:8px}
 .carousel-inner .ci-row>*{pointer-events:auto}
-.carousel-inner .ci-label{color:#fff;font-size:11px;letter-spacing:1px;opacity:.7;flex:1}
+.carousel-inner .ci-label{color:var(--m2t);font-size:11px;letter-spacing:1px;opacity:.85;flex:1}
 .carousel-inner .ci-dots{display:flex;gap:5px}
-.carousel-inner .ci-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:all .2s}
-.carousel-inner .ci-dot.active{background:#fff;transform:scale(1.5)}
+.carousel-inner .ci-dot{width:6px;height:6px;border-radius:50%;background:var(--m4);border:none;cursor:pointer;padding:0;transition:all .2s;opacity:.5}
+.carousel-inner .ci-dot.active{background:var(--m4t);transform:scale(1.5);opacity:1}
 .carousel-inner .ci-btns{display:flex;gap:4px}
-.carousel-inner .ci-btn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;font-size:12px;cursor:pointer}
+.carousel-inner .ci-btn{width:28px;height:28px;border-radius:50%;border:none;background:var(--m4);color:var(--m4t);font-size:12px;cursor:pointer}
 
 .gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
 .gallery .card{border-radius:var(--radius);background:var(--surface);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
-.gallery .card:nth-child(8n+1){border-top:3px solid var(--m1t)}
-.gallery .card:nth-child(8n+2){border-top:3px solid var(--m2t)}
-.gallery .card:nth-child(8n+3){border-top:3px solid var(--m4t)}
-.gallery .card:nth-child(8n+4){border-top:3px solid var(--m5t)}
-.gallery .card:nth-child(8n+5){border-top:3px solid var(--m6t)}
-.gallery .card:nth-child(8n+6){border-top:3px solid var(--m7t)}
-.gallery .card:nth-child(8n+7){border-top:3px solid var(--m3t)}
-.gallery .card:nth-child(8n+0){border-top:3px solid var(--m8t)}
+.gallery .card:nth-child(8n+1){border-top:3px solid var(--m1)}
+.gallery .card:nth-child(8n+2){border-top:3px solid var(--m2)}
+.gallery .card:nth-child(8n+3){border-top:3px solid var(--m4)}
+.gallery .card:nth-child(8n+4){border-top:3px solid var(--m5)}
+.gallery .card:nth-child(8n+5){border-top:3px solid var(--m6)}
+.gallery .card:nth-child(8n+6){border-top:3px solid var(--m7)}
+.gallery .card:nth-child(8n+7){border-top:3px solid var(--m3)}
+.gallery .card:nth-child(8n+0){border-top:3px solid var(--m8)}
 .gallery .card:active{transform:scale(.97)}
 .gallery .card .img-box{width:100%;height:160px;overflow:hidden;background:#F5F0EB}
 .gallery .card .img-box img{width:100%;height:100%;object-fit:cover;display:block}
@@ -393,7 +399,7 @@ function buildSlides(){var slides=[],land=[],port=[];all.forEach(function(o){var
 function drawSlide(slide,cvs){var dpr=window.devicePixelRatio||1,cw=cvs.width/dpr,ch=cvs.height/dpr,ctx=cvs.getContext("2d");ctx.clearRect(0,0,cw,ch);if(slide.t==="s"){var o=slide.items[0],img=new Image();img.onload=function(){var s=Math.min(cw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh)};img.src=bu(o.image)}else{var hw=cw/2;slide.items.forEach(function(o,i){var img=new Image();img.onload=function(){var s=Math.min(hw/img.width,ch/img.height),dw=img.width*s,dh=img.height*s;ctx.drawImage(img,i*hw+(hw-dw)/2,(ch-dh)/2,dw,dh);if(i===0){ctx.fillStyle="rgba(255,255,255,.06)";ctx.fillRect(hw-1,0,2,ch)}};img.src=bu(o.image)})}}
 function renderCarousel(){
   var wrap=document.getElementById("cw"),el=document.getElementById("ce");if(!all.length){if(el)el.style.display="none";return}st.slides=buildSlides();if(!st.slides.length){if(el)el.style.display="none";return}st.ci=0;
-  if(!wrap){wrap=document.createElement("div");wrap.id="cw";wrap.className="carousel-wrap";el=document.createElement("div");el.id="ce";el.className="carousel-inner";el.innerHTML='<canvas id="carouselCanvas"></canvas><div class="ci-overlay"><div class="ci-row"><span class="ci-label">🎡 灵感轮播</span><div class="ci-dots" id="carouselDots"></div><div class="ci-btns"><button class="ci-btn" id="carouselPrev">◀</button><button class="ci-btn" id="carouselPlay">⏯</button><button class="ci-btn" id="carouselNext">▶</button></div></div></div>';wrap.appendChild(el);$("#main").insertBefore(wrap,$("#main").firstChild);bindCarousel(el)}else{el.style.display="block"}upDots();loadSlide();startTimer()}
+  if(!wrap){wrap=document.createElement("div");wrap.id="cw";wrap.className="carousel-wrap";el=document.createElement("div");el.id="ce";el.className="carousel-inner";el.innerHTML='<canvas id="carouselCanvas"></canvas><div class="ci-overlay"><div class="ci-row"><span class="ci-label">🎡 灵感轮播</span><div class="ci-dots" id="carouselDots"></div><div class="ci-btns"><button class="ci-btn" id="carouselPrev">◀</button><button class="ci-btn" id="carouselPlay">⏯</button><button class="ci-btn" id="carouselNext">▶</button></div></div></div>';var projector=document.createElement("div");projector.className="carousel-projector";projector.innerHTML='<div class="proj-lens"><span></span><span></span><span></span></div><div class="proj-reel"><span class="reel"></span><span class="reel"></span></div>';projector.appendChild(el);wrap.appendChild(projector);$("#main").insertBefore(wrap,$("#main").firstChild);bindCarousel(el)}else{el.style.display="block"}upDots();loadSlide();startTimer()}
 function bindCarousel(el){var cvs=el.querySelector("#carouselCanvas");function sz(){var rect=cvs.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cvs.width=rect.width*dpr;cvs.height=rect.height*dpr;cvs.style.width=rect.width+"px";cvs.style.height=rect.height+"px";cvs.getContext("2d").setTransform(1,0,0,1,0,0);cvs.getContext("2d").scale(dpr,dpr)}sz();window.addEventListener("resize",function(){sz();loadSlide()});el.querySelector("#carouselPrev").addEventListener("click",function(){st.ci=(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()});el.querySelector("#carouselNext").addEventListener("click",function(){st.ci=(st.ci+1)%st.slides.length;loadSlide();startTimer()});el.querySelector("#carouselPlay").addEventListener("click",function(){st.cp=!st.cp;this.textContent=st.cp?"⏯":"▶";if(st.cp)startTimer();else clearInterval(st.ct)});var tx=0;el.addEventListener("touchstart",function(e){tx=e.touches[0].clientX});el.addEventListener("touchend",function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){st.ci=dx<0?(st.ci+1)%st.slides.length:(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()}})}
 function upDots(){var dots=$("#carouselDots");if(!dots)return;var h="";for(var i=0;i<st.slides.length;i++)h+='<button class="ci-dot'+(i===st.ci?" active":"")+'" data-i="'+i+'"></button>';dots.innerHTML=h;dots.querySelectorAll(".ci-dot").forEach(function(d){d.addEventListener("click",function(){st.ci=parseInt(this.dataset.i);loadSlide();startTimer()})})}
 function loadSlide(){var cvs=document.getElementById("carouselCanvas");if(!cvs||!st.slides.length)return;var s=st.slides[st.ci];if(s)drawSlide(s,cvs);upDots()}
@@ -424,7 +430,7 @@ function renderFashionMode(mode){
     if(mode==='A'){
       h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="font-size:15px">👘 '+esc(sn)+'</b><span style="font-size:12px;color:var(--text2)">'+total+'张</span></div>';
       h+='<div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap">';
-      SLOTS.forEach(function(s){var has=slots.has(s);h+='<span style="padding:4px 8px;border-radius:8px;font-size:10px;background:'+(has?'var(--m4)':'var(--bg)')+';color:'+(has?'var(--m4t)':'var(--text2)')+'">'+(s.substring(0,2))+'</span>'});
+      SL.forEach(function(s){var has=slots.has(s);h+='<span style="padding:4px 8px;border-radius:8px;font-size:10px;background:'+(has?'var(--m4)':'var(--bg)')+';color:'+(has?'var(--m4t)':'var(--text2)')+'">'+(s.substring(0,2))+'</span>'});
       h+='</div>';
       h+='<div style="display:flex;gap:6px">'+imgs.map(function(o){return'<img src="'+bu(o.thumbnail)+'" style="width:50px;height:50px;object-fit:cover;border-radius:6px;background:#F5F0EB">'}).join('')+'</div>';
     }else if(mode==='B'){
