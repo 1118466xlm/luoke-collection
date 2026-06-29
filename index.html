@@ -74,8 +74,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .export-row{display:flex;gap:10px;justify-content:center;padding:8px 10px calc(8px + var(--sB))}
 .export-row button{padding:8px 18px;border-radius:22px;border:none;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:transform .12s}
 .export-row button:active{transform:scale(.95)}
-.export-row .btn-export{background:var(--m3);color:var(--m3t)}
-.export-row .btn-import{background:var(--m6);color:var(--m6t)}
+.export-row .btn-export,.export-row .btn-import{background:rgba(255,255,255,.35);color:rgba(0,0,0,.45)}
 .export-row button svg{width:16px;height:16px;flex-shrink:0}
 .fashion-placeholder{text-align:center;padding:80px 20px;color:var(--text2)}
 
@@ -305,7 +304,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,
+var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
 function setNames(){var s=new Set();all.forEach(function(o){o.pieces.forEach(function(p){if(p.setName)s.add(p.setName)})});return Array.from(s).sort()}
@@ -558,7 +557,7 @@ function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)retu
 // ═══════ FORM ═══════
 function openAdd(){st.eid=null;st.croppedImgBlob=null;$("#formTitle").textContent="添加搭配";$("#formImageInput").value="";$("#formImgPreview").style.display="none";$("#formPieces").innerHTML="";addRow();$("#btnAddPiece").style.display="block";$("#formOverlay").classList.add("active");document.body.style.overflow="hidden"}
 function openEdit(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.eid=id;st.croppedImgBlob=null;$("#formTitle").textContent="编辑搭配";$("#formImageInput").value="";if(o.image){$("#formImgPreview").src=bu(o.image);$("#formImgPreview").style.display="block"}else{$("#formImgPreview").style.display="none"}$("#formPieces").innerHTML="";o.pieces.forEach(function(p){addRow(p)});$("#btnAddPiece").style.display="block";$("#formOverlay").classList.add("active");document.body.style.overflow="hidden"}
-function closeForm(){$("#formOverlay").classList.remove("active");document.body.style.overflow="";st.eid=null;st.croppedImgBlob=null}
+function closeForm(){$("#formOverlay").classList.remove("active");document.body.style.overflow="";st.eid=null;st.croppedImgBlob=null;st.saving=false}
 function addRow(data){
   data=data||{setName:"",slot:"头发"};
   var row=document.createElement("div");row.className="piece-row";
@@ -570,10 +569,10 @@ function addRow(data){
   document.addEventListener("click",function(){menu.classList.remove("open")});
   row.querySelector(".btn-rm").addEventListener("click",function(){var rows=$("#formPieces").querySelectorAll(".piece-row");if(rows.length>1)row.remove();else toast("至少保留一个部件")});
   var si=row.querySelector(".fn-set");ac(si,setNames);
-  si.addEventListener("change",function(){var v=this.value.trim(),cs=btn.textContent;if(!v)return;if(cs==="帽子")return;var rows=$("#formPieces").querySelectorAll(".piece-row");if(rows[rows.length-1]!==row)return;var idx=SL.indexOf(cs),ns=SL[(idx+1)%SL.length];addRow({setName:"",slot:ns});var nrs=$("#formPieces").querySelectorAll(".piece-row");setTimeout(function(){nrs[nrs.length-1].querySelector(".fn-set").focus()},100)});
+  si.addEventListener("keydown",function(e){if(e.key!=="Enter")return;e.preventDefault();var v=this.value.trim(),cs=btn.textContent;if(!v||cs==="帽子")return;var rows=$("#formPieces").querySelectorAll(".piece-row");if(rows[rows.length-1]!==row)return;var idx=SL.indexOf(cs),ns=SL[(idx+1)%SL.length];addRow({setName:"",slot:ns});var nrs=$("#formPieces").querySelectorAll(".piece-row");nrs[nrs.length-1].querySelector(".fn-set").focus()});
   $("#formPieces").appendChild(row);
 }
-function saveForm(){var pr=$("#formPieces").querySelectorAll(".piece-row"),pieces=[];pr.forEach(function(r){var sn=r.querySelector(".fn-set").value.trim(),slot=r.querySelector(".slot-dd-btn").textContent;if(sn)pieces.push({setName:sn,slot:slot})});if(!pieces.length){toast("请至少填写一个部件的服装名");return}function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbPut("outfits",o).then(function(){refresh().then(function(){closeForm();renderHome();toast(st.eid?"已更新":"已添加")})})}if(st.croppedImgBlob){imgSz(st.croppedImgBlob).then(function(sz){mkThumb(st.croppedImgBlob).then(function(tb){doSave(st.croppedImgBlob,tb,sz.w,sz.h)})})}else if(st.eid){var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}else{toast("请选择截图")}}
+function saveForm(){if(st.saving)return;st.saving=true;var pr=$("#formPieces").querySelectorAll(".piece-row"),pieces=[];pr.forEach(function(r){var sn=r.querySelector(".fn-set").value.trim(),slot=r.querySelector(".slot-dd-btn").textContent;if(sn)pieces.push({setName:sn,slot:slot})});if(!pieces.length){st.saving=false;toast("请至少填写一个部件的服装名");return}function doSave(ib,tb,iw,ih){var now=Date.now(),o;if(st.eid){o=all.find(function(x){return x.id===st.eid});o.pieces=pieces;if(ib){o.image=ib;o.imageWidth=iw;o.imageHeight=ih}if(tb)o.thumbnail=tb}else{o={id:uid(),image:ib,thumbnail:tb,pieces:pieces,createdAt:now,imageWidth:iw,imageHeight:ih};all.push(o)}dbPut("outfits",o).then(function(){return refresh()}).then(function(){closeForm();renderHome();toast(st.eid?"已更新":"已添加");st.saving=false}).catch(function(err){st.saving=false;toast("保存失败:"+err.message)})}if(st.croppedImgBlob){imgSz(st.croppedImgBlob).then(function(sz){mkThumb(st.croppedImgBlob).then(function(tb){doSave(st.croppedImgBlob,tb,sz.w,sz.h)})})}else if(st.eid){var old=all.find(function(x){return x.id===st.eid});doSave(old?old.image:null,old?old.thumbnail:null,old?old.imageWidth:0,old?old.imageHeight:0)}else{st.saving=false;toast("请选择截图")}}
 
 // ═══════ IMPORT/EXPORT ═══════
 function b64(b){return new Promise(function(ok,fail){var r=new FileReader();r.onload=function(){ok(r.result)};r.onerror=fail;r.readAsDataURL(b)})}
@@ -632,7 +631,7 @@ var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;$("#installBanner").classList.add("show")});
 window.addEventListener("appinstalled",function(){dp=null;$("#installBanner").classList.remove("show")});
 function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){})}}
-function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v48").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
+function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v49").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
 function refresh(){return dbAll("outfits").then(function(arr){all=arr})}
 function loadPika(){return dbAll("pika").then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut("pika",p)})});return chain.then(function(){return dbAll("pika")}).then(function(arr){pika=arr})}}).catch(function(err){console.error("loadPika失败",err);pika=DP.slice();return Promise.resolve()})}
 function loadCart(){return dbAll("pikaCart").then(function(arr){cart=arr})}
