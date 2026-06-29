@@ -424,7 +424,7 @@ window.collectClick=function(action,pid,e){
 function isInCart(pid){return cart.some(function(x){return x.id===pid})}
 function renderCart(){
   var cw=document.getElementById("cw");if(cw)cw.remove();$("#cartSidebar").style.display="none";$("#fab").style.display="none";var main=$("#main");
-  var list=pika.slice().sort(function(a,b){return(b.createdAt||0)-(a.createdAt||0)});if(sortAsc)list.reverse();
+  var list=pika.slice().sort(function(a,b){return(a.createdAt||0)-(b.createdAt||0)});if(!sortAsc)list.reverse();
   var full=0,part=0;pika.forEach(function(p){var cs=p.collectState||"none";if(cs==="full")full++;else if(cs==="partial")part++});
   var pct=pika.length?Math.round(full/pika.length*100):0;
   var html='<div class="cart-wrap"><div class="cart-top-bar"><button id="btnAddPika" class="cart-add-btn">+ 添加时装</button><span class="stat-bar">'+full+'/'+pika.length+'<span class="prog-track"><span class="prog-fill" style="width:'+pct+'%"></span></span></span><button id="btnSort" class="cart-sort-btn">'+(sortAsc?'⬆ 正序':'⬇ 倒序')+'</button><button id="btnPokedexGear" class="cart-gear-btn">⚙</button></div><div class="cart-list">'+(manageMode?'<div class="jm-bar"><button id="jmDelBtn" class="jm-del-btn">🗑 删除选中</button></div>':'')+'';
