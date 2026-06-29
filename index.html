@@ -328,6 +328,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
+var APP_VER=53;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
@@ -649,12 +650,13 @@ function bind(){
 var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;$("#installBanner").classList.add("show")});
 window.addEventListener("appinstalled",function(){dp=null;$("#installBanner").classList.remove("show")});
-function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){})}}
-function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v53").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
+function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js?v="+APP_VER,{scope:"./"}).catch(function(){})}}
+function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v"+APP_VER).then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
 function refresh(){return dbAll("outfits").then(function(arr){all=arr})}
 function loadPika(){return dbAll("pika").then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut("pika",p)})});return chain.then(function(){return dbAll("pika")}).then(function(arr){pika=arr})}}).catch(function(err){console.error("loadPika失败",err);pika=DP.slice();return Promise.resolve()})}
 function loadCart(){return dbAll("pikaCart").then(function(arr){cart=arr})}
-function init(){dbo().then(function(){return Promise.all([refresh(),loadPika(),loadCart()])}).then(function(){bind();regPWA();renderHome();cachePg();updateCartBadge()})}
+function versionCheck(){setTimeout(function(){fetch('./?vc='+Date.now()).then(function(r){return r.text()}).then(function(t){var m=t.match(/APP_VER=(\d+)/);if(m&&parseInt(m[1])>APP_VER){caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k)}))}).then(function(){location.reload(true)})}}).catch(function(){})},5000)}
+function init(){dbo().then(function(){return Promise.all([refresh(),loadPika(),loadCart()])}).then(function(){bind();regPWA();renderHome();cachePg();updateCartBadge();versionCheck()})}
 document.addEventListener("DOMContentLoaded",init);
 }();</script>
 </body>

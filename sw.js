@@ -15,19 +15,16 @@ self.addEventListener('fetch', e => {
   var url = new URL(e.request.url);
   // Blob URLs: pass through
   if (url.protocol === 'blob:') return;
-  // Navigation: cache-first + background update
+  // Navigation: network-first, fallback to cache (offline only)
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      caches.match(PAGE).then(function(cached) {
-        var netUp = fetch(e.request).then(function(r) {
-          if (r.ok) {
-            var rc = r.clone();
-            caches.open(CACHE).then(function(c) { c.put(PAGE, rc); });
-          }
-          return r;
-        }).catch(function() {});
-        return cached || netUp;
-      })
+      fetch(e.request).then(function(r) {
+        if (r.ok) {
+          var rc = r.clone();
+          caches.open(CACHE).then(function(c) { c.put(PAGE, rc); });
+        }
+        return r;
+      }).catch(function() { return caches.match(PAGE); })
     );
     return;
   }
