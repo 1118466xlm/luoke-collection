@@ -79,15 +79,17 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .fashion-placeholder{text-align:center;padding:80px 20px;color:var(--text2)}
 /* fashion ranking */
 .fg-wrap{padding:10px}
-.fg-slots{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin-bottom:10px}
-.fg-slot-btn{padding:6px 0;border-radius:12px;border:none;font-size:11px;cursor:pointer;font-weight:500;background:var(--border);color:var(--text2);transition:all .15s;text-align:center}
-.fg-slot-btn.active{background:var(--m4);color:var(--m4t);font-weight:700}
 .fg-summary{display:flex;gap:16px;font-size:12px;color:var(--text2);margin-bottom:12px;padding:0 2px}
 .fg-summary b{color:var(--text)}
-.fg-card{background:var(--surface);border-radius:10px;padding:6px 10px;margin-bottom:5px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:3px}
-.fg-card-top{display:flex;align-items:center;gap:6px}
-.fg-name{font-size:12px;font-weight:700;flex:1}
-.fg-count{font-size:16px;font-weight:800;color:var(--m4t);min-width:22px;text-align:right}
+.fg-row{background:var(--surface);border-radius:10px;margin-bottom:5px;box-shadow:var(--shadow);overflow:hidden}
+.fg-row-header{display:flex;align-items:center;gap:6px;padding:8px 12px;cursor:pointer}
+.fg-row-header .fg-name{font-size:13px;font-weight:700}
+.fg-row-header .fg-slot{font-size:11px;color:var(--text2);flex:1}
+.fg-row-header .fg-times{font-size:12px;font-weight:700;color:var(--m4t);min-width:24px;text-align:right}
+.fg-row-header .fg-arrow{font-size:9px;color:var(--text2);transition:transform .2s}
+.fg-row-header .fg-arrow.open{transform:rotate(180deg)}
+.fg-row-body{display:none;padding:0 12px 8px;flex-direction:column;gap:4px}
+.fg-row-body.open{display:flex}
 .fg-bar-row{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text2)}
 .fg-bar-track{flex:1;height:3px;border-radius:2px;background:var(--border);overflow:hidden}
 .fg-bar-fill{height:100%;border-radius:2px;background:var(--m4t);min-width:2px}
@@ -429,27 +431,24 @@ function renderHome(){$("#fab").style.display="flex";$("#cartSidebar").style.dis
 function renderFashion(){
   var cw=document.getElementById("cw");if(cw)cw.remove();
   var total=all.length;if(!total){$("#main").innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>还没有添加搭配</p><p>去首页添加带部件的搭配吧</p></div>';return}
-  var flt=st.fashionSlot||null,stats=pieceStats(flt);
+  var stats=pieceStats();
   var h='<div class="fg-wrap">';
-  h+='<div class="fg-slots"><button class="fg-slot-btn'+(flt?'':' active')+'" data-slot="">全部</button>';
-  SL.forEach(function(s,i){var c=TC[i];h+='<button class="fg-slot-btn'+(flt===s?' active':'')+'" data-slot="'+s+'"'+(flt===s?' style="background:'+c.bg+';color:'+c.tx+'"':'')+'>'+s.substring(0,2)+'</button>'});
-  h+='</div>';
-  if(!stats.length){h+='<div class="fashion-placeholder"><p>该槽位暂无部件数据</p></div>'}else{
+  if(!stats.length){h+='<div class="fashion-placeholder"><p>暂无部件数据</p></div>'}else{
   h+='<div class="fg-summary"><span>共 <b>'+total+'</b> 套搭配</span><span>共 <b>'+stats.length+'</b> 种部件</span></div>';
   stats.forEach(function(item){
     var pct=Math.round(item.count/total*100);
     var imgs='';item.outfitIds.slice(0,4).forEach(function(id){var o=all.find(function(x){return x.id===id});if(o)imgs+='<img src="'+bu(o.thumbnail)+'" alt="">'});
-    h+='<div class="fg-card">';
-    h+='<div class="fg-card-top"><span class="fg-name">'+esc(item.setName)+'</span><span class="fg-count">'+item.count+'</span></div>';
-    h+='<div class="fg-bar-row"><span>'+pct+'%</span><div class="fg-bar-track"><div class="fg-bar-fill" style="width:'+pct+'%"></div></div><span>'+item.count+'/'+total+'</span></div>';
+    h+='<div class="fg-row">';
+    h+='<div class="fg-row-header"><span class="fg-name">'+esc(item.setName)+'</span><span class="fg-slot">'+esc(item.slot)+'</span><span class="fg-times">×'+item.count+'</span><span class="fg-arrow">▼</span></div>';
+    h+='<div class="fg-row-body"><div class="fg-bar-row"><div class="fg-bar-track"><div class="fg-bar-fill" style="width:'+pct+'%"></div></div><span>'+item.count+'/'+total+'</span></div>';
     if(imgs)h+='<div class="fg-imgs">'+imgs+'</div>';
-    h+='</div>';
+    h+='</div></div>';
   });}
   h+='</div>';$("#main").innerHTML=h;
-  $("#main").querySelectorAll(".fg-slot-btn").forEach(function(b){b.addEventListener("click",function(){st.fashionSlot=this.dataset.slot||null;renderFashion()})});
+  $("#main").querySelectorAll(".fg-row-header").forEach(function(hdr){hdr.addEventListener("click",function(){var body=this.nextElementSibling;var arrow=this.querySelector(".fg-arrow");body.classList.toggle("open");arrow.classList.toggle("open")})});
 }
-function pieceStats(slotFilter){
-  var map=new Map();all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(slotFilter&&p.slot!==slotFilter)return;var key=sn+'|'+p.slot;if(!map.has(key))map.set(key,{setName:sn,slot:p.slot,count:0,outfitIds:[]});var e=map.get(key);e.count++;if(e.outfitIds.indexOf(o.id)===-1)e.outfitIds.push(o.id)})});
+function pieceStats(){
+  var map=new Map();all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';var key=sn+'|'+p.slot;if(!map.has(key))map.set(key,{setName:sn,slot:p.slot,count:0,outfitIds:[]});var e=map.get(key);e.count++;if(e.outfitIds.indexOf(o.id)===-1)e.outfitIds.push(o.id)})});
   var arr=Array.from(map.values());arr.sort(function(a,b){return b.count-a.count});return arr
 }
 
@@ -620,7 +619,7 @@ var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;$("#installBanner").classList.add("show")});
 window.addEventListener("appinstalled",function(){dp=null;$("#installBanner").classList.remove("show")});
 function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){})}}
-function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v51").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
+function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v52").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
 function refresh(){return dbAll("outfits").then(function(arr){all=arr})}
 function loadPika(){return dbAll("pika").then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut("pika",p)})});return chain.then(function(){return dbAll("pika")}).then(function(arr){pika=arr})}}).catch(function(err){console.error("loadPika失败",err);pika=DP.slice();return Promise.resolve()})}
 function loadCart(){return dbAll("pikaCart").then(function(arr){cart=arr})}
