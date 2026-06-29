@@ -43,16 +43,16 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 /* carousel — projector frame (马卡龙8色 only) */
 .carousel-wrap{padding:14px 10px 12px}
 .carousel-projector{background:var(--m5);border-radius:18px;padding:8px 8px 8px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:6px}
-.carousel-projector .proj-dots{display:flex;gap:6px}
-.carousel-projector .proj-dot{width:6px;height:6px;border-radius:50%;background:var(--m4);border:none;padding:0;transition:all .2s;opacity:.4}
-.carousel-projector .proj-dot.on{background:var(--m4t);opacity:1;transform:scale(1.4)}
+.carousel-projector .proj-dots{display:flex;gap:5px}
+.carousel-projector .proj-dot{width:3.5px;height:3.5px;border-radius:50%;background:var(--m4);border:1px solid var(--m4t);padding:0;transition:all .2s;opacity:.5}
+.carousel-projector .proj-dot.on{background:var(--m4t);opacity:1}
 .carousel-inner{width:100%;height:140px;border-radius:10px;overflow:hidden;background:var(--bg);position:relative}
-.carousel-inner canvas{width:100%;height:100%;display:block;transition:opacity .5s}
+.carousel-inner::after{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  background:radial-gradient(ellipse 65% 55% at 50% 50%,transparent 55%,rgba(180,200,210,.15) 85%,rgba(160,180,195,.25) 100%)}
+.carousel-inner canvas{width:100%;height:100%;display:block;transition:opacity .5s;position:relative;z-index:1}
 .ci-controls{display:flex;align-items:center;gap:6px;width:100%;padding:0 4px}
 .ci-controls .ci-label{color:var(--m5t);font-size:11px;letter-spacing:1px;opacity:.8;flex:1}
-.ci-controls .ci-dots{display:flex;gap:4px}
-.ci-controls .ci-dot{width:5px;height:5px;border-radius:50%;background:var(--m4);border:none;cursor:pointer;padding:0;transition:all .2s;opacity:.45}
-.ci-controls .ci-dot.active{background:var(--m4t);opacity:1}
+.ci-controls .ci-grpidx{font-size:10px;color:var(--m5t);background:var(--bg);border-radius:4px;padding:1px 6px;min-width:28px;text-align:center;opacity:.75}
 .ci-controls .ci-btns{display:flex;gap:2px}
 .ci-controls .ci-btn{background:none;border:none;color:var(--m5t);font-size:13px;cursor:pointer;padding:2px 5px;line-height:1}
 
@@ -398,11 +398,11 @@ function renderCarousel(){
   if(!wrap){wrap=document.createElement("div");wrap.id="cw";wrap.className="carousel-wrap";var projector=document.createElement("div");projector.className="carousel-projector";
     var topDots=document.createElement("div");topDots.className="proj-dots";topDots.id="projDots";topDots.innerHTML='<span class="proj-dot on"></span><span class="proj-dot"></span><span class="proj-dot"></span>';
     el=document.createElement("div");el.id="ce";el.className="carousel-inner";el.innerHTML='<canvas id="carouselCanvas"></canvas>';
-    var ctrls=document.createElement("div");ctrls.className="ci-controls";ctrls.innerHTML='<span class="ci-label">🎡 灵感轮播</span><div class="ci-dots" id="carouselDots"></div><div class="ci-btns"><button class="ci-btn" id="carouselPrev">◀</button><button class="ci-btn" id="carouselPlay">⏯</button><button class="ci-btn" id="carouselNext">▶</button></div>';
+    var ctrls=document.createElement("div");ctrls.className="ci-controls";ctrls.innerHTML='<span class="ci-label">🎡 灵感轮播</span><span class="ci-grpidx" id="carouselGrpIdx">1/'+st.slides.length+'</span><div class="ci-btns"><button class="ci-btn" id="carouselPrev">◀</button><button class="ci-btn" id="carouselPlay">⏯</button><button class="ci-btn" id="carouselNext">▶</button></div>';
     projector.appendChild(topDots);projector.appendChild(el);projector.appendChild(ctrls);wrap.appendChild(projector);
     $("#main").insertBefore(wrap,$("#main").firstChild);bindCarousel(el)}else{el.style.display="block"}upDots();loadSlide();startTimer()}
 function bindCarousel(el){var cvs=document.getElementById("carouselCanvas");function sz(){var rect=cvs.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1;cvs.width=rect.width*dpr;cvs.height=rect.height*dpr;cvs.style.width=rect.width+"px";cvs.style.height=rect.height+"px";cvs.getContext("2d").setTransform(1,0,0,1,0,0);cvs.getContext("2d").scale(dpr,dpr)}sz();window.addEventListener("resize",function(){sz();loadSlide()});document.getElementById("carouselPrev").addEventListener("click",function(){st.ci=(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()});document.getElementById("carouselNext").addEventListener("click",function(){st.ci=(st.ci+1)%st.slides.length;loadSlide();startTimer()});document.getElementById("carouselPlay").addEventListener("click",function(){st.cp=!st.cp;this.textContent=st.cp?"⏯":"▶";if(st.cp)startTimer();else clearInterval(st.ct)});var tx=0;el.addEventListener("touchstart",function(e){tx=e.touches[0].clientX});el.addEventListener("touchend",function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){st.ci=dx<0?(st.ci+1)%st.slides.length:(st.ci-1+st.slides.length)%st.slides.length;loadSlide();startTimer()}})}
-function upDots(){var dots=$("#carouselDots");if(!dots)return;var h="";for(var i=0;i<st.slides.length;i++)h+='<button class="ci-dot'+(i===st.ci?" active":"")+'" data-i="'+i+'"></button>';dots.innerHTML=h;dots.querySelectorAll(".ci-dot").forEach(function(d){d.addEventListener("click",function(){st.ci=parseInt(this.dataset.i);loadSlide();startTimer()})});var pd=$("#projDots");if(pd&&st.slides.length>1){var dots=pd.querySelectorAll(".proj-dot"),n=st.slides.length,idx=Math.round(st.ci/(n-1)*2);dots.forEach(function(d,i){d.classList.toggle("on",i===idx)})}}
+function upDots(){var g=$("#carouselGrpIdx");if(g){g.textContent=(st.ci+1)+"/"+st.slides.length}var pd=$("#projDots");if(pd){var idx=st.ci%3;pd.querySelectorAll(".proj-dot").forEach(function(d,i){d.classList.toggle("on",i===idx)})}}
 function loadSlide(){var cvs=document.getElementById("carouselCanvas");if(!cvs||!st.slides.length)return;var s=st.slides[st.ci];if(s)drawSlide(s,cvs);upDots()}
 function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=setInterval(function(){st.ci=(st.ci+1)%st.slides.length;loadSlide()},3500)}
 
@@ -629,7 +629,7 @@ var dp=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;$("#installBanner").classList.add("show")});
 window.addEventListener("appinstalled",function(){dp=null;$("#installBanner").classList.remove("show")});
 function regPWA(){if(!document.querySelector('link[rel="manifest"]')){var l=document.createElement("link");l.rel="manifest";l.href="./manifest.json";document.head.appendChild(l)}if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(function(){})}}
-function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v45").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
+function cachePg(){if("caches" in window){setTimeout(function(){var h="<!DOCTYPE html>\n"+document.documentElement.outerHTML;caches.open("luoke-v46").then(function(c){c.put("./",new Response(h,{headers:{"Content-Type":"text/html; charset=utf-8"}}))}).catch(function(){})},3000)}}
 function refresh(){return dbAll("outfits").then(function(arr){all=arr})}
 function loadPika(){return dbAll("pika").then(function(arr){pika=arr;if(!pika.length){var chain=Promise.resolve();DP.forEach(function(p){chain=chain.then(function(){return dbPut("pika",p)})});return chain.then(function(){return dbAll("pika")}).then(function(arr){pika=arr})}}).catch(function(err){console.error("loadPika失败",err);pika=DP.slice();return Promise.resolve()})}
 function loadCart(){return dbAll("pikaCart").then(function(arr){cart=arr})}
