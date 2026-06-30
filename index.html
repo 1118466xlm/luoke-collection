@@ -319,7 +319,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var APP_VER=60;
+var APP_VER=61;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
@@ -447,29 +447,30 @@ function renderFashion(){
     var imgs='';item.outfitIds.slice(0,4).forEach(function(id){var o=all.find(function(x){return x.id===id});if(o)imgs+='<img src="'+bu(o.thumbnail)+'" data-oid="'+id+'" alt="" onclick="fgImgClick(this)">'});
     h+='<div class="fg-row">';
     h+='<div class="fg-row-header"><span class="fg-name">'+esc(item.setName)+'</span><span class="fg-slot-row">'+slotTags+'</span><span class="fg-arrow">▼</span></div>';
-    h+='<div class="fg-row-body"><div class="fg-bar-row"><div class="fg-bar-track"><div class="fg-bar-fill" style="width:'+pct+'%"></div></div><span>'+item.totalCount+'/'+total+'</span></div>';
+    h+='<div class="fg-row-body">';
     h+=sbtns;
     if(imgs)h+='<div class="fg-imgs">'+imgs+'</div>';
     h+='</div></div>';
   });}
   h+='</div>';$("#main").innerHTML=h;
   $("#main").querySelectorAll(".fg-row-header").forEach(function(hdr){hdr.addEventListener("click",function(){var body=this.nextElementSibling;var arrow=this.querySelector(".fg-arrow");body.classList.toggle("open");arrow.classList.toggle("open")})});
-  $("#main").querySelectorAll(".fg-row").forEach(function(row){var imgs=row.querySelector(".fg-imgs");if(!imgs)return;imgs.querySelectorAll("img").forEach(function(im){var o=all.find(function(x){return x.id===im.dataset.oid});im.style.display=o&&o.pieces.some(function(p){return p.slot==="头发"})?"":"none"})});
+  $("#main").querySelectorAll(".fg-row").forEach(function(row){var imgs=row.querySelector(".fg-imgs");if(!imgs)return;var sn=row.querySelector(".fg-name").textContent;imgs.querySelectorAll("img").forEach(function(im){var o=all.find(function(x){return x.id===im.dataset.oid});im.style.display=o&&o.pieces.some(function(p){return p.slot==="头发"&&p.setName===sn})?"":"none"})});
 }
 function pieceStats(){
   var map=new Map();all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(!map.has(sn))map.set(sn,{setName:sn,slots:{},totalCount:0,outfitIds:[]});var e=map.get(sn);e.slots[p.slot]=(e.slots[p.slot]||0)+1;e.totalCount++;if(e.outfitIds.indexOf(o.id)===-1)e.outfitIds.push(o.id)})});
   var arr=Array.from(map.values());arr.sort(function(a,b){return b.totalCount-a.totalCount});return arr
 }
 window.fgSlotFilter=function(btn){
-  var imgs=btn.closest('.fg-row').querySelector('.fg-imgs');if(!imgs)return;
+  var row=btn.closest('.fg-row');var imgs=row.querySelector('.fg-imgs');if(!imgs)return;
   var slot=btn.dataset.slot;
+  var sn=row.querySelector('.fg-name').textContent;
   var on=btn.classList.contains('on');
   btn.parentElement.querySelectorAll('.fg-slot-btn').forEach(function(b){b.classList.remove('on')});
   if(on){imgs.querySelectorAll('img').forEach(function(im){im.style.display=''});return}
   btn.classList.add('on');
   imgs.querySelectorAll('img').forEach(function(im){
     var o=all.find(function(x){return x.id===im.dataset.oid});
-    im.style.display=o&&o.pieces.some(function(p){return p.slot===slot})?'':'none';
+    im.style.display=o&&o.pieces.some(function(p){return p.slot===slot&&p.setName===sn})?'':'none';
   });
 };
 window.fgImgClick=function(im){
