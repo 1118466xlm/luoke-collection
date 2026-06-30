@@ -319,7 +319,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var APP_VER=59;
+var APP_VER=60;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
@@ -428,6 +428,7 @@ function startTimer(){clearInterval(st.ct);st.ct=null;if(!st.cp)return;st.ct=set
 function renderHome(){$("#fab").style.display="flex";$("#cartSidebar").style.display="block";var main=$("#main"),outfits=filt(st.q),cw=document.getElementById("cw");if(cw)cw.remove();var html="";if(!outfits.length){html+='<div class="empty"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>还没有收藏穿搭</p><p>点击右下角 + 添加游戏截图吧</p></div>'}else{html+='<div class="gallery">';outfits.forEach(function(o){var sns=[];o.pieces.forEach(function(p){if(p.setName&&sns.indexOf(p.setName)===-1)sns.push(p.setName)});var chips="";sns.forEach(function(s){var c=tc(s);chips+='<span class="chip" style="background:'+c.bg+";color:"+c.tx+'">'+esc(s)+"</span>"});html+='<div class="card" data-id="'+o.id+'"><div class="img-box"><img src="'+bu(o.thumbnail)+'" alt="" loading="lazy"></div><div class="info">'+chips+"</div></div>"});html+="</div>"}html+='<div class="export-row"><button id="btnExport" class="btn-export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>导出数据</button><button id="btnImport" class="btn-import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 15 12 20 17 15"/><line x1="12" y1="20" x2="12" y2="4"/></svg>导入数据</button></div>';main.innerHTML=html;main.querySelectorAll(".card").forEach(function(c){c.addEventListener("click",function(){showDetail(c.dataset.id)})});var be=document.getElementById("btnExport"),bi=document.getElementById("btnImport");if(be)be.onclick=exportData;if(bi)bi.onclick=importData;renderCarousel()}
 function renderFashion(){
   var cw=document.getElementById("cw");if(cw)cw.remove();
+  $("#fab").style.display="none";$("#cartSidebar").style.display="none";
   var total=all.length;if(!total){$("#main").innerHTML='<div class="fashion-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#A098AE" stroke-width="1.5"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg><p>还没有添加搭配</p><p>去首页添加带部件的搭配吧</p></div>';return}
   var stats=pieceStats();
   var h='<div class="fg-wrap">';
@@ -441,7 +442,7 @@ function renderFashion(){
     slotKeys.sort(function(a,b){return SL.indexOf(a)-SL.indexOf(b)});
     slotKeys.forEach(function(sk){var si=SL.indexOf(sk);var ci=si===-1?0:si;slotTags+='<span class="fg-slot-tag" style="background:'+SBG[ci]+';color:'+STX[ci]+'">'+esc(sk)+'×'+item.slots[sk]+'</span>'});
     var sbtns='<div class="fg-slot-btns">';
-    SL.forEach(function(s){sbtns+='<button class="fg-slot-btn" data-slot="'+s+'" onclick="fgSlotFilter(this)">'+s+'</button>'});
+    SL.forEach(function(s){sbtns+='<button class="fg-slot-btn"+(s==="头发"?" on":"")+" data-slot="'+s+'" onclick="fgSlotFilter(this)">'+s+'</button>'});
     sbtns+='</div>';
     var imgs='';item.outfitIds.slice(0,4).forEach(function(id){var o=all.find(function(x){return x.id===id});if(o)imgs+='<img src="'+bu(o.thumbnail)+'" data-oid="'+id+'" alt="" onclick="fgImgClick(this)">'});
     h+='<div class="fg-row">';
@@ -453,6 +454,7 @@ function renderFashion(){
   });}
   h+='</div>';$("#main").innerHTML=h;
   $("#main").querySelectorAll(".fg-row-header").forEach(function(hdr){hdr.addEventListener("click",function(){var body=this.nextElementSibling;var arrow=this.querySelector(".fg-arrow");body.classList.toggle("open");arrow.classList.toggle("open")})});
+  $("#main").querySelectorAll(".fg-row").forEach(function(row){var imgs=row.querySelector(".fg-imgs");if(!imgs)return;imgs.querySelectorAll("img").forEach(function(im){var o=all.find(function(x){return x.id===im.dataset.oid});im.style.display=o&&o.pieces.some(function(p){return p.slot==="头发"})?"":"none"})});
 }
 function pieceStats(){
   var map=new Map();all.forEach(function(o){o.pieces.forEach(function(p){var sn=p.setName||'未分组';if(!map.has(sn))map.set(sn,{setName:sn,slots:{},totalCount:0,outfitIds:[]});var e=map.get(sn);e.slots[p.slot]=(e.slots[p.slot]||0)+1;e.totalCount++;if(e.outfitIds.indexOf(o.id)===-1)e.outfitIds.push(o.id)})});
