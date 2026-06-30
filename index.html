@@ -69,7 +69,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .gallery .card:active{transform:scale(.97)}
 .gallery .card .img-box{width:100%;height:160px;overflow:hidden;background:#F5F0EB}
 .gallery .card .img-box img{width:100%;height:100%;object-fit:cover;display:block}
-.gallery .card .info{padding:8px 10px;display:flex;gap:5px;flex-wrap:wrap}
+.gallery .card .info{padding:8px 10px;display:grid;grid-template-columns:repeat(3,auto);gap:5px}
 .chip{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600}
 .export-row{display:flex;gap:10px;justify-content:center;padding:8px 10px calc(8px + var(--sB))}
 .export-row button{padding:8px 18px;border-radius:22px;border:none;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:transform .12s}
@@ -319,7 +319,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var APP_VER=66;
+var APP_VER=67;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
