@@ -96,8 +96,8 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .fg-imgs img{width:32px;height:32px;object-fit:cover;border-radius:5px;background:#F5F0EB;cursor:pointer}
 .fg-slot-tag{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:600;line-height:1.4}
 .fg-slot-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
-.fg-slot-btn{padding:3px 8px;border-radius:10px;border:none;font-size:10px;cursor:pointer;background:linear-gradient(135deg,var(--m7) 0%,var(--bg) 30%,var(--m2) 60%,var(--m6) 100%);color:var(--text2);font-weight:500}
-.fg-slot-btn.on{color:var(--text)}
+.fg-slot-btn{padding:3px 8px;border-radius:10px;border:1px solid var(--m5);font-size:10px;cursor:pointer;background:transparent;color:var(--m5t);font-weight:500}
+.fg-slot-btn.on{background:var(--m5);color:var(--m5t)}
 .fg-img-full{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;cursor:pointer}
 .fg-img-full img{max-width:92vw;max-height:85vh;object-fit:contain;border-radius:8px}
 
@@ -319,7 +319,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var APP_VER=58;
+var APP_VER=59;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
