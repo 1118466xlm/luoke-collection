@@ -319,7 +319,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var APP_VER=63;
+var APP_VER=64;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
@@ -522,10 +522,10 @@ function renderCart(){
   main.querySelectorAll(".ci-quality-toggle").forEach(function(el){el.onclick=function(){var pid=this.dataset.pid;var p=pika.find(function(x){return x.id===pid});if(!p)return;p.quality=p.quality==="金色"?"紫色":"金色";dbPut("pika",p);renderCart()}});
   // Swipe — per-row state via DOM property, no shared variable
   main.querySelectorAll(".cart-row-h").forEach(function(row){
-    row._swx=null;row._swy=null;row._slo=false;row._sdx=0;
-    row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icon-btn")||t.closest(".cr-img")||t.closest(".ci-quality-toggle")){this._slo=false;return}this._swx=e.touches[0].clientX;this._swy=e.touches[0].clientY;this._slo=false;this.style.transition="none"},{passive:false});
-    row.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-this._swx,dy=e.touches[0].clientY-this._swy;if(!this._slo){if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>4){this._slo=true;e.preventDefault()}else return}if(this._slo){this._sdx=Math.max(-72,Math.min(0,dx));this.style.transform="translateX("+this._sdx+"px)";e.preventDefault()}},{passive:false});
-    row.addEventListener("touchend",function(){this.style.transition="transform .2s ease";if(this._sdx<-36){this.style.transform="translateX(-72px)";this.classList.add("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.add("swiped")}else{this.style.transform="translateX(0)";this.classList.remove("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.remove("swiped")}this._slo=false;this._sdx=0});
+    row._swx=null;row._sdx=0;
+    row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icon-btn")||t.closest(".cr-img")||t.closest(".ci-quality-toggle"))return;this._swx=e.touches[0].clientX;this.style.transition="none"},{passive:false});
+    row.addEventListener("touchmove",function(e){if(this._swx===null)return;var dx=e.touches[0].clientX-this._swx;if(!this._locked&&Math.abs(dx)>6){this._locked=true}if(!this._locked)return;this._sdx=Math.max(-72,Math.min(0,dx));this.style.transform="translateX("+this._sdx+"px)";e.preventDefault()},{passive:false});
+    row.addEventListener("touchend",function(){this.style.transition="transform .2s ease";if(this._sdx<-20){this.style.transform="translateX(-72px)";this.classList.add("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.add("swiped")}else{this.style.transform="translateX(0)";this.classList.remove("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.remove("swiped")}this._swx=null;this._sdx=0;this._locked=false});
   });
   main.querySelectorAll(".swipe-bg").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();toggleCart(this.dataset.pid,this)}});
   if(manageMode){var gm=document.getElementById("btnPokedexGear");if(gm)gm.style.color="var(--m8t)";main.querySelectorAll(".swipe-wrap").forEach(function(wrap){var pid=wrap.querySelector(".cart-row-h").dataset.pid;if(!pid||pid.length<15)return;var del=document.createElement("button");del.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';del.style.cssText="position:absolute;right:80px;top:50%;transform:translateY(-50%);z-index:5;background:none;border:none;color:var(--m8t);font-size:14px;cursor:pointer";del.onclick=function(e){e.stopPropagation();confirm("删除此时装？").then(function(ok){if(ok){pika=pika.filter(function(x){return x.id!==pid});dbDel("pika",pid);manageMode=false;renderCart();toast("已删除")}})};wrap.style.position="relative";wrap.appendChild(del)})}else{var gm2=document.getElementById("btnPokedexGear");if(gm2)gm2.style.color=""}
