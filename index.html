@@ -119,7 +119,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-se
 .cart-gear-btn{padding:6px 8px;border-radius:50%;border:none;background:var(--surface);color:var(--text2);font-size:16px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
 .cart-list{display:flex;flex-direction:column;gap:8px}
 /* swipe wrapper */
-.swipe-wrap{position:relative;overflow:hidden;border-radius:var(--radius);box-shadow:var(--shadow)}
+.swipe-wrap{position:relative;overflow:hidden;border-radius:var(--radius);box-shadow:var(--shadow);touch-action:pan-y}
 .swipe-wrap .swipe-bg{position:absolute;right:0;top:0;bottom:0;width:72px;display:flex;align-items:center;justify-content:center;background:var(--m5);color:var(--m5t);font-size:12px;font-weight:600;cursor:pointer;border:none;border-radius:0 var(--radius) var(--radius) 0;opacity:0;transition:opacity .3s}
 .swipe-wrap.swiped .swipe-bg{opacity:1}
 .swipe-wrap .swipe-bg.in-cart{background:var(--m8);color:var(--m8t)}
@@ -319,7 +319,7 @@ function mkThumb(blob,sz){sz=sz||500;return new Promise(function(ok){var img=new
 function imgSz(blob){return new Promise(function(ok){var img=new Image();img.onload=function(){ok({w:img.width,h:img.height})};img.src=bu(blob)})}
 
 var all=[],pika=[],cart=[],sortAsc=true,panelMode=false,selAll=false;
-var APP_VER=61;
+var APP_VER=62;
 var st={tab:"home",q:"",did:null,ci:0,ct:null,cp:true,slides:[],eid:null,croppedImgBlob:null,saving:false,fashionSlot:null,
   cropRes:null,cropRatio:3/4,cropScale:1,cropTX:0,cropTY:0,boxW:0,boxH:0,cropImg:null};
 
@@ -466,7 +466,7 @@ window.fgSlotFilter=function(btn){
   var sn=row.querySelector('.fg-name').textContent;
   var on=btn.classList.contains('on');
   btn.parentElement.querySelectorAll('.fg-slot-btn').forEach(function(b){b.classList.remove('on')});
-  if(on){imgs.querySelectorAll('img').forEach(function(im){im.style.display=''});return}
+  if(on){imgs.querySelectorAll('img').forEach(function(im){im.style.display='none'});return}
   btn.classList.add('on');
   imgs.querySelectorAll('img').forEach(function(im){
     var o=all.find(function(x){return x.id===im.dataset.oid});
@@ -524,7 +524,7 @@ function renderCart(){
   main.querySelectorAll(".cart-row-h").forEach(function(row){
     row._swx=null;row._swy=null;row._swl=false;
     row.addEventListener("touchstart",function(e){var t=e.target;if(t.closest(".collect-icon-btn")||t.closest(".cr-img")||t.closest(".ci-quality-toggle")){this._swl=false;return}this._swx=e.touches[0].clientX;this._swy=e.touches[0].clientY;this._swl=false;this.style.transition="none"},{passive:false});
-    row.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-this._swx,dy=e.touches[0].clientY-this._swy;if(!this._swl){if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>8){this._swl=true;e.preventDefault()}else return}if(this._swl){if(dx<-25){this.classList.add("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.add("swiped")}else if(dx>25){this.classList.remove("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.remove("swiped")}e.preventDefault()}},{passive:false});
+    row.addEventListener("touchmove",function(e){var dx=e.touches[0].clientX-this._swx,dy=e.touches[0].clientY-this._swy;if(!this._swl){if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>6){this._swl=true;e.preventDefault()}else return}if(this._swl){if(dx<-18){this.classList.add("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.add("swiped")}else if(dx>18){this.classList.remove("swiped");var w=this.closest(".swipe-wrap");if(w)w.classList.remove("swiped")}e.preventDefault()}},{passive:false});
     row.addEventListener("touchend",function(){this.style.transition="transform .2s ease";this._swl=false});
   });
   main.querySelectorAll(".swipe-bg").forEach(function(btn){btn.onclick=function(e){e.stopPropagation();toggleCart(this.dataset.pid,this)}});
@@ -568,7 +568,7 @@ function updatePanelFooter(){
 function addPikaFashion(){var name=$("#pikaName").value.trim(),quality=$("#pikaQuality").value;if(!name){toast("请输入时装名称");return}var id="p"+uid(),obj={id:id,name:name,quality:quality,imageBlob:window._pikaCrop||null,createdAt:Date.now()};window._pikaCrop=null;toast("正在保存…");dbPut("pika",obj).then(function(){pika.unshift(obj);$("#pikaFormOverlay").classList.remove("active");$("#pikaName").value="";$("#pikaImage").value="";renderCart();toast("已添加 ✅")}).catch(function(err){toast("保存失败:"+err.message)})}
 
 // ═══════ DETAIL ═══════
-function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$("#detailImg").src=bu(o.image);$("#detailDate").textContent="📅 添加于 "+fd(o.createdAt);var html="";o.pieces.forEach(function(p,i){var c=TC[i%TC.length];html+='<div class="piece-card" style="background:'+c.bg+'"><div class="p-set" style="color:'+c.tx+'">'+esc(p.setName||"未分组")+'</div><div class="p-slot">'+esc(p.slot)+"</div></div>"});$("#detailPieces").innerHTML=html;$("#detailOverlay").classList.add("active");document.body.style.overflow="hidden"}function closeDetail(){$("#detailOverlay").classList.remove("active");document.body.style.overflow="";st.did=null}
+function showDetail(id){var o=all.find(function(x){return x.id===id});if(!o)return;st.did=id;$("#detailImg").src=bu(o.image);$("#detailDate").textContent="📅 添加于 "+fd(o.createdAt);var html="";o.pieces.forEach(function(p,i){var c=tc(p.setName||"未分组");html+='<div class="piece-card" style="background:'+c.bg+'"><div class="p-set" style="color:'+c.tx+'">'+esc(p.setName||"未分组")+'</div><div class="p-slot">'+esc(p.slot)+"</div></div>"});$("#detailPieces").innerHTML=html;$("#detailOverlay").classList.add("active");document.body.style.overflow="hidden"}function closeDetail(){$("#detailOverlay").classList.remove("active");document.body.style.overflow="";st.did=null}
 
 // ═══════ FORM ═══════
 function openAdd(){st.eid=null;st.croppedImgBlob=null;$("#formTitle").textContent="添加搭配";$("#formImageInput").value="";$("#formImgPreview").style.display="none";$("#formPieces").innerHTML="";addRow();$("#btnAddPiece").style.display="block";$("#formOverlay").classList.add("active");document.body.style.overflow="hidden"}
